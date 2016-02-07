@@ -1,0 +1,126 @@
+box {
+  display: inline-block;
+}
+.dathumbsContainer {
+  float: left;
+  margin: 5px;
+  background: #fff;
+  padding: 8px;
+  position: relative;
+  border: 1px solid silver;
+  border-radius: 4px;
+}
+.dathumbsContainer a,
+.dathumbsContainer a img {
+  display: block;
+  position: relative;
+}
+.dathumbsContainer a {
+  overflow: hidden;
+  border-radius: 3px;
+}
+.dathumbsContainer a div {
+  position: absolute;
+  background: #333;
+  background: rgba(75, 75, 75, 0.7);
+  width: 100%;
+  height: 100%;
+}
+.dathumbsContainer a div span {
+  display: block;
+  padding: 10px 0;
+  margin: 40px 20px 20px 20px;
+  text-transform: uppercase;
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), 0 -10px 0 rgba(255, 255, 255, 0.3);
+}
+.dathumbsContainer .imageContainer {
+  overflow: hidden;
+}
+.dathumbsContainer .imageContainer img {
+  position: relative;
+  left: -150px;
+}
+.dathumbsContainer .in {
+  transition: all .2s ease-in-out;
+  -webkit-transition: all .2s ease-in-out;
+  /** Chrome & Safari **/
+  -moz-transition: all .2s ease-in-out;
+  /** Firefox **/
+  -o-transition: all .2s ease-in-out;
+  /** Opera **/
+}
+.dathumbsContainer .out {
+  transition: all .2s ease-out;
+  -webkit-transition: all .2s ease-out;
+  /** Chrome & Safari **/
+  -moz-transition: all .2s ease-out;
+  /** Firefox **/
+  -o-transition: all .2s ease-out;
+  /** Opera **/
+}
+.dathumbsContainer .top.in {
+  left: 0px;
+  right: 0px;
+  top: 150px;
+  bottom: 150px;
+  transform: translate3d(0px, -150px, 0px);
+}
+.dathumbsContainer .top.out {
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+  transform: translate3d(0px, -150px, 0px);
+}
+.dathumbsContainer .bottom.in {
+  left: 0px;
+  right: 0px;
+  top: -150px;
+  bottom: -150px;
+  transform: translate3d(0px, 150px, 0px);
+}
+.dathumbsContainer .bottom.out {
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+  transform: translate3d(0px, 150px, 0px);
+}
+.dathumbsContainer .left.in {
+  left: -150px;
+  right: -150px;
+  top: 0px;
+  bottom: 0px;
+  transform: translate3d(150px, 0px, 0px);
+}
+.dathumbsContainer .left.out {
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+  transform: translate3d(-150px, 0px, 0px);
+}
+.dathumbsContainer .right.in {
+  left: 150px;
+  right: 150px;
+  top: 0px;
+  bottom: 0px;
+  transform: translate3d(-150px, 0px, 0px);
+}
+.dathumbsContainer .right.out {
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+  transform: translate3d(150px, 0px, 0px);
+}
+.appContainer {
+  > .ui-view-content {
+    > .sliding-thumbnail {
+    }
+  }
+}

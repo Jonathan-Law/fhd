@@ -25,7 +25,8 @@ if (match) {
 
   request.send();
 } else if (location.hostname === 'localhost') {
-  window.location.replace('/lab.html');
+  window.location.replace('/desktop/index.html');
+  // window.location.replace('/lab.html');
 } else {
   window.location.replace('/desktop/index.html');
 }

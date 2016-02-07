@@ -27,7 +27,7 @@ inquirer.prompt(questions, answers => {
     .then(setupGit)
     .then(() => {
       console.log(chalk.green('Success!'));
-      console.log(chalk.white('Don\'t forget to setup your manifest.json and run `domo publish`'));
+      console.log(chalk.white('Don\'t forget to finish the setup process'));
     })
     .catch((err) => {
       console.log(chalk.red('There was an error!'));

@@ -7,6 +7,7 @@ angular
     'ngAnimate',
     require('./services')(angular).name,
     require('./views')(angular).name,
+    require('./components')(angular).name,
   ])
   .constant('$', require('jquery'))
   .constant('d3', require('d3'))

@@ -1,9 +1,9 @@
 /* Typesetting variables.*/
 /* in pixels. This would result in 22px on desktop */
-$baseFontSize: 12;
+$baseFontSize: 10;
 
 /* how large the line height is as a multiple of font size */
-$baseLineHeight: 1.5;
+$baseLineHeight: 1.2;
 $leading: $baseLineHeight * 1rem;
 
 /* Rate of growth for headings
@@ -11,5 +11,48 @@ $leading: $baseLineHeight * 1rem;
  */
 $scale: 1.414;
 
-/* Domo Blue Color */
-$domo-blue: #99ccee;
+/* Jon Color */
+$font-family: 'Roboto slab', serif;
+$background-color: #EEEBE0;
+$background-color-shaded: #DAD7CD;
+$border-color: #857f5A;
+$text-color: #555;
+$jon-color: #99ccee;
+
+$normal-mobile: 480px;
+$mobile-screen: 690px;
+$normal-tablet: 768px;
+$tablet-screen: 995px;
+$desktop-screen: 1440px;
+
+$screen: "only screen";
+$mobile: "only screen and (max-width:#{$mobile-screen})";
+$tablet: "only screen and (min-width:#{$mobile-screen}) and (max-width: #{$tablet-screen})";
+$normalTablet: "only screen and (max-width: #{$normal-tablet})";
+$tabletSmaller: "only screen and (max-width: #{$tablet-screen})";
+$desktop: "only screen and (min-width:#{$tablet-screen})";
+$landscape: "only screen and (orientation: landscape)";
+$portrait: "only screen and (orientation: portrait)";
+
+
+$green: rgba(102,102,76,0.95);
+$darkGray: rgb(85,85,85);
+$darken: rgba(85,85,85, .4);
+$offwhite: #eee;
+$linkBlue: #1b7fcc;
+
+
+@define-mixin border-radius $radius {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@define-mixin transition $speed {
+  -webkit-transition: all $speed ease 0s;
+  -moz-transition: all $speed ease 0s;
+  -ms-transition: all $speed ease 0s;
+  -o-transition: all $speed ease 0s;
+  transition: all $speed ease 0s;
+}
