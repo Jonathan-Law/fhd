@@ -1,42 +1,28 @@
-function MainCtrl() {
+/* ngInject */
+function MainCtrl(configs, $state) {
   const main = this;
   main.meaningOfLife = 42;
-  main.list = [{
-    letter: 'a',
-    base: 'http://www.planwallpaper.com/static/cache/18/ca/18ca8c4c0fe2f90c096ebfaa942965c2.jpg',
-    overlay: 'http://www.planwallpaper.com/static/images/nasas-images-of-most-remarkable-events-you-cant-miss.jpg'
-  }, {
-    letter: 'a',
-    base: 'http://www.planwallpaper.com/static/cache/18/ca/18ca8c4c0fe2f90c096ebfaa942965c2.jpg',
-    overlay: 'http://www.planwallpaper.com/static/images/nasas-images-of-most-remarkable-events-you-cant-miss.jpg'
-  }, {
-    letter: 'a',
-    base: 'http://www.planwallpaper.com/static/cache/18/ca/18ca8c4c0fe2f90c096ebfaa942965c2.jpg',
-    overlay: 'http://www.planwallpaper.com/static/images/nasas-images-of-most-remarkable-events-you-cant-miss.jpg'
-  }, {
-    letter: 'a',
-    base: 'http://www.planwallpaper.com/static/cache/18/ca/18ca8c4c0fe2f90c096ebfaa942965c2.jpg',
-    overlay: 'http://www.planwallpaper.com/static/images/nasas-images-of-most-remarkable-events-you-cant-miss.jpg'
-  }, {
-    letter: 'a',
-    base: 'http://www.planwallpaper.com/static/cache/18/ca/18ca8c4c0fe2f90c096ebfaa942965c2.jpg',
-    overlay: 'http://www.planwallpaper.com/static/images/nasas-images-of-most-remarkable-events-you-cant-miss.jpg'
-  }, {
-    letter: 'a',
-    base: 'http://www.planwallpaper.com/static/cache/18/ca/18ca8c4c0fe2f90c096ebfaa942965c2.jpg',
-    overlay: 'http://www.planwallpaper.com/static/images/nasas-images-of-most-remarkable-events-you-cant-miss.jpg'
-  }, {
-    letter: 'a',
-    base: 'http://www.planwallpaper.com/static/cache/18/ca/18ca8c4c0fe2f90c096ebfaa942965c2.jpg',
-    overlay: 'http://www.planwallpaper.com/static/images/nasas-images-of-most-remarkable-events-you-cant-miss.jpg'
-  }];
-  main.clicked = function clicked() {
-    console.log('stuff');
+
+  main.list = [];
+
+  main.goTo = (letter) => {
+    $state.go('family', {
+      letter,
+    });
   };
+
+  for (let i = 1; i < 27; i++) {
+    const current = String.fromCharCode(i + 96);
+    main.list.push({
+      overlay: configs.baseURL + 'images/ind/' + current + '.' + current + '.jpg',
+      base: configs.baseURL + 'images/ind/' + current + '.jpg',
+      letter: current
+    });
+  }
 }
 
 // inject dependencies here
-MainCtrl.$inject = [];
+// MainCtrl.$inject = [];
 
 if (ON_TEST) {
   require('./Main.ctrl.spec.js')(MainCtrl);

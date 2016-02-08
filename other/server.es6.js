@@ -13,7 +13,7 @@ const fs = require('fs-extra');
 const glob = require('glob');
 const request = require('request');
 const portfinder = require('portfinder');
-portfinder.basePort = 4321;
+portfinder.basePort = 9000;
 
 // webpack-dev-server
 const server = new WebpackDevServer(compiler, {

@@ -1,0 +1,48 @@
+<!-- <catchkey letter="letter" give-focus="true" show-input="false"></catchkey> -->
+<div>
+  <div class="text-center">
+    <h2>Select a family</h2>
+  </div>
+  <div class="greenlink little text-center" id="minilinks">
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='a'">&nbsp;&nbsp;A&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='b'">&nbsp;&nbsp;B&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='c'">&nbsp;&nbsp;C&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='d'">&nbsp;&nbsp;D&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='e'">&nbsp;&nbsp;E&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='f'">&nbsp;&nbsp;F&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='g'">&nbsp;&nbsp;G&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='h'">&nbsp;&nbsp;H&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='i'">&nbsp;&nbsp;I&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='j'">&nbsp;&nbsp;J&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='k'">&nbsp;&nbsp;K&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='l'">&nbsp;&nbsp;L&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='m'">&nbsp;&nbsp;M&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='n'">&nbsp;&nbsp;N&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='o'">&nbsp;&nbsp;O&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='p'">&nbsp;&nbsp;P&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='q'">&nbsp;&nbsp;Q&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='r'">&nbsp;&nbsp;R&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='s'">&nbsp;&nbsp;S&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='t'">&nbsp;&nbsp;T&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='u'">&nbsp;&nbsp;U&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='v'">&nbsp;&nbsp;V&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='w'">&nbsp;&nbsp;W&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='x'">&nbsp;&nbsp;X&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='y'">&nbsp;&nbsp;Y&nbsp;&nbsp;</a></span>
+    <span><a href="javascript:void(0);" ng-click="sbf.letter='z'">&nbsp;&nbsp;Z&nbsp;&nbsp;</a></span>
+    <!-- <span><a href="javascript:void(0);" ng-click="letter='0'">&nbsp;&nbsp;#&nbsp;&nbsp;</a></span> -->
+  </div>
+  <hr>
+  <div style="text-align:center">
+    <p ng-bind="sbf.letter.toUpperCase()" style="font-size: 100px;"></p>
+    <div ng-if="sbf.names.length < 1" ng-cloak>
+      {{noNames}}
+    </div>
+    <div style="text-align: center; display: inline-block">
+      <div ng-class="sbf.names.length > 15? 'half': ''" ng-repeat="thing in sbf.getNames(null) track by $index" style="display:inline-block">
+        <div ng-repeat="name in sbf.getNames($index)">
+          <a href="javascript:void(0);" ng-click="sbf.goToFamily(name)">{{name}}</a>
+        </div>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,171 @@
+.ribbon {
+  position: absolute;
+  left: -5px; top: -5px;
+  z-index: 1;
+  overflow: hidden;
+  width: 95px; height: 95px;
+  text-align: right;
+}
+.ribbon span {
+  font-size: 10px;
+  font-weight: bold;
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 20px;
+  -ms-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  width: 127px;
+  display: block;
+  background: #79A70A;
+  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 28px; 
+  left: -26px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute; left: 0px; top: 100%;
+  z-index: -1;
+  border-left: 3px solid #79A70A;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;
+}
+.ribbon span::after {
+  content: "";
+  position: absolute; right: 0px; top: 100%;
+  z-index: -1;
+  border-left: 3px solid transparent;
+  border-right: 3px solid #79A70A;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;
+}
+
+.ribbon.large {
+  left: -5px; top: -5px;
+  width: 105px; height: 105px;
+}
+.ribbon.large span {
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 20px;
+  width: 140px;
+  top: 33px; 
+  left: -27px;
+}
+.ribbon.large span::before {
+  position: absolute; left: 0px; top: 100%;
+}
+.ribbon.large span::after {
+  position: absolute; right: 0px; top: 100%;
+}
+
+
+.ribbon.small {
+  left: -5px; top: -5px;
+  width: 75px; height: 75px;
+}
+.ribbon.small span {
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 20px;
+  width: 100px;
+  top: 19px; 
+  left: -21px;
+}
+.ribbon.small span::before {
+  position: absolute; left: 0px; top: 100%;
+}
+.ribbon.small span::after {
+  position: absolute; right: 0px; top: 100%;
+}
+
+
+.ribbon.green span{
+  background: #79A70A;
+  background: linear-gradient(#9BC90D 0%, #9BC90D 100%);
+}
+.ribbon-container .ribbon.green:last-of-type span{
+  background: #79A70A;
+  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+}
+.ribbon.red span {
+  background: #a80909;
+  background: linear-gradient(#c90c0c 0%, #a80909 100%);
+}
+.ribbon-container .ribbon.red:last-of-type span {
+  background: #a80909;
+  background: linear-gradient(#c90c0c 0%, #c90c0c 100%);
+}
+.ribbon.blue span {
+  background: #096ea8;
+  background: linear-gradient(#0c84c9 0%, #0c84c9 100%);
+}
+.ribbon-container .ribbon.blue:last-of-type span {
+  background: #096ea8;
+  background: linear-gradient(#0c84c9 0%, #096ea8 100%);
+}
+.ribbon.yellow span {
+  background: #a88809;
+  background: linear-gradient(#c9bc0c 0%, #c9bc0c 100%);
+}
+.ribbon-container .ribbon.yellow:last-of-type span {
+  background: #a88809;
+  background: linear-gradient(#c9bc0c 0%, #a88809 100%);
+}
+
+.ribbon.green span::before {
+  border-left: 3px solid #79A70A;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;
+}
+.ribbon.red span::before {
+  border-left: 3px solid #a80909;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #a80909;
+}
+.ribbon.blue span::before {
+  border-left: 3px solid #096ea8;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #096ea8;
+}
+.ribbon.yellow span::before {
+  border-left: 3px solid #a88809;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #a88809;
+}
+
+
+
+.ribbon.green span::after {
+  border-left: 3px solid transparent;
+  border-right: 3px solid #79A70A;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;
+}
+.ribbon.red span::after {
+  border-left: 3px solid transparent;
+  border-right: 3px solid #a80909;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #a80909;
+}
+.ribbon.blue span::after {
+  border-left: 3px solid transparent;
+  border-right: 3px solid #096ea8;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #096ea8;
+}.ribbon.yellow span::after {
+  border-left: 3px solid transparent;
+  border-right: 3px solid #a88809;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #a88809;
+}
