@@ -1,8 +1,8 @@
 function searchByFamilyConfig($stateProvider) {
   require('./searchByFamily.css');
 
-  $stateProvider.state('family', {
-    url: '/family/:letter',
+  $stateProvider.state('families', {
+    url: '/families/:letter',
     template: require('./searchByFamily.template.html'),
     controller: require('./searchByFamily.ctrl.js'),
     controllerAs: 'sbf',

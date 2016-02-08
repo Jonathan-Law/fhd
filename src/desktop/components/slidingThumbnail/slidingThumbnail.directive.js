@@ -1,9 +1,8 @@
 const $ = require('jquery');
 require('../libs/hoverDir.js');
 module.exports = ngModule => {
-  ngModule.directive('slidingThumbnail', /* @ngInject */ ($log) => {
+  ngModule.directive('slidingThumbnail', /* @ngInject */ () => {
     function linkFn(scope, element) {
-      $log.log(scope.params);
       scope.direction = 'Initial';
       if (scope.id) {
         // Business.individual.getProfilePicByPersonId(scope.id).then(function(result) {
@@ -22,7 +21,7 @@ module.exports = ngModule => {
       scope: {
         params: '=',
         id: '=',
-        callback: '='
+        callback: '=?'
       },
       template: require('./slidingThumbnail.html'),
       link: linkFn,

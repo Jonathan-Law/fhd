@@ -41,8 +41,9 @@
     <div style="text-align: center; display: inline-block">
       <div ng-class="sbf.names.length > 15? 'half': ''" ng-repeat="thing in sbf.getNames(null) track by $index" style="display:inline-block">
         <div ng-repeat="name in sbf.getNames($index)">
-          <a href="javascript:void(0);" ng-click="sbf.goToFamily(name)">{{name}}</a>
+          <a ui-sref="family({name: name})">{{name}}</a>
         </div>
       </div>
     </div>
+  </div>
 </div>

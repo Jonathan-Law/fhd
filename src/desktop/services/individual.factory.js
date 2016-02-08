@@ -363,24 +363,24 @@ module.exports = ngModule => {
     //   return deferred.promise;
     // }
 
-    // service.getFirstNames = function(family, all) {
-    //   var deferred = $q.defer();
-    //   if (family) {
-    //     var url = '/api/v1/individual/familyNames/'+family;
-    //     if (all){
-    //       url = url + '/true';
-    //     }
-    //     $http({
-    //       method: 'GET',
-    //       url: url
-    //     }).success(function(data, status, headers, config){
-    //       deferred.resolve(data);
-    //     }).error (function(data, status, headers, config){
-    //       deferred.reject('There was an error on the server.')
-    //     })
-    //   }
-    //   return deferred.promise;
-    // }
+    service.getFirstNames = (family, all) => {
+      const deferred = $q.defer();
+      if (family) {
+        let url = configs.baseURL + '/api/v1/individual/familyNames/' + family;
+        if (all) {
+          url = url + '/true';
+        }
+        $http({
+          method: 'GET',
+          url,
+        }).success((data/* , status, headers, config */) => {
+          deferred.resolve(data);
+        }).error((/* data, status, headers, config */) => {
+          deferred.reject('There was an error on the server.');
+        });
+      }
+      return deferred.promise;
+    };
 
     // service.getDocuments = function(id, override) {
     //   var deferred = $q.defer();

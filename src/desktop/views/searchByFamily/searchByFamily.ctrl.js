@@ -26,7 +26,7 @@ function searchByFamily($scope, individual, $state) {
           if (index === 0) {
             plussone = 1;
             offset = 0;
-          } else if (index !== 2 && sbf.names.length % 3 !== 2) {
+          } else if (index !== 2 && sbf.names.length % 3 !== 1) {
             offset = 1;
             plussone = 1;
           } else {

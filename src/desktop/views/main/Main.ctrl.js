@@ -1,15 +1,9 @@
 /* ngInject */
-function MainCtrl(configs, $state) {
+function MainCtrl(configs) {
   const main = this;
   main.meaningOfLife = 42;
 
   main.list = [];
-
-  main.goTo = (letter) => {
-    $state.go('family', {
-      letter,
-    });
-  };
 
   for (let i = 1; i < 27; i++) {
     const current = String.fromCharCode(i + 96);

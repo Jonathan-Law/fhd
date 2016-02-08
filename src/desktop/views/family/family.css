@@ -1,0 +1,23 @@
+.half{
+  width: 300px;
+  display: inline-block;
+  float: left;
+}
+
+
+/***********************************************************************************/
+/* This pair is very useful for full width text that has no-wraping ellipsis when too long*/
+.overflow-pair-left{
+  display: block;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  white-space:nowrap;
+}
+.overflow-pair-left:after {
+ content: " .................................................................................." 
+}
+
+.overflow-pair-right{
+  float: right;
+  display: inline-block;
+}

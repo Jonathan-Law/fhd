@@ -1,0 +1,54 @@
+<!-- <catchkey letter="letter" give-focus="true" show-input="false"></catchkey> -->
+<div>
+  <div class="text-center">
+    <h2>Select an Individual</h2>
+  </div>
+  <div class="greenlink little text-center" id="minilinks">
+    <span><a ui-sref="families({letter: 'a'})">&nbsp;&nbsp;A&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'b'})">&nbsp;&nbsp;B&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'c'})">&nbsp;&nbsp;C&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'd'})">&nbsp;&nbsp;D&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'e'})">&nbsp;&nbsp;E&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'f'})">&nbsp;&nbsp;F&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'g'})">&nbsp;&nbsp;G&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'h'})">&nbsp;&nbsp;H&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'i'})">&nbsp;&nbsp;I&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'j'})">&nbsp;&nbsp;J&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'k'})">&nbsp;&nbsp;K&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'l'})">&nbsp;&nbsp;L&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'm'})">&nbsp;&nbsp;M&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'n'})">&nbsp;&nbsp;N&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'o'})">&nbsp;&nbsp;O&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'p'})">&nbsp;&nbsp;P&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'q'})">&nbsp;&nbsp;Q&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'r'})">&nbsp;&nbsp;R&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 's'})">&nbsp;&nbsp;S&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 't'})">&nbsp;&nbsp;T&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'u'})">&nbsp;&nbsp;U&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'v'})">&nbsp;&nbsp;V&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'w'})">&nbsp;&nbsp;W&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'x'})">&nbsp;&nbsp;X&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'y'})">&nbsp;&nbsp;Y&nbsp;&nbsp;</a></span>
+    <span><a ui-sref="families({letter: 'z'})">&nbsp;&nbsp;Z&nbsp;&nbsp;</a></span>
+  </div>
+  <hr>
+  <div style="text-align:center">
+    <p ng-bind="fn.name" style="font-size: 100px;"></p>
+    <div style="text-align: center; display: inline-block">
+      <div ng-class="fn.names.length > 15? 'half': ''" ng-repeat="thing in fn.getNames(null) track by $index" style="display:inline-block;  border-top: 1px solid lightgray;">
+        <div ng-repeat="individual in fn.getNames($index)">
+          <div style="width: 300px; padding: 0px 25px 0px 25px; display:inline-block; float: none">
+            <a ui-sref="individual({id: individual.id})">
+              <span class="overflow-pair-right" style="text-align:right;">
+              ({{individual.yearBorn}})
+            </span>
+              <span class="overflow-pair-left" style="text-align:left">
+              {{individual.displayableName}}
+            </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

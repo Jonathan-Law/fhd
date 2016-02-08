@@ -1,6 +1,6 @@
 <div class="sliding-thumbnail">
   <div class="dathumbsContainer">
-    <a ng-click="callback(params.letter)">
+    <a ui-sref="families({ letter: params.letter })">
       <img ng-src="{{params.base}}" style="width: 70px; height: 53px;">
       <div style="display: block; left: -100%; top: 0px; overflow: hidden; transition: all 300ms ease; -webkit-transition: all 300ms ease;">
         <img ng-src="{{params.overlay}}" style="width: 70px; height: 53px;">
