@@ -38,7 +38,7 @@
       <div ng-class="fn.names.length > 15? 'half': ''" ng-repeat="thing in fn.getNames(null) track by $index" style="display:inline-block;  border-top: 1px solid lightgray;">
         <div ng-repeat="individual in fn.getNames($index)">
           <div style="width: 300px; padding: 0px 25px 0px 25px; display:inline-block; float: none">
-            <a ui-sref="individual({id: individual.id})">
+            <a ui-sref="individual({id: individual.id, tab: 'default'})">
               <span class="overflow-pair-right" style="text-align:right;">
               ({{individual.yearBorn}})
             </span>

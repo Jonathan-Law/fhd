@@ -199,7 +199,7 @@ const config = {
  * If on production then minify code else (on dev) and turn on hot module replacement.
  */
 if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }));
+  // config.plugins.push(new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }));
 } else {
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
 }
@@ -224,7 +224,7 @@ if (INCLUDE_DESKTOP_VIEW) {
         title: 'Desktop',
         dev: process.env.NODE_ENV === 'development' || !process.env.NODE_ENV,
         pkg: pkg,
-        template: 'src/desktop/desktop.html', // Load a custom template
+        template: 'src/desktop/desktop.php', // Load a custom template
         inject: 'body', // Inject all scripts into the body
         filename: INCLUDE_MULTIPLE_VIEWS ? 'desktop/index.html' : 'index.html',
         chunks: ['commons', 'common', 'desktop']

@@ -24,7 +24,7 @@
           </a>
           <div class="almostFullWidth">
             <div class="input-group" id="navSearch">
-              <input type="text" ng-model="searchKey" typeahead-on-select='onSelect($item, $model, $label)' typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Search">
+              <input type="text" ng-model="searchKey" typeahead-on-select='onSelect($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Search">
               <span class="input-group-btn">
                 <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
               </span>
@@ -72,7 +72,7 @@
       </li>
       <li class="notAlmostFullWidth">
         <div class="input-group" id="sideSearch">
-          <input id="sideNavSearch" type="text" ng-model="searchKey" typeahead-on-select='onSelect($item, $model, $label)' typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Search">
+          <input id="sideNavSearch" type="text" ng-model="searchKey" typeahead-on-select='onSelect($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Search">
           <span class="input-group-btn">
             <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
           </span>

@@ -1,0 +1,27 @@
+<div style="min-width: 550px;" data-toggle="tooltip" data-placement="bottom" data-title="Right click on picture and select 'Save As'" data-trigger="hover" data-original-title="" title="">
+  <div style="width: 110px; text-align: center; float:left; height: 600px;" id="thumbnails">
+    <button ng-disabled="!moreBefore()" ng-click="start = start - interval; stop = stop - interval; active = active + 1" class="btn btn-default" style="display:inline-block;"> <i class="fa fa-arrow-up"></i> </button>
+    <div ng-class="active === $index? 'active': ''" class="thumb" ng-click="setActiveImage($index, image);" back-img="{{configs.baseURL + image.viewlink}}" ng-repeat="image in pictures | slice:start:stop">
+    </div>
+    <button ng-disabled="!moreAfter()" ng-click="start = start + interval; stop = stop + interval; active = active  - 1" class="btn btn-default" style="display:inline-block;"> <i class="fa fa-arrow-down" ></i> </button>
+  </div>
+  <div style="width:100%; padding-left:110px;">
+    <!-- <div class="displayImage" back-img="/{{focus.link}}"></div> -->
+    <div id="display" class="displayImage">
+      <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
+      <img id="displayImage" ng-src="{{configs.baseURL + focus.viewlink}}" style="width: {{imgWidth}}px; height: {{imgHeight}}px; display: inline-block; vertical-align: middle; margin-left: -4px;">
+      <div class="photoAlbumData">
+        <button class="btn btn-default printButton pull-right" style="position:relative;" ng-click="print()"><i class="fa fa-print" ></i></button>
+        <button class="btn btn-default printButton pull-right" type="button" style="position:relative; margin-right: 5px;" ng-click="getDownload()"><i class="fa fa-download imitateLink"></i></button>
+        <button class="btn btn-default printButton pull-right" type="button" style="position:relative; margin-right: 5px;" ng-click="openInNewWindow()"><i class="fa  fa-eye imitateLink"></i></button>
+        <button ng-show="isUserAdmin" class="btn btn-default printButton pull-right" type="button" style="position:relative; margin-right: 5px;" ng-click="setProfilePicture()"><i class="fa fa-user imitateLink" ></i></button>
+        <div style="overflow:hidden; white-space: initial;">
+          <h3 style="margin: 5px 0px;">{{focus.title}}</h3>
+          Author: {{focus.author}}
+          <br>
+          Comments: {{focus.comments}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

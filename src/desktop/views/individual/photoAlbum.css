@@ -1,0 +1,66 @@
+.thumb {
+  background-color: lightgray;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border: 1px solid dimgray;
+  margin: 5px;
+  width: 100px;
+  height: 100px;
+  border-radius: 4px;
+}
+
+.thumb.active{
+  outline: none;
+  border-color: #2281CD;
+  box-shadow: 0 0 10px #4986B6;
+}
+
+.displayImage {
+  background-color: lightgray;
+  border: 1px solid dimgray;
+  width: 100%;
+  height: 600px;
+  border-radius: 4px;
+  text-align: center;
+  white-space: nowrap;
+  position: relative;
+}
+
+.photoAlbumData{
+  padding: 5px;
+  width:100%;
+  max-height: 500px;
+  height: auto;
+  position: absolute;
+  bottom:0px;
+  left: 0px;
+  white-space: initial;
+  text-align: left;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.6);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+  color: white;
+}
+
+.printButton{
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 1030;
+  display: block;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  visibility: visible;
+  display: inline-table !important;
+}
+.tooltip-inner {
+  display: inline-block;
+  padding: 3px 5px;
+}

@@ -2,6 +2,13 @@
 @import '../common/styles/typebase.css';
 @import '../common/styles/bootstrap.css';
 
+html, body, #appContainer {
+  height: 100%;
+}
+.ui-view-content {
+  height: calc(100% - 53px);
+}
+
 body {
   color: $text-color;
   background: $background-color;

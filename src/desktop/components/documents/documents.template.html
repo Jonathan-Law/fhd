@@ -1,0 +1,12 @@
+<div style="margin-left: 20px; margin-right: 20px; min-height: 100px; min-width: 100px;">
+  <h2>Documents</h2>
+  <loader trigger="documentsLoader"></loader>
+  <div ng-repeat="doc in documents">
+    {{$index + 1}}.&nbsp;<a href="{{configs.baseURL + doc.link}}" target="_blank">{{doc.title}}</a>
+    <br>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;–&nbsp;{{doc.comments}}.</span>
+    <br>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;–&nbsp;Author: {{doc.author}}&nbsp;—&nbsp;Date Uploaded: {{getDate(doc.date)}}</span>
+    <hr class="style-four">
+  </div>
+</div>

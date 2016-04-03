@@ -1,51 +1,50 @@
 // const _ = require('lodash');
 module.exports = ngModule => {
   /* @nginject */
-  function individual(configs, $http, $q) { /*jshint unused: false*/
+  function individual(configs, $http, $q, localCache) { /*jshint unused: false*/
     const service = {};
 
-    // var minute = 60 * 1000;
-    // var componentservice = {};
+    const minute = 60 * 1000;
+    // const componentservice = {};
 
-    // /***************************************************************
-    // * This function is used to check the localCache for the existance of a result
-    // * object that hasn't yet expired
-    // * params: name -- The unique identifier for the entry in the local cache (usually a string)
-    // * params: expire -- The ammount of time in ms that it will take for the object to expire
-    // * returns: result -- The value of the object if it has not yet expired, and null for
-    // *                    result objects that are no longer valid
-    // ***************************************************************/
-    // var checkExpire = function(name, expire) {
-    //   var result = localCache.get(name, 'object');
-    //   var cacheTime = null;
-    //   if (result) {
-    //     cacheTime = localCache.get(name+'-time', 'date');
-    //     var timeDiff = new Date() - cacheTime;
-    //     if (timeDiff < expire) {
-    //       return result;
-    //     } else {
-    //       return null;
-    //     }
-    //   }
-    //   return null;
-    // };
+    /***************************************************************
+    * This function is used to check the localCache for the existance of a result
+    * object that hasn't yet expired
+    * params: name -- The unique identifier for the entry in the local cache (usually a string)
+    * params: expire -- The ammount of time in ms that it will take for the object to expire
+    * returns: result -- The value of the object if it has not yet expired, and null for
+    *                    result objects that are no longer valid
+    ***************************************************************/
+    function checkExpire(name, expire) {
+      const result = localCache.get(name, 'object');
+      let cacheTime = null;
+      if (result) {
+        cacheTime = localCache.get(name + '-time', 'date');
+        const timeDiff = new Date() - cacheTime;
+        if (timeDiff < expire) {
+          return result;
+        }
+        return null;
+      }
+      return null;
+    }
 
-    // /***************************************************************
-    // * We use this function in conjunction with the checkExpire function.
-    // * Use this function to save the value in the local cache (it will also save
-    // * an expire time that it can use later to check validity of an entry)
-    // * params: name -- The unique identifier for the entry in the local cache (usually a string)
-    // * params: value -- The value of the data that you will be storing
-    // ***************************************************************/
-    // var save = function(name, value) {
-    //   localCache.save(name, value);
-    //   localCache.save(name+'-time', new Date());
-    // };
+    /***************************************************************
+    * We use this function in conjunction with the checkExpire function.
+    * Use this function to save the value in the local cache (it will also save
+    * an expire time that it can use later to check validity of an entry)
+    * params: name -- The unique identifier for the entry in the local cache (usually a string)
+    * params: value -- The value of the data that you will be storing
+    ***************************************************************/
+    function save(name, value) {
+      localCache.save(name, value);
+      localCache.save(name + '-time', new Date());
+    }
 
 
-    // var updateCache = function(name, value) {
+    // function updateChache(name, value) {
     //   save(name, value);
-    // };
+    // }
 
 
     // var handleQueue = function(current) {
@@ -80,62 +79,47 @@ module.exports = ngModule => {
     //   return (typeof result === 'object')? (result.error)? (_.contains(result.error, 'SQLSTATE[42000] [1203]'))? true:false :false : false;
     // }
 
-    // service.getIndData = function (id, override){
-    //   var deferred = $q.defer();
-    //   if (id)
-    //   {
-    //     var url = '/api/v1/individual/' + id;
-    //     var value = null;
-    //     value = checkExpire('indData'+id, minute * 2);
-    //     if (value && !override) {
-    //       deferred.resolve(value);
-    //     } else {
-    //       $http({
-    //         method: 'GET',
-    //         url: url,
-    //       }).success(function(data, status, headers, config) {
-    //         if (data !== "false" && !isMaxError(data)) {
-    //           save('indData'+id, data);
-    //           deferred.resolve(data);
-    //         } else {
-    //           if (isMaxError(data)) {
-    //             var returnCall = angular.copy(utils.httpObj);
-    //             returnCall.method = 'GET';
-    //             returnCall.saveName = 'indData'+id;
-    //             returnCall.url = url;
-    //             handleQueue(returnCall).then(function(result){
-    //               deferred.resolve(result);
-    //             });
-    //           } else {
-    //             deferred.resolve([]);
-    //           }
-    //         }
-    //       });
-    //     }
-    //   } else {
-    //     deferred.reject([]);
-    //   }
-    //   return deferred.promise;
-    // };
+    service.getIndData = (id, override) => {
+      const deferred = $q.defer();
+      if (id) {
+        const url = configs.baseURL + 'api/v1/individual/' + id;
+        let value = null;
+        value = checkExpire('indData' + id, minute * 2);
+        if (value && !override) {
+          deferred.resolve(value);
+        } else {
+          $http({
+            method: 'GET',
+            url,
+          }).success((data) => {
+            save('indData' + id, data);
+            deferred.resolve(data);
+          }).error((data) => {
+            deferred.resolve(data || []);
+          });
+        }
+      } else {
+        deferred.reject([]);
+      }
+      return deferred.promise;
+    };
 
-    // service.getPictures = function(id){
-    //   var deferred = $q.defer();
-    //   if (id) {
-    //     $http({
-    //       method: 'GET',
-    //       url: '/api/v1/individual/pictures/' + id,
-    //     }).success(function(data, status, headers, config) {
-    //       if (data !== "false") {
-    //         deferred.resolve(data);
-    //       } else {
-    //         deferred.resolve(false);
-    //       }
-    //     });
-    //   } else {
-    //     deferred.resolve(false);
-    //   }
-    //   return deferred.promise;
-    // }
+    service.getPictures = (id) => {
+      const deferred = $q.defer();
+      if (id) {
+        $http({
+          method: 'GET',
+          url: configs.baseURL + 'api/v1/individual/pictures/' + id,
+        }).success((data) => {
+          deferred.resolve(data);
+        }).error(() => {
+          deferred.resolve([]);
+        });
+      } else {
+        deferred.resolve(false);
+      }
+      return deferred.promise;
+    };
 
     // service.updateIndData = function (data){
     //   var deferred = $q.defer();
@@ -287,48 +271,34 @@ module.exports = ngModule => {
     //   return deferred.promise;
     // }
 
-    // service.getChildren = function(id, spouseid, override) {
-    //   var deferred = $q.defer();
-    //   if (id && spouseid)
-    //   {
-    //     var url = '/api/v1/individual/children/' + id + '/' + spouseid;
-    //     var value = checkExpire('childrenOf_'+ id + '_' + spouseid, minute * 2);
-    //     if (!value) {
-    //       value = checkExpire('childrenOf_'+ spouseid + '_' + id, minute * 2);
-    //     }
-    //     if (value && !override) {
-    //       deferred.resolve(value);
-    //     } else {
-    //       $http({
-    //         method: 'GET',
-    //         url: url,
-    //       }).success(function(data, status, headers, config) {
-    //         if (data !== "false" && !isMaxError(data)) {
-    //           save('childrenOf_'+ id + '_' + spouseid, data);
-    //           deferred.resolve(data);
-    //         } else {
-    //           if (isMaxError(data)) {
-    //             var returnCall = angular.copy(utils.httpObj);
-    //             returnCall.method = 'GET';
-    //             returnCall.saveName = 'childrenOf_'+ id + '_' + spouseid;
-    //             returnCall.url = url;
-    //             handleQueue(returnCall).then(function(result){
-    //               deferred.resolve(result);
-    //             });
-    //           } else {
-    //             deferred.resolve([]);
-    //           }
-    //         }
-    //       });
-    //     }
-    //   } else {
-    //     deferred.reject([]);
-    //   }
-    //   return deferred.promise;
-    // }
+    service.getChildren = (id, spouseid, override) => {
+      const deferred = $q.defer();
+      if (id && spouseid) {
+        const url = configs.baseURL + 'api/v1/individual/children/' + id + '/' + spouseid;
+        let value = checkExpire('childrenOf_' + id + '_' + spouseid, minute * 2);
+        if (!value) {
+          value = checkExpire('childrenOf_' + spouseid + '_' + id, minute * 2);
+        }
+        if (value && !override) {
+          deferred.resolve(value);
+        } else {
+          $http({
+            method: 'GET',
+            url,
+          }).success((data) => {
+            save('childrenOf_' + id + '_' + spouseid, data);
+            deferred.resolve(data);
+          }).error(() => {
+            deferred.resolve([]);
+          });
+        }
+      } else {
+        deferred.reject([]);
+      }
+      return deferred.promise;
+    };
 
     service.getFamilies = (letter, all) => {
-      // console.log('letter', letter);
       const deferred = $q.defer();
       if (letter) {
         let url = configs.baseURL + '/api/v1/individual/families/' + letter;
@@ -382,42 +352,27 @@ module.exports = ngModule => {
       return deferred.promise;
     };
 
-    // service.getDocuments = function(id, override) {
-    //   var deferred = $q.defer();
-    //   if (id)
-    //   {
-    //     var url = '/api/v1/individual/documents/' + id;
-    //     var value = checkExpire('documentsOf_'+ id, minute * 2);
-    //     if (value && !override) {
-    //       deferred.resolve(value);
-    //     } else {
-    //       $http({
-    //         method: 'GET',
-    //         url: url,
-    //       }).success(function(data, status, headers, config) {
-    //         if (data !== "false" && !isMaxError(data)) {
-    //           save('documentsOf_' + id, data);
-    //           deferred.resolve(data);
-    //         } else {
-    //           if (isMaxError(data)) {
-    //             var returnCall = angular.copy(utils.httpObj);
-    //             returnCall.method = 'GET';
-    //             returnCall.saveName = 'documentsOf_' + id;
-    //             returnCall.url = url;
-    //             handleQueue(returnCall).then(function(result){
-    //               deferred.resolve(result);
-    //             });
-    //           } else {
-    //             deferred.resolve([]);
-    //           }
-    //         }
-    //       });
-    //     }
-    //   } else {
-    //     deferred.reject([]);
-    //   }
-    //   return deferred.promise;
-    // }
+    service.getDocuments = (id, override) => {
+      const deferred = $q.defer();
+      if (id) {
+        const url = configs.baseURL + '/api/v1/individual/documents/' + id;
+        const value = checkExpire('documentsOf_' + id, minute * 2);
+        if (value && !override) {
+          deferred.resolve(value);
+        } else {
+          $http({
+            method: 'GET',
+            url,
+          }).success((data/*, status, headers, config*/) => {
+            save('documentsOf_' + id, data);
+            deferred.resolve(data);
+          });
+        }
+      } else {
+        deferred.reject([]);
+      }
+      return deferred.promise;
+    };
 
     // service.getAllSubmissions = function() {
     //   var deferred = $q.defer();

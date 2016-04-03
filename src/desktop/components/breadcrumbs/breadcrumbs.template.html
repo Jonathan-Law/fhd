@@ -1,0 +1,9 @@
+<div style="text-align: center" ng-show="show">
+  <a  href="javascript:void(0);" ng-click="goToLetter()">Go back to '{{ngModel.letter}}'</a>
+  <span ng-show="ngModel.family">
+    &nbsp;||&nbsp;<a href="javascript:void(0);" style="background: #EEEBE0" ng-click="goToFamily()">Go back to '{{ngModel.family}}'</a>
+  </span>
+  <span ng-show="ngModel.individual">
+  &nbsp;||&nbsp;<a ng-show="ngModel.individual" href="javascript:void(0);" style="background: #EEEBE0" ng-click="goToIndividual()">Go back to '{{ngModel.individual.displayableName}}'</a>
+  </span>
+</div>

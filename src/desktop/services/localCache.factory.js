@@ -4,6 +4,7 @@ module.exports = ngModule => {
   function localCache() {
     //Cross compatibility is provided by the sessionpolyfill.js file.
     const cache = window.sessionStorage;
+    const undefinedStr = 'undefined';
     /**
      * Stores the value into the cache.  Will convert objects to strings.
      * params: key -- a string value
@@ -35,7 +36,11 @@ module.exports = ngModule => {
         throw new Error('Key must be a string');
       }
       if ((typeof type !== 'undefined') && (type === 'object')) {
-        return JSON.parse(cache.getItem(key));
+        const result = cache.getItem(key);
+        if (result !== undefinedStr) {
+          return JSON.parse(cache.getItem(key));
+        }
+        return undefined;
       }
       if ((typeof type !== 'undefined') && (type === 'date')) {
         return new Date(cache.getItem(key));

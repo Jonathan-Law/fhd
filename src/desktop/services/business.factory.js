@@ -1,14 +1,14 @@
 const _ = require('lodash');
 module.exports = ngModule => {
   /* @nginject */
-  function businessFn($http, configs) {
+  function businessFn($http, configs, individual) {
     // 60 seconds until expiration
     // const expireTime = 60 * 1000;
     const business = {};
     // business.user = UserService;
     // business.auth = AuthService;
 
-    // business.individual = IndividualService;
+    business.individual = individual;
     // business.file = FileService;
 
     business.getTypeahead = (val) => {

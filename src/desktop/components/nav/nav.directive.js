@@ -1,10 +1,12 @@
 const $ = require('jquery');
 
 module.exports = ngModule => {
-  ngModule.directive('nav', /* @ngInject */ (navigation, $timeout, $log) => {
-    function linkFn() {
+  ngModule.directive('nav', /* @ngInject */ (navigation, $timeout, $log, business, $state) => {
+    function linkFn(scope) {
       // navigation.logThis();
-
+      scope.getTypeahead = (val) => {
+        return business.getTypeahead(val);
+      };
       // trigger functions for slideout
       function closeMenu() {
         const menuItems = $('.side-wrapper-nav');
@@ -24,6 +26,13 @@ module.exports = ngModule => {
           $(this).addClass('active');
         });
       }
+
+      scope.onSelect = (item/*, model, something*/) => {
+        $state.go('individual', {
+          'id': item.id,
+          'tab': 'default',
+        });
+      };
 
       $timeout(() => {
         $('#sidebar-wrapper').on('mouseleave', () => {
