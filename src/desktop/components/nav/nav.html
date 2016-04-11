@@ -94,21 +94,19 @@
         </ul>
       </div>
     </li>
-    <li ng-show="user" class="sidebar-brand">
-      <hr style="margin-top:-1px; margin-bottom:-1px">
+    <li ng-show="user">
       <a href="#/myfamily" class="imitateLink" id="sidebar-brand-extra">My Family</a>
-      <hr style="margin-top:-1px">
     </li>
-    <li ng-show="user && user.admin" class="sidebar-brand">
+    <li ng-if="user && user.isAdmin" class="sidebar-brand">
       <hr style="margin-top:-1px; margin-bottom:-1px">
-      <a href="javascript:void(0);" ng-click="goTo('admin')" class="imitateLink" id="sidebar-brand-extra">ADMIN</a>
+      <a ui-sref="admin" class="imitateLink" id="sidebar-brand-extra">ADMIN</a>
       <hr style="margin-top:-1px">
     </li>
-    <li ng-show="user && user.admin">
-      <a role="menuitem" tabindex="-1" href="javascript:void(0);" ng-click="goTo('admin/add')">Add Files/Individuals</a>
+    <li ng-if="user && user.isAdmin">
+      <a role="menuitem" tabindex="-1" ui-sref="admin.add">Add Files/Individuals</a>
     </li>
-    <li ng-show="user && user.admin">
-      <a role="menuitem" tabindex="-1" href="javascript:void(0);" ng-click="goTo('admin/edit')">Edit Files/Individuals</a>
+    <li ng-if="user && user.isAdmin">
+      <a role="menuitem" tabindex="-1" ui-sref="admin.edit">Edit Files/Individuals</a>
     </li>
   </ul>
   </nav>

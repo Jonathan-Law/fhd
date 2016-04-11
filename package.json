@@ -86,8 +86,10 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
+    "angular-dropzone": "git+https://github.com/tbenbrahim/angular-dropzone.git",
     "angular-ui-bootstrap": "^1.2.5",
     "babel-polyfill": "^6.3.14",
+    "dropzone": "^4.3.0",
     "jquery": "^2.2.2",
     "ngtouch": "^1.0.1"
   },

@@ -38,6 +38,11 @@ module.exports = ngModule => {
         business.user.isLoggedIn().then((result) => {
           if (typeof result === 'object' && !isNaN(result.id)) {
             scope.user = result;
+            business.user.getIsAdmin(result).then((isAdmin) => {
+              $timeout(() => {
+                scope.user.isAdmin = isAdmin;
+              });
+            });
           } else {
             scope.user = null;
           }
@@ -49,6 +54,13 @@ module.exports = ngModule => {
 
       scope.setUser = (user) => {
         scope.user = user;
+        if (user && scope.user) {
+          business.user.getIsAdmin(user).then((isAdmin) => {
+            $timeout(() => {
+              scope.user.isAdmin = isAdmin;
+            });
+          });
+        }
       };
 
       business.user.subscribeToUserState(scope.setUser);

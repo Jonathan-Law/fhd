@@ -5,6 +5,7 @@ module.exports = angular => {
     require('./nav')(angular).name,
     require('./breadcrumbs')(angular).name,
     require('./documents')(angular).name,
+    require('./dropzone')(angular).name,
     require('./familyTree')(angular).name,
     require('./photoAlbum')(angular).name,
     require('./slidingThumbnail')(angular).name,

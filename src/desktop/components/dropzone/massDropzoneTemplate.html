@@ -1,0 +1,44 @@
+<div style="position:relative; min-width: 840px;">
+  <div class="" style="max-width: 400px; width: 300px; margin-right: -300px; margin-left: 33px; display: inline-block; border: 1px solid lightgray; padding: 10px; border-radius: 4px; margin-bottom: 30px;">
+    <div class="form-group" ng-class="(validName && validName.state)? 'has-feedback ' + validName.state: ''">
+      <label class="control-label" for="newName">New Name (no extension)</label>
+      <input type="text" class="form-control" id="newName" ng-model="data.newName" style="">
+      <span ng-show="validName.state === 'has-success'" class="glyphicon glyphicon-ok form-control-feedback ng-hide"></span>
+      <span ng-show="validName.state === 'has-warning'" class="glyphicon glyphicon-warning-sign form-control-feedback ng-hide"></span>
+      <span ng-show="validName.state === 'has-error'" class="glyphicon glyphicon-remove form-control-feedback ng-hide"></span>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label" for="title">Title</label>
+      <input type="text" class="form-control" id="title" ng-model="data.title" style="">
+    </div>
+
+    <div class="form-group">
+      <label class="control-label" for="author">Author</label>
+      <input type="text" class="form-control" id="author" ng-model="data.author" style="">
+    </div>
+
+    <p><strong>Description</strong></p>
+    <textarea class="boxsizingBorder form-control" ng-model="data.description" style=""></textarea>
+
+    <div class="btn-group" style="width: 100%; margin: 10px 0px 10px 0px" data-toggle="buttons">
+      <button class="btn btn-primary btn-xs active" style="width: 50%" ng-click="type = 'image'; $event.stopPropagation();" ng-class="type === 'image'? 'active':''"> Image </button>
+      <button class="btn btn-primary btn-xs" style="width: 50%" ng-click="type = 'document'; $event.stopPropagation();" ng-class="type === 'document'? 'active':''"> Document </button>
+    </div>
+
+    <p><strong>Person Tags</strong></p>
+    <tags-input min-length="1" class="bootstrap" replace-spaces-with-dashes="false" add-from-autocomplete-only="true" ng-model="data.tags.person"> <auto-complete min-length="1" source="getTagTypeahead('person', $query)"></auto-complete></tags-input>
+
+    <p><strong>Place Tags</strong></p>
+    <tags-input min-length="1" class="bootstrap" replace-spaces-with-dashes="false" add-from-autocomplete-only="true" ng-model="data.tags.place"> <auto-complete min-length="1" source="getTagTypeahead('place', $query)"></auto-complete> </tags-input>
+
+    <p><strong>Other Tags</strong></p>
+    <tags-input min-length="1" class="bootstrap" replace-spaces-with-dashes="false" ng-model="data.tags.other"><auto-complete min-length="1" source="getTagTypeahead('other', $query)"></auto-complete> </tags-input>
+
+    <div style="clear:both"></div>
+    <button class="processMe btn btn-primary pull-left" ng-click="saveAll()"><i class="fa fa-save"></i></button>
+    <button data-dz-remove="" class="btn btn-danger pull-right"><i class="fa fa-times"></i></button>
+  </div>
+
+  <form action="" method="post" enctype="multipart/form-data" onsubmit="return false" style="margin-right: 30px; display: inline-block; width: calc(100% - 390px); float: right;"><div class="dropzone"><div class="dz-default dz-message"><span>Drop files here to upload</span></div></div></form>
+</div>

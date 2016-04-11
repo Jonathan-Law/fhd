@@ -1,0 +1,42 @@
+<div style="position:relative; min-width: 840px;">
+  <div class="" style="max-width: 400px; width: 300px; margin-right: -300px; display: inline-block; border: 1px solid lightgray; padding: 10px; border-radius: 4px; margin-bottom: 30px;">
+    <div class="form-group">
+      <label class="control-label" for="title">Title</label>
+      <input type="text" class="form-control" id="title" ng-model="file.title" style="">
+    </div>
+
+    <div class="form-group">
+      <label class="control-label" for="author">Author</label>
+      <input type="text" class="form-control" id="author" ng-model="file.author" style="">
+    </div>
+
+    <p><strong>Description</strong></p>
+    <textarea class="boxsizingBorder form-control" ng-model="file.comments" style=""></textarea>
+
+    <div class="btn-group" style="width: 100%; margin: 10px 0px 10px 0px" data-toggle="buttons">
+      <button class="btn btn-primary btn-xs active" style="width: 50%" ng-click="file.type = 'image'; $event.stopPropagation();" ng-class="file.type === 'image'? 'active':''"> Image </button>
+      <button class="btn btn-primary btn-xs" style="width: 50%" ng-click="file.type = 'document'; $event.stopPropagation();" ng-class="file.type === 'document'? 'active':''"> Document </button>
+    </div>
+
+    <p><strong>Person Tags</strong></p>
+    <tags-input min-length="1" class="bootstrap" replace-spaces-with-dashes="false" add-from-autocomplete-only="true" ng-model="file.tags.person"> <auto-complete min-length="1" source="getTagTypeahead('person', $query)"></auto-complete></tags-input>
+
+    <p><strong>Place Tags</strong></p>
+    <tags-input min-length="1" class="bootstrap" replace-spaces-with-dashes="false" add-from-autocomplete-only="true" ng-model="file.tags.place"> <auto-complete min-length="1" source="getTagTypeahead('place', $query)"></auto-complete> </tags-input>
+
+    <p><strong>Other Tags</strong></p>
+    <tags-input min-length="1" class="bootstrap" replace-spaces-with-dashes="false" ng-model="file.tags.other"><auto-complete min-length="1" source="getTagTypeahead('other', $query)"></auto-complete> </tags-input>
+
+    <div style="clear:both"></div>
+    <div style="text-align: center">
+
+      <button class="btn btn-warning" ng-click="reset()" style="display:inline-block; margin: 0 auto;" title="Reset"><i class="fa fa-undo"></i></button>
+      <button class="btn btn-primary pull-left" ng-click="save()" title="Save"><i class="fa fa-save"></i></button>
+      <button class="btn btn-danger pull-right" ng-click="cancel()" title="Cancel"><i class="fa fa-times"></i></button>
+    </div>
+  </div>
+
+  <img ng-src="/{{file.viewlink}}" alt="" style="width: 540px; height: auto; float:right;">
+</div>
+
+<!-- {{file}} -->

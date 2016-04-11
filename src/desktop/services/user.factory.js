@@ -93,7 +93,12 @@ module.exports = ngModule => {
         });
     };
 
-    user.getIsAdmin = () => {
+    user.getIsAdmin = (userInstance) => {
+      if (userInstance && userInstance.rights && (userInstance.rights === 'super' || userInstance.rights === 'admin')) {
+        return new Promise((resolve) => {
+          resolve(true);
+        });
+      }
       return user.isLoggedIn().then((result) => {
         if (result && result.rights) {
           if (result.rights === 'super' || result.rights === 'admin') {
@@ -106,7 +111,24 @@ module.exports = ngModule => {
       });
     };
 
-    user.getIsValidated = () => {
+    user.getIsValidated = (userInstance) => {
+      if (userInstance && userInstance.rights) {
+        const promise = new Promise((resolve) => {
+          switch (userInstance.rights) {
+            case 'super':
+            case 'admin':
+            case 'high':
+            case 'medium':
+              resolve(true);
+              break;
+            default:
+              resolve(false);
+              break;
+          }
+        });
+        return promise;
+      }
+
       return user.isLoggedIn().then((result) => {
         if (result && result.rights) {
           switch (result.rights) {
