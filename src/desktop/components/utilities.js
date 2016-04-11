@@ -1,5 +1,5 @@
 module.exports = angular => {
-  const ngModule = angular.module('da.desktop.components', []);
+  const ngModule = angular.module('da.desktop.utilities', []);
 
 
   ngModule.directive('backImg', () => {
@@ -17,6 +17,20 @@ module.exports = angular => {
   ngModule.filter('slice', () => {
     return (arr, start, end) => {
       return (arr || []).slice(start, end);
+    };
+  });
+
+
+  ngModule.directive('enterEvent', () => {
+    return (scope, element, attrs) => {
+      element.bind('keydown keypress', (event) => {
+        if (event.which === 13) {
+          scope.$apply(() => {
+            scope.$eval(attrs.enterEvent, { event });
+          });
+          event.preventDefault();
+        }
+      });
     };
   });
 

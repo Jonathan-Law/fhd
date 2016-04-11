@@ -1,120 +1,114 @@
 <div class="navbarSpacer"></div>
 <nav class="navbar navbar-default" role="navigation" id="globalNav">
-  <div class="container-fluid"  id="globalNavDiv">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <form class="navbar-form navbar-left navLeft" role="search">
-        <div class="form-group">
-          <button class="btn btn-default" id="menu-toggle"><i class="fa fa-bars"></i> Menu</button>
-        </div>
-      </form>
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="navbar-header">
-        <button type="button" class="btn btn-default" data-toggle="collapse" id="navRightButton" data-target="#bs-example-navbar-collapse-1">
-          <span class="sr-only">Toggle navigation</span>
-          <!-- <i class="fa fa-user"></i> -->
-          <i class="glyphicon glyphicon-user"></i>
-        </button>
-        <div class="navbarCenter">
-          <a class="navbar-brand" href="#">
-            <span class="fullWidth"><img id="logo" src="http://familyhistorydatabase.org/images/title.png" style="width: 215px; margin-right: -15px; margin-top: -5px;" />
+  <div class="container-fluid" id="globalNavDiv">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <form class="navbar-form navbar-left navLeft" role="search">
+      <div class="form-group">
+        <button class="btn btn-default" id="menu-toggle"><i class="fa fa-bars"></i> Menu</button>
+      </div>
+    </form>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="navbar-header">
+      <button type="button" class="btn btn-default" data-toggle="collapse" id="navRightButton" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <!-- <i class="fa fa-user"></i> -->
+        <i class="glyphicon glyphicon-user"></i>
+      </button>
+      <div class="navbarCenter">
+        <a class="navbar-brand" href="#">
+          <span class="fullWidth"><img id="logo" src="http://familyhistorydatabase.org/images/title.png" style="width: 215px; margin-right: -15px; margin-top: -5px;" />
             </span>
-<!--             <span class="notFullWidth">
+          <!--             <span class="notFullWidth">
               F.H.D.
             </span> -->
-          </a>
-          <div class="almostFullWidth">
-            <div class="input-group" id="navSearch">
-              <input type="text" ng-model="searchKey" typeahead-on-select='onSelect($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Search">
-              <span class="input-group-btn">
+        </a>
+        <div class="almostFullWidth">
+          <div class="input-group" id="navSearch">
+            <input type="text" ng-model="searchKey" typeahead-on-select='onSelect($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Search">
+            <span class="input-group-btn">
                 <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
               </span>
-            </div><!-- /input-group -->
           </div>
+          <!-- /input-group -->
         </div>
       </div>
-      <div class="collapse navbar-collapse navRight" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-right">
-          <!-- <li><a href="#">Link</a></li> -->
-          <li ng-show="!loggedIn">
-            <a href="javascript:void(0);" ng-click="login()">Login/Register</a>
-          </li>
-          <li ng-show="loggedIn" class="dropdown">
-            <a href="#" dropdowntoggle="username" id="navUserName">{{getUserName()}}&nbsp;<b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li ng-show="user"><a href="#/myfamily">My Family</a></li>
-              <!-- <li><a href="#">Another action</a></li> -->
-              <!-- <li><a href="#">Something else here</a></li> -->
-              <!-- <li class="divider"></li> -->
-              <li ng-show="user">
-                <a href="javascript:void(0);" ng-click="logout()">logout</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div><!-- /.navbar-collapse -->
-
-    </div><!-- /.container-fluid -->
-  </nav>
-
-
-
-
-
-
-  <!-- Side Menu Pop out version -->
-
-  <div id="sidebar-wrapper-background" class="side-wrapper-nav">&nbsp;</div>
-  <div id="sidebar-wrapper" class="side-wrapper-nav">
-    <ul class="sidebar-nav">
-      <!-- <a id="menu-close" href="javascript:void(0);" class="btn btn-default btn-lg pull-right toggle"><i class="fa fa-times"></i></a> -->
-      <li class="sidebar-brand"><a class="imitateLink" id="sidebar-brand" ui-sref="main" >FamilyHistoryDatabase</a>
-        <hr style="margin-top:-1px">
-      </li>
-      <li class="notAlmostFullWidth">
-        <div class="input-group" id="sideSearch">
-          <input id="sideNavSearch" type="text" ng-model="searchKey" typeahead-on-select='onSelect($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Search">
-          <span class="input-group-btn">
+    </div>
+    <div class="collapse navbar-collapse navRight" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <!-- <li><a href="#">Link</a></li> -->
+        <li ng-show="!user">
+          <auth></auth>
+        </li>
+        <li ng-show="user" class="dropdown">
+          <button style="line-height: 48px; padding: 0px 10px; margin: 0px;" type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{user.displayableName}}&nbsp;<span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-show="user"><a ui-sref="myFamily({})">My Family</a></li>
+            <li ng-show="user">
+              <a href="javascript:void(0);" ng-click="logout()">logout</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <!-- /.navbar-collapse -->
+  </div>
+  <!-- /.container-fluid -->
+</nav>
+<!-- Side Menu Pop out version -->
+<div id="sidebar-wrapper-background" class="side-wrapper-nav">&nbsp;</div>
+<div id="sidebar-wrapper" class="side-wrapper-nav">
+  <ul class="sidebar-nav">
+    <!-- <a id="menu-close" href="javascript:void(0);" class="btn btn-default btn-lg pull-right toggle"><i class="fa fa-times"></i></a> -->
+    <li class="sidebar-brand"><a class="imitateLink" id="sidebar-brand" ui-sref="main">FamilyHistoryDatabase</a>
+      <hr style="margin-top:-1px">
+    </li>
+    <li class="notAlmostFullWidth">
+      <div class="input-group" id="sideSearch">
+        <input id="sideNavSearch" type="text" ng-model="searchKey" typeahead-on-select='onSelect($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Search">
+        <span class="input-group-btn">
             <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
           </span>
-        </div><!-- /input-group -->
-      </li>
-      <li><a ui-sref="families({letter: 'a'})">People</a>
-      </li>
-      <li><a style="color: #ccc" href="javascript:void(0);" ng-disabled="true" class="imitateLink">Places (coming soon)</a>
-      </li>
-      <li><a style="color: #ccc" href="javascript:void(0);" ng-disabled="true" class="imitateLink">Cemeteries (coming soon)</a>
-      </li>
-      <li><a style="color: #ccc" href="javascript:void(0);" ng-disabled="true" class="imitateLink">Mayflower (coming soon)</a>
-      </li>
-      <li>
-        <div class="dropdown">
-          <a style="color: #ccc" href="#" dropdowntoggle="hiddenMenu" id="dropdownMenu1" >
+      </div>
+      <!-- /input-group -->
+    </li>
+    <li><a ui-sref="families({letter: 'a'})">People</a>
+    </li>
+    <li><a style="color: #ccc" href="javascript:void(0);" ng-disabled="true" class="imitateLink">Places (coming soon)</a>
+    </li>
+    <li><a style="color: #ccc" href="javascript:void(0);" ng-disabled="true" class="imitateLink">Cemeteries (coming soon)</a>
+    </li>
+    <li><a style="color: #ccc" href="javascript:void(0);" ng-disabled="true" class="imitateLink">Mayflower (coming soon)</a>
+    </li>
+    <li>
+      <div class="dropdown">
+        <a style="color: #ccc" href="#" dropdowntoggle="hiddenMenu" id="dropdownMenu1">
             About (coming soon)
             <span class="caret"></span>
           </a>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li role="presentation"><a style="color: #ccc" href="javascript:void(0);" ng-disabled="true" role="menuitem" tabindex="-1">Contact Info</a></li>
-            <!-- <li role="presentation"><a style="color: #ccc" role="menuitem" tabindex="-1" href="#/contact">Contact Info</a></li> -->
-            <li role="presentation"><a style="color: #ccc" href="javascript:void(0);" ng-disabled="true" role="menuitem" tabindex="-1">More Info</a></li>
-            <!-- <li role="presentation"><a style="color: #ccc" role="menuitem" tabindex="-1" href="#/about">More Info</a></li> -->
-          </ul>
-        </div>
-      </li>
-      <li ng-show="user" class="sidebar-brand">
-        <hr style="margin-top:-1px; margin-bottom:-1px">
-        <a href="#/myfamily" class="imitateLink" id="sidebar-brand-extra" >My Family</a>
-        <hr style="margin-top:-1px">
-      </li>
-      <li ng-show="user && user.admin" class="sidebar-brand">
-        <hr style="margin-top:-1px; margin-bottom:-1px">
-        <a href="javascript:void(0);" ng-click="goTo('admin')" class="imitateLink" id="sidebar-brand-extra" >ADMIN</a>
-        <hr style="margin-top:-1px">
-      </li>
-      <li ng-show="user && user.admin">
-        <a role="menuitem" tabindex="-1" href="javascript:void(0);" ng-click="goTo('admin/add')">Add Files/Individuals</a>
-      </li>
-      <li ng-show="user && user.admin">
-        <a role="menuitem" tabindex="-1" href="javascript:void(0);" ng-click="goTo('admin/edit')">Edit Files/Individuals</a>
-      </li>
-    </ul>
-</nav>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+          <li role="presentation"><a style="color: #ccc" href="javascript:void(0);" ng-disabled="true" role="menuitem" tabindex="-1">Contact Info</a></li>
+          <!-- <li role="presentation"><a style="color: #ccc" role="menuitem" tabindex="-1" href="#/contact">Contact Info</a></li> -->
+          <li role="presentation"><a style="color: #ccc" href="javascript:void(0);" ng-disabled="true" role="menuitem" tabindex="-1">More Info</a></li>
+          <!-- <li role="presentation"><a style="color: #ccc" role="menuitem" tabindex="-1" href="#/about">More Info</a></li> -->
+        </ul>
+      </div>
+    </li>
+    <li ng-show="user" class="sidebar-brand">
+      <hr style="margin-top:-1px; margin-bottom:-1px">
+      <a href="#/myfamily" class="imitateLink" id="sidebar-brand-extra">My Family</a>
+      <hr style="margin-top:-1px">
+    </li>
+    <li ng-show="user && user.admin" class="sidebar-brand">
+      <hr style="margin-top:-1px; margin-bottom:-1px">
+      <a href="javascript:void(0);" ng-click="goTo('admin')" class="imitateLink" id="sidebar-brand-extra">ADMIN</a>
+      <hr style="margin-top:-1px">
+    </li>
+    <li ng-show="user && user.admin">
+      <a role="menuitem" tabindex="-1" href="javascript:void(0);" ng-click="goTo('admin/add')">Add Files/Individuals</a>
+    </li>
+    <li ng-show="user && user.admin">
+      <a role="menuitem" tabindex="-1" href="javascript:void(0);" ng-click="goTo('admin/edit')">Edit Files/Individuals</a>
+    </li>
+  </ul>
+  </nav>

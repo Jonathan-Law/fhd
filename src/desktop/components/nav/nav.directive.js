@@ -34,6 +34,33 @@ module.exports = ngModule => {
         });
       };
 
+      scope.isUserLoggedIn = () => {
+        business.user.isLoggedIn().then((result) => {
+          if (typeof result === 'object' && !isNaN(result.id)) {
+            scope.user = result;
+          } else {
+            scope.user = null;
+          }
+        }, () => {
+          scope.user = null;
+          // not logged in
+        });
+      };
+
+      scope.setUser = (user) => {
+        scope.user = user;
+      };
+
+      business.user.subscribeToUserState(scope.setUser);
+
+      scope.isUserLoggedIn();
+
+      scope.logout = () => {
+        business.user.logout().then(() => {
+          scope.user = null;
+        });
+      };
+
       $timeout(() => {
         $('#sidebar-wrapper').on('mouseleave', () => {
           closeMenu();
@@ -49,6 +76,8 @@ module.exports = ngModule => {
             e.stopPropagation();
           }
         });
+
+        scope.isUserLoggedIn();
       });
     }
 

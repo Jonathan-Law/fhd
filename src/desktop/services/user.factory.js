@@ -1,191 +1,199 @@
-// const _ = require('lodash');
+// const moment = require('moment');
 module.exports = ngModule => {
   /* @nginject */
-  function userService() { /*jshint unused: false*/
+  function userService(configs, $http, $q) { /*jshint unused: false*/
+    const userStateWatches = [];
+
     const user = {};
-    // user.isLoggedIn = false;
-    // user.getUserInfo = () => {
-    //   var deferred = $q.defer();
-    //   $http({
-    //     method: 'GET',
-    //     url: '/api/v1/user/'
-    //   }).success((data, status, headers, config) => {
-    //     // console.log('we got user info', data);
 
-    //     if (data) {
-    //       user.userInfo = data;
-    //       deferred.resolve(data);
-    //     } else {
-    //       deferred.resolve('Grabbing user info failed');
-    //     }
-    //   }).error(() => {
-    //     deferred.resolve('Grabbing user info failed');
-    //   });
-    //   return deferred.promise;
-    // };
+    user.subscribeToUserState = (callback) => {
+      userStateWatches.push(callback);
+    };
 
-    // user.getUserInfoId = (id) => {
-    //   var deferred = $q.defer();
-    //   $http({
-    //     method: 'GET',
-    //     url: '/api/v1/user/getUserInfo/' + id
-    //   }).success((data, status, headers, config) => {
-    //     if (data) {
-    //       deferred.resolve(data);
-    //     }
-    //   }).error(() => {
-    //     deferred.resolve(false);
-    //   });
-    //   return deferred.promise;
-    // };
+    function handleWatches(state) {
+      userStateWatches.forEach((watch) => {
+        watch(state);
+      });
+    }
 
+    // variables to cache data
+    const results = {};
+    const inProgress = {};
 
-    // user.isLoggedInStill = () => {
-    //   var deferred = $q.defer();
-    //   $http.get('/api/v1/user/isLoggedIn')
-    //     .success((data, status, headers, config) => {
-    //       if (!data || data === 'false') {
-    //         deferred.resolve(false);
-    //       } else {
-    //         user.isLoggedIn = true;
-    //         $rootScope.$emit('$triggerEvent', '$LOGGEDIN', data);
-    //         deferred.resolve(data);
-    //       }
-    //     }).error(() => {
-    //       deferred.resolve(false);
-    //     })
-    //   return deferred.promise;
+    // functions to debounce data calls
+    // function checkComplete(key) {
+    //   if (results[key] !== undefined) {
+    //     return results[key];
+    //   }
+    //   return null;
     // }
 
-    // user.getIsAdmin = () => {
-    //   var deferred = $q.defer();
-    //   // console.log('user service', user);
+    function addToInProgress(key, promise) {
+      if (inProgress[key] && inProgress[key].constructor === Array) {
+        inProgress[key].push(promise);
+      } else {
+        inProgress[key] = [promise];
+      }
+    }
 
-    //   if (user) {
-    //     var isAdmin = false;
-    //     if (!user.userInfo) {
-    //       user.getUserInfo().then((data) => {
-    //         if (data) {
-    //           deferred.resolve(true);
-    //         } else {
-    //           deferred.resolve(false);
-    //         }
-    //       });
-    //     } else if (user.userInfo && user.userInfo.rights) {
-    //       switch (user.userInfo.rights) {
-    //         case 'super':
-    //         case 'admin':
-    //           isAdmin = true;
-    //           break;
-    //         default:
-    //           isAdmin = false;
-    //           break;
-    //       }
-    //       deferred.resolve(isAdmin);
-    //     }
-    //     deferred.resolve(false);
-    //   }
-    //   deferred.resolve(false);
-    //   return deferred.promise;
-    // }
+    function resolveKey(key, result) {
+      results[key] = result;
+      while (inProgress[key].length) {
+        inProgress[key].pop().resolve(result);
+      }
+    }
 
-    // user.getIsValidated = () => {
-    //   if (!user.isLoggedIn) {
-    //     return false;
-    //   }
-    //   var isValid = false;
-    //   switch (user.userInfo.rights) {
-    //     case 'super':
-    //     case 'admin':
-    //     case 'high':
-    //     case 'medium':
-    //       isAdmin = true;
-    //       break;
-    //     default:
-    //       isAdmin = false;
-    //       break;
-    //   }
-    //   return isAdmin;
-    // }
+    function rejectKey(key, result) {
+      results[key] = result;
+      while (inProgress[key].length) {
+        inProgress[key].pop().reject(result);
+      }
+    }
 
-    // user.login = (username, password) => {
-    //   var deferred = $q.defer();
-    //   if (!username || !password) {
-    //     deferred.resolve(false);
-    //     console.error('You must include a username and password to login')
-    //   } else {
-    //     $http({
-    //       method: 'POST',
-    //       url: '/api/v1/user/login',
-    //       data: {
-    //         username: username,
-    //         password: password
-    //       },
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       }
-    //     }).success((data, status, headers, config) => {
-    //       if (data !== "false") {
-    //         user.getUserInfo();
-    //         user.isLoggedIn = true;
-    //         deferred.resolve(data);
-    //       } else {
-    //         deferred.resolve(false);
-    //       }
-    //     });
-    //   }
-    //   return deferred.promise;
-    // };
-
-    // user.register = (username, password, email, first, last, gender) => {
-    //   var deferred = $q.defer();
-    //   if (!username || !password) {
-    //     deferred.resolve(false);
-    //     console.error('You must include a username and password to register')
-    //   } else {
-    //     $http({
-    //       method: 'POST',
-    //       url: '/api/v1/user/register',
-    //       data: {
-    //         username: username ? username : null,
-    //         password: password ? password : null,
-    //         email: email ? email : null,
-    //         first: first ? first : null,
-    //         last: last ? last : null,
-    //         gender: gender ? gender : null
-    //       },
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       }
-    //     }).success((data, status, headers, config) => {
-    //       if (data !== "false") {
-    //         user.isLoggedIn = true;
-    //         deferred.resolve(data);
-    //       } else {
-    //         deferred.resolve(false);
-    //       }
-    //     });
-    //   }
-    //   return deferred.promise;
-    // };
-
-    // user.checkLoggedIn = () => {
-    //   return user.isLoggedInStill();
-    // };
+    user.getUserInfoId = (id) => {
+      const deferred = $q.defer();
+      $http({
+        method: 'GET',
+        url: configs.baseURL + '/api/v1/user/getUserInfo/' + id
+      }).success((data) => {
+        if (data) {
+          deferred.resolve(data);
+        } else {
+          deferred.reject('Undefined user');
+        }
+      }).error(() => {
+        deferred.resolve(false);
+      });
+      return deferred.promise;
+    };
 
 
-    // user.logout = () => {
-    //   $http({
-    //     method: 'POST',
-    //     url: '/api/v1/user/logout',
-    //     data: {},
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     }
-    //   }).success(() => (data, status, headers, config) {
-    //     user.isLoggedIn = false;
-    //   });
-    // };
+    user.isLoggedIn = (/*override*/) => {
+      // create a promise for if we don't have the data
+      const promise = new Promise((resolve, reject) => {
+        addToInProgress('isLoggedIn', {
+          resolve, reject
+        });
+      });
+
+      // and return it if we're already pulling for it
+      if (inProgress.isLoggedIn.length > 1) {
+        return promise;
+      }
+
+      return $http.get(configs.baseURL + 'api/v1/user/isLoggedIn')
+        .success((data) => {
+          handleWatches(data);
+          resolveKey('isLoggedIn', data);
+          return promise;
+        }).error(() => {
+          rejectKey('isLoggedIn', null);
+          handleWatches(null);
+          return promise;
+        });
+    };
+
+    user.getIsAdmin = () => {
+      return user.isLoggedIn().then((result) => {
+        if (result && result.rights) {
+          if (result.rights === 'super' || result.rights === 'admin') {
+            return true;
+          }
+        }
+        return false;
+      }, () => {
+        return false;
+      });
+    };
+
+    user.getIsValidated = () => {
+      return user.isLoggedIn().then((result) => {
+        if (result && result.rights) {
+          switch (result.rights) {
+            case 'super':
+            case 'admin':
+            case 'high':
+            case 'medium':
+              return true;
+            default:
+              return false;
+          }
+        }
+        return false;
+      }, () => {
+        return false;
+      });
+    };
+
+    setTimeout(() => {
+      user.getIsValidated();
+    }, 1000);
+
+    user.login = (username, password) => {
+      const deferred = $q.defer();
+      if (!username || !password) {
+        deferred.resolve(false);
+        console.error('You must include a username and password to login');
+      } else {
+        $http({
+          method: 'POST',
+          url: configs.baseURL + 'api/v1/user/login',
+          data: {
+            username,
+            password,
+          }
+        }).success((data) => {
+          handleWatches(data);
+          deferred.resolve(data);
+        }).error((data) => {
+          handleWatches(data);
+          deferred.reject(data);
+        });
+      }
+      return deferred.promise;
+    };
+
+    user.register = (username, password, email, first, last, gender) => {
+      const deferred = $q.defer();
+      if (!username || !password) {
+        deferred.resolve(false);
+        console.error('You must include a username and password to register');
+      } else {
+        $http({
+          method: 'POST',
+          url: configs.baseURL + '/api/v1/user/register',
+          data: {
+            username: username ? username : null,
+            password: password ? password : null,
+            email: email ? email : null,
+            first: first ? first : null,
+            last: last ? last : null,
+            gender: gender ? gender : null
+          }
+        }).success((data) => {
+          if (data !== 'false') {
+            handleWatches(data);
+            deferred.resolve(data);
+          } else {
+            handleWatches(null);
+            deferred.resolve(false);
+          }
+        }).error(() => {
+          handleWatches(null);
+          deferred.reject(false);
+        });
+      }
+      return deferred.promise;
+    };
+
+    user.logout = () => {
+      return $http({
+        method: 'POST',
+        url: configs.baseURL + '/api/v1/user/logout',
+      }).success(() => {
+        return user.isLoggedIn();
+      });
+    };
 
     return user;
   }

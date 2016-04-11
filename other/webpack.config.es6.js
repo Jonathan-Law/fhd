@@ -1,10 +1,3 @@
-/**
- * BUILD CONFIGS -  SET THESE BASED ON VIEWS YOU PLAN TO USE.
- * These configs can be changed at anytime.
- */
-const INCLUDE_DESKTOP_VIEW = true;
-const INCLUDE_MOBILE_VIEW = true;
-
 /*
  * ***********************************************************
  * WARNING: DO NOT EDIT FILE BELOW THIS POINT!
@@ -205,77 +198,20 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 
-/**
- * Logic to change build based on configs at top of file.
- */
-const INCLUDE_MULTIPLE_VIEWS = INCLUDE_DESKTOP_VIEW && INCLUDE_MOBILE_VIEW;
-if (!INCLUDE_DESKTOP_VIEW && !INCLUDE_MOBILE_VIEW) {
-  throw new Error('You must include at least one view!');
-}
-/**
- * Setup the mobile view if INCLUDE_MOBILE_VIEW is set to true
- */
-if (INCLUDE_DESKTOP_VIEW) {
-  config.entry.desktop = './desktop/index.js';
-  commonChunks.push('desktop');
-  if (!ON_TEST) {
-    config.plugins.push(
-      new HtmlWebpackPlugin({
-        title: 'Desktop',
-        dev: process.env.NODE_ENV === 'development' || !process.env.NODE_ENV,
-        pkg: pkg,
-        template: 'src/desktop/desktop.php', // Load a custom template
-        inject: 'body', // Inject all scripts into the body
-        filename: INCLUDE_MULTIPLE_VIEWS ? 'desktop/index.html' : 'index.html',
-        chunks: ['commons', 'common', 'desktop']
-      })
-    );
-  }
-}
-/**
- * Setup the mobile view if INCLUDE_MOBILE_VIEW is set to true
- */
-if (INCLUDE_MOBILE_VIEW) {
-  commonChunks.push('mobile');
-  config.entry.mobile = './mobile/index.js';
-  if (!ON_TEST) {
-    config.plugins.push(
-      new HtmlWebpackPlugin({
-        title: 'Mobile',
-        dev: process.env.NODE_ENV === 'development' || !process.env.NODE_ENV,
-        pkg: pkg,
-        template: 'src/mobile/mobile.html', // Load a custom template
-        inject: 'body', // Inject all scripts into the body
-        filename: INCLUDE_MULTIPLE_VIEWS ? 'mobile/index.html' : 'index.html',
-        chunks: ['commons', 'common', 'mobile']
-      })
-    );
-  }
-}
-/**
- * add swither and lab view when app has multiple views.
- * INCLUDE_MULTIPLE_VIEWS is true when INCLUDE_DESKTOP_VIEW and INCLUDE_MOBILE_VIEW views are both true
- */
-if (INCLUDE_MULTIPLE_VIEWS) {
-  config.entry.switcher = './switcher.js';
-  if (!ON_TEST) {
-    config.plugins.push(
-      new HtmlWebpackPlugin({
-        title: 'Switcher',
-        dev: process.env.NODE_ENV === 'development' || !process.env.NODE_ENV,
-        pkg: pkg,
-        chunks: ['commons', 'switcher']
-      }),
-      new HtmlWebpackPlugin({
-        title: 'Lab',
-        dev: process.env.NODE_ENV === 'development' || !process.env.NODE_ENV,
-        pkg: pkg,
-        template: 'lab.html',
-        filename: 'lab.html',
-        chunks: []
-      })
-    );
-  }
+config.entry.desktop = './desktop/index.js';
+commonChunks.push('desktop');
+if (!ON_TEST) {
+  config.plugins.push(
+    new HtmlWebpackPlugin({
+      title: 'Desktop',
+      dev: process.env.NODE_ENV === 'development' || !process.env.NODE_ENV,
+      pkg: pkg,
+      template: 'src/desktop/desktop.php', // Load a custom template
+      inject: 'body', // Inject all scripts into the body
+      filename: process.env.NODE_ENV === 'development'? 'index.html': 'index.php',
+      chunks: ['commons', 'common', 'desktop']
+    })
+  );
 }
 
 module.exports = config;

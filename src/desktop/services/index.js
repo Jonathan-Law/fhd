@@ -5,7 +5,6 @@ module.exports = angular => {
 
   require('./business.factory.js')(ngModule);
   require('./daEvents.factory.js')(ngModule);
-  require('./auth.factory.js')(ngModule);
   require('./file.factory.js')(ngModule);
   require('./individual.factory.js')(ngModule);
   require('./localCache.factory.js')(ngModule);

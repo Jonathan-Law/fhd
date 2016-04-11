@@ -15,7 +15,8 @@ angular
   .constant('$', require('jquery'))
   .constant('d3', require('d3'))
   .constant('_', require('lodash'))
-  .config($urlRouterProvider => {
+  .config(($urlRouterProvider, $httpProvider) => {
+    $httpProvider.defaults.withCredentials = true;
     $urlRouterProvider.otherwise('/');
   })
   .run(/* @ngInject */($rootScope, business) => {
