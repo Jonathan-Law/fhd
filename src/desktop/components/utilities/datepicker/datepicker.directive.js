@@ -8,7 +8,6 @@ module.exports = ngModule => {
       $timeout(() => {
         scope.confident = scope.confident === undefined ? true : +scope.confident;
       });
-      console.log('scope.confident', scope.confident);
       scope.today = () => {
         scope.dt = new Date();
       };

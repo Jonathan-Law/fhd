@@ -18,7 +18,7 @@
       Upload a profile picture...
     </div>
   </div>
-  <hr>
+  <hr style="margin: 10px 0px;">
   <form name="addAPersonForm" role="form" ng-submit="savePerson()" class="">
     <div class="form-group row">
       <div class="col-sm-12 parent">
@@ -28,7 +28,7 @@
         <input style="width: auto; display: inline-block" class="form-control" ng-model="result.lastName" id="Name" placeholder="Last Name" required/>
       </div>
       <br style="clear:both">
-      <hr>
+      <hr style="margin: 10px 0px;">
       <div class="col-sm-6 parent">
         <label for="Birth">Birth: </label>
         <br>
@@ -44,7 +44,7 @@
         <placepicker place="result.death.deathPlace"></placepicker>
       </div>
       <br style="clear:both">
-      <hr>
+      <hr style="margin: 10px 0px;">
       <div class="col-sm-6 parent">
         <label for="Burial">Burial: </label>
         <br>
@@ -71,7 +71,7 @@
         <input type="text" ng-model="result.relationship" class="form-control" id="relationship" placeholder="Relationship To Michele or Marvin Law" />
       </div>
       <br style="clear:both">
-      <hr>
+      <hr style="margin: 10px 0px;">
       <div class="col-sm-6 parent">
         <label for="Parents">Parents:</label>
         <br>
@@ -85,6 +85,8 @@
         </div>
         <input type="text" id="parents" ng-model="parents" typeahead-on-select='onSelectParent($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Parent">
       </div>
+      <br style="clear:both">
+      <hr style="margin: 10px 0px;">
       <div class="col-sm-6 parent">
         <label for="Spouse">Spouse:</label>
         <br>
