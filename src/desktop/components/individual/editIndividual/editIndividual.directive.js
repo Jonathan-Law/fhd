@@ -215,6 +215,7 @@ module.exports = ngModule => {
         business.individual.activateSubmission(id).then(() => {
           $timeout(() => {
             setupEdit(id);
+            scope.callback();
           });
         });
       };
@@ -223,6 +224,7 @@ module.exports = ngModule => {
         business.individual.deactivateSubmission(id).then(() => {
           $timeout(() => {
             setupEdit(id);
+            scope.callback();
           });
         });
       };
@@ -233,6 +235,7 @@ module.exports = ngModule => {
           business.individual.deleteInd(id).then((result) => {
             if (result) {
               setupEdit(null);
+              scope.callback();
             }
           });
         }
@@ -244,6 +247,7 @@ module.exports = ngModule => {
           if (result && result.id) {
             // show success screen or something... IT WORKED
             setupEdit(result.id);
+            scope.callback();
           }
         });
       };
@@ -253,7 +257,8 @@ module.exports = ngModule => {
       template: require('./editIndividual.template.html'),
       restrict: 'E',
       scope: {
-        personId: '=?'
+        personId: '=?',
+        callback: '&?'
       },
       link: linkFn,
     };

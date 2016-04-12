@@ -11,14 +11,14 @@
         <i class="fa fa-times"></i>
       </label>
     </div>
-    <div style="height: calc(100% - 68px); overflow: auto;">
+    <div style="height: calc(100% - 183px); overflow: auto;">
       <div class="individual" ng-class="{'bg-info': selection.id === thing.id}" ng-repeat="thing in collection" ng-click="makeSelection(thing)">
         {{thing.displayableName + ' (' + thing.yearBorn + ')'}}
       </div>
     </div>
   </div>
   <div class="editColumn">
-    <edit-individual person-id="selection.id"></edit-individual>
+    <edit-individual callback="getNewList()" person-id="selection.id"></edit-individual>
     <!-- {{selection}} -->
   </div>
 </div>

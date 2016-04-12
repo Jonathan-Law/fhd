@@ -12,10 +12,11 @@
       <button class="btn btn-danger pull-right" ng-show="result && result.id && isAdmin" ng-click="deleteIndividual(result.id)">Delete Individual</button>
     </div>
     <div class="col-sm-12 initial" ng-show="result.profilePicture && result.profilePicture.viewlink">
-      <img ng-src="{{configs.baseURL + result.profilePicture.viewlink}}" alt="Profile Picture" width="auto" height="150" style="border-radius:4px; border: 1px solid darkgray;">
+      <a ui-sref="individual({id: result.id})" target="_blank"><img ng-src="{{configs.baseURL + result.profilePicture.viewlink}}" alt="Profile Picture" width="auto" height="150" style="border-radius:4px; border: 1px solid darkgray;"></a>
     </div>
     <div class="col-sm-12 initial" ng-show="!result.profilePicture || !result.profilePicture.viewlink">
       Upload a profile picture...
+      <a ui-sref="individual({id: result.id})" target="_blank" ng-show="result.id">Open their page</a>
     </div>
   </div>
   <hr style="margin: 10px 0px;">
@@ -83,7 +84,7 @@
                 </span>
           </span>
         </div>
-        <input type="text" id="parents" ng-model="parents" typeahead-on-select='onSelectParent($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Parent">
+        <input autocomplete="off" type="text" id="parents" ng-model="parents" typeahead-on-select='onSelectParent($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Parent">
       </div>
       <br style="clear:both">
       <hr style="margin: 10px 0px;">
@@ -93,7 +94,7 @@
         <div ng-repeat="item in result.spouseList" >
           <spouse individual="result.id" ng-model="item" callback="removeSpouse(id)"></spouse>
         </div>
-        <input type="text" id="spouse" ng-model="spouse" typeahead-on-select='onSelectSpouse($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Spouse">
+        <input autocomplete="off" type="text" id="spouse" ng-model="spouse" typeahead-on-select='onSelectSpouse($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Spouse">
       </div>
     </div>
     <button class="btn btn-primary" type="submit">Save</button>
