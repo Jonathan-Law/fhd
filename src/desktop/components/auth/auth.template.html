@@ -1,9 +1,0 @@
-<div class="auth">
-  <login trigger="login" callback="callback(result)" switcher="switcher()"></login>
-  <register trigger="register" callback="callback(result)" switcher="switcher()"></register>
-  <div ng-if="user">{{user.displayableName}}</div>
-  <div ng-if="!user">
-    <button type="button" ng-click="triggerLogin()" class="authTriggerButton">Login&nbsp;</button>
-    <button type="button" ng-click="triggerRegister()" class="authTriggerButton">/&nbsp;Register</button>
-  </div>
-</div>

@@ -1,5 +1,37 @@
-.half{
-  width: 300px;
-  display: inline-block;
-  float: left;
+.adminAdd {
+  height: 100%;
+  text-align: center;
+  .addItem{
+    display: inline-block;
+    margin: 20px;
+    .addButton{
+      border-radius: 4px;
+      width: 200px;
+      height: 200px;
+      display: table-cell;
+      vertical-align: middle;
+      border: 1px solid #555;
+      padding: 5px;
+      cursor: pointer;
+      transition: all 0.5s ease;
+      font-size: 20px;
+    }
+  }
+  .adminUIView {
+    height: calc(100% - 244px);
+  }
+  &.small{
+    .addItem{
+      margin: 5px;
+      .addButton{
+        font-size: 12px;
+        width: 75px;
+        height: 50px;
+        transition: all 0.5s ease;
+      }
+    }
+    .adminUIView {
+      height: calc(100% - 64px);
+    }
+  }
 }

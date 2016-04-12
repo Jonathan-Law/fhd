@@ -1,0 +1,24 @@
+<div class="adminIndividual">
+  <div class="searchColumn">
+    <div class="input-group" style="width:100%;">
+      <div class="btn-group btn-group-justified overrideButtonStyles" role="group">
+        <a type="button" class="btn btn-default" ng-click="getSubmissionsList()"><i class="fa fa-user" tooltip-placement="right" uib-tooltip="Inactive individuals needing approval" ></i></a>
+        <!-- <a type="button" class="btn btn-default"><i class="fa fa-user" tooltip-placement="top" uib-tooltip="Something else"></i></a> -->
+        <!-- <a type="button" class="btn btn-default"><i class="fa fa-user" tooltip-placement="top" uib-tooltip="Another"></i></a> -->
+      </div>
+      <input class="form-control" type="text" ng-model="searchKey" ng-model-options="{debounce: 200}" ng-change="getNewList()" placeholder="Quick Search">
+      <label class="input-group-addon" style="width:38px;" ng-click="searchKey = null; getNewList(); makeSelection({});" tooltip-placement="right" uib-tooltip="Create new user / Clear search">
+        <i class="fa fa-times"></i>
+      </label>
+    </div>
+    <div style="height: calc(100% - 68px); overflow: auto;">
+      <div class="individual" ng-class="{'bg-info': selection.id === thing.id}" ng-repeat="thing in collection" ng-click="makeSelection(thing)">
+        {{thing.displayableName + ' (' + thing.yearBorn + ')'}}
+      </div>
+    </div>
+  </div>
+  <div class="editColumn">
+    <edit-individual person-id="selection.id"></edit-individual>
+    <!-- {{selection}} -->
+  </div>
+</div>

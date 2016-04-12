@@ -1,0 +1,6 @@
+<div class="input-group"  style="width:100%;">
+  <input autocomplete="off" class="form-control" type="text" id="{{placeId}}" ng-model="tempplace" typeahead-on-select="onSelect($item, $model, $label)" uib-typeahead="address as address.formatted_address for address in getLocation($viewValue)" class="form-control" placeholder="Place (Town, County, State, Country)" tabindex="0">
+  <label class="input-group-addon" for="{{placeId}}" style="width:38px;">
+    <i class="fa fa-map-marker"></i>
+  </label>
+</div>

@@ -1,8 +1,10 @@
 module.exports = angular => {
   const ngModule = angular
     .module('da.desktop.admin', [
-      require('./add')(angular).name,
-      require('./edit')(angular).name,
+      require('./files')(angular).name,
+      require('./individuals')(angular).name,
+      require('./users')(angular).name,
+      require('./configs')(angular).name,
     ])
     .config(require('./admin.config.js'));
 

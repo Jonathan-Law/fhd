@@ -1,6 +1,8 @@
-<a class="btn btn-default" ui-sref="admin.add">Add</a>
-<a class="btn btn-default" ui-sref="admin.edit">Edit</a>
-
-<div>This page is still a work in progress</div>
-<!-- <div ng-if="isAdmin === true" ui-view></div>
-<div ng-if="isAdmin === false">You are not logged in as an administrator. Please log in as an administrator and refresh this page.</div> -->
+<div class="adminAdd" ng-class="{'small': open}">
+  <div class="addItem" ng-show="selection.shown()" ng-repeat="selection in selections">
+    <a class="addButton" ui-sref="{{selection.route}}">{{selection.name}}</a>
+  </div>
+  <!-- <div>This page is still a work in progress</div> -->
+  <div ng-if="isAdmin === true" ui-view class="adminUIView"></div>
+  <div ng-if="isAdmin === false">You are not logged in as an administrator. Please log in as an administrator and refresh this page.</div>
+</div>

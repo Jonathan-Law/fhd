@@ -1,0 +1,99 @@
+<div class="container-fluid editIndividual">
+  <div ng-show="!result || !result.id" class="bg-primary editMsg">
+    NOTE: You are now creating a new individual
+  </div>
+  <div ng-show="!(!result || !result.id)" class="bg-info editMsg">
+    NOTE: You are now editing individual {{result.id}} <span ng-show="result && result.displayableName">{{result.displayableName}}</span>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-12 initial" ng-show="isAdmin">
+      <button class="btn btn-default" ng-show="result && result.status && result.status !== 'I'" ng-click="deactivateSubmission(result.id);">Deactivate Individual</button>
+      <button class="btn btn-danger" ng-show="result && result.status && result.status !== 'A'" ng-click="activateSubmission(result.id);">Activate Individual</button>
+      <button class="btn btn-danger pull-right" ng-show="result && result.id && isAdmin" ng-click="deleteIndividual(result.id)">Delete Individual</button>
+    </div>
+    <div class="col-sm-12 initial" ng-show="result.profilePicture && result.profilePicture.viewlink">
+      <img ng-src="{{configs.baseURL + result.profilePicture.viewlink}}" alt="Profile Picture" width="auto" height="150" style="border-radius:4px; border: 1px solid darkgray;">
+    </div>
+    <div class="col-sm-12 initial" ng-show="!result.profilePicture || !result.profilePicture.viewlink">
+      Upload a profile picture...
+    </div>
+  </div>
+  <hr>
+  <form name="addAPersonForm" role="form" ng-submit="savePerson()" class="">
+    <div class="form-group row">
+      <div class="col-sm-12 parent">
+        <label for="Name">Name: </label>
+        <input style="width: auto; display: inline-block" class="form-control" ng-model="result.firstName" id="Name" placeholder="First Name" required/>
+        <input style="width: auto; display: inline-block" class="form-control" ng-model="result.middleName" id="Name" placeholder="Middle Name" />
+        <input style="width: auto; display: inline-block" class="form-control" ng-model="result.lastName" id="Name" placeholder="Last Name" required/>
+      </div>
+      <br style="clear:both">
+      <hr>
+      <div class="col-sm-6 parent">
+        <label for="Birth">Birth: </label>
+        <br>
+        <datepicker date="result.birthDate" confident="result.birth.yearB" placeholder="Birth Date: " is-required="true"></datepicker>
+        </date>
+        <placepicker place="result.birth.birthPlace"></placepicker>
+      </div>
+      <div class="col-sm-6 parent">
+        <label for="Death">Death: </label>
+        <br>
+        <datepicker date="result.deathDate" confident="result.death.yearD" placeholder="Death Date: " is-required="true"></datepicker>
+        </date>
+        <placepicker place="result.death.deathPlace"></placepicker>
+      </div>
+      <br style="clear:both">
+      <hr>
+      <div class="col-sm-6 parent">
+        <label for="Burial">Burial: </label>
+        <br>
+        <datepicker date="result.burialDate" confident="result.burial.yearB" placeholder="Burial Date: " is-required="false"></datepicker>
+        </date>
+        <placepicker place="result.burial.burialPlace"></placepicker>
+      </div>
+      <div class="col-sm-2 parent">
+        <label for="Parents">Gender:</label>
+        <br>
+        <br>
+        <label for="Parents">Male:
+          <input type="radio" ng-model="result.sex" name="gender" value="male" style="width: auto;" id="Parents" placeholder="Parents Stuff" />
+        </label>
+        <br>
+        <label for="Parents">Female:
+          <input type="radio" ng-model="result.sex" name="gender" value="female" style="width: auto;" id="Parents" placeholder="Parents Stuff" />
+        </label>
+      </div>
+      <div class="col-sm-4 parent">
+        <label for="Spouse">Relationship to Michele or Marvin Law: </label>
+        <br>
+        <br>
+        <input type="text" ng-model="result.relationship" class="form-control" id="relationship" placeholder="Relationship To Michele or Marvin Law" />
+      </div>
+      <br style="clear:both">
+      <hr>
+      <div class="col-sm-6 parent">
+        <label for="Parents">Parents:</label>
+        <br>
+        <div ng-repeat="item in result.parentList" style="width:auto; display:inline-block;">
+          <span class="btn btn-primary">
+                {{item.typeahead}}
+                <span class="btn btn-default btn-xs" ng-click="removeParent(item.id)">
+                  <i class="fa fa-times"></i>
+                </span>
+          </span>
+        </div>
+        <input type="text" id="parents" ng-model="parents" typeahead-on-select='onSelectParent($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Parent">
+      </div>
+      <div class="col-sm-6 parent">
+        <label for="Spouse">Spouse:</label>
+        <br>
+        <div ng-repeat="item in result.spouseList" >
+          <spouse individual="result.id" ng-model="item" callback="removeSpouse(id)"></spouse>
+        </div>
+        <input type="text" id="spouse" ng-model="spouse" typeahead-on-select='onSelectSpouse($item, $model, $label)' uib-typeahead="individual as individual.typeahead for individual in getTypeahead($viewValue)" class="form-control" placeholder="Spouse">
+      </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Save</button>
+  </form>
+</div>

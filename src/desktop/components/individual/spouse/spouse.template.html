@@ -1,0 +1,14 @@
+<div>
+  <span class="btn btn-primary">
+    {{ngModel.typeahead}}
+    <span class="btn btn-default btn-xs" ng-click="callback({id: ngModel.id})">
+      <i class="fa fa-times"></i>
+    </span>
+  </span>
+  <div style="width: 100%">
+    <datepicker date="ngModel.marriageDate" confident="ngModel.exactMarriageDate" placeholder="Marriage Date: " is-required="false"></datepicker>
+  </div>
+  <div style="width: 100%">
+    <placepicker place="ngModel.marriagePlace"></place>
+  </div>
+</div>

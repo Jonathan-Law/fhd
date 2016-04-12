@@ -91,6 +91,7 @@
     "babel-polyfill": "^6.3.14",
     "dropzone": "^4.3.0",
     "jquery": "^2.2.2",
+    "ng-tags-input": "^3.0.0",
     "ngtouch": "^1.0.1"
   },
   "config": {

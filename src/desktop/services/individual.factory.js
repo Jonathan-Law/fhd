@@ -1,4 +1,4 @@
-// const _ = require('lodash');
+const _ = require('lodash');
 module.exports = ngModule => {
   /* @nginject */
   function individual(configs, $http, $q, localCache) { /*jshint unused: false*/
@@ -46,38 +46,14 @@ module.exports = ngModule => {
     //   save(name, value);
     // }
 
-
-    // var handleQueue = function(current) {
-    //   var deferred = $q.defer();
-    //   setTimeout(function(){
-    //     if (current) {
-    //       $http({
-    //         method: current.method,
-    //         url: current.url,
-    //         params: current.params,
-    //         data: current.data
-    //       }).success(function(data, status, headers, config) {
-    //         if (data !== "false" && !isMaxError(data)) {
-    //           save(current.saveName, data);
-    //           deferred.resolve(data);
-    //         } else {
-    //           if (isMaxError(data)) {
-    //             deferred.resolve(handleQueue(current));
-    //           } else {
-    //             deferred.reject([]);
-    //           }
-    //         }
-    //       }).error(function(data, status, headers, config){
-    //         deferred.reject(data);
-    //       });
-    //     }
-    //   }, 500);
-    //   return deferred.promise;
-    // }
-
-    // var isMaxError = function (result) {
-    //   return (typeof result === 'object')? (result.error)? (_.contains(result.error, 'SQLSTATE[42000] [1203]'))? true:false :false : false;
-    // }
+    function isMaxError(result) {
+      if (typeof result === 'object') {
+        if (result.error) {
+          return _.contains(result.error, 'SQLSTATE[42000] [1203]');
+        }
+      }
+      return false;
+    }
 
     service.getIndData = (id, override) => {
       const deferred = $q.defer();
@@ -92,8 +68,18 @@ module.exports = ngModule => {
             method: 'GET',
             url,
           }).success((data) => {
-            save('indData' + id, data);
-            deferred.resolve(data);
+            if (isMaxError(data)) {
+              setTimeout(() => {
+                service.getIndData(id, override).then((result) => {
+                  deferred.resolve(result);
+                }, () => {
+                  deferred.reject();
+                });
+              }, 50);
+            } else {
+              save('indData' + id, data);
+              deferred.resolve(data);
+            }
           }).error((data) => {
             deferred.resolve(data || []);
           });
@@ -111,7 +97,17 @@ module.exports = ngModule => {
           method: 'GET',
           url: configs.baseURL + 'api/v1/individual/pictures/' + id,
         }).success((data) => {
-          deferred.resolve(data);
+          if (isMaxError(data)) {
+            setTimeout(() => {
+              service.getPictures(id).then((result) => {
+                deferred.resolve(result);
+              }, () => {
+                deferred.reject();
+              });
+            }, 50);
+          } else {
+            deferred.resolve(data);
+          }
         }).error(() => {
           deferred.resolve([]);
         });
@@ -121,26 +117,23 @@ module.exports = ngModule => {
       return deferred.promise;
     };
 
-    // service.updateIndData = function (data){
-    //   var deferred = $q.defer();
-    //   if (data) {
-    //     $http({
-    //       method: 'POST',
-    //       url: '/api/v1/individual/',
-    //       data: data
-    //     }).success(function(data, status, headers, config) {
-    //       if (data !== "false") {
-    //         deferred.resolve(data);
-    //       } else {
-    //         deferred.resolve(false);
-    //       }
-    //     });
-    //   } else {
-    //     deferred.resolve(false);
-    //   }
-    //   return deferred.promise;
-    // };
-
+    service.updateIndData = (data) => {
+      const deferred = $q.defer();
+      if (data) {
+        $http({
+          method: 'POST',
+          url: configs.baseURL + 'api/v1/individual/',
+          data,
+        }).success((result) => {
+          deferred.resolve(result);
+        }).error(() => {
+          deferred.reject();
+        });
+      } else {
+        deferred.reject(false);
+      }
+      return deferred.promise;
+    };
     // service.getProfilePic = function (picId, override){
     //   var deferred = $q.defer();
 
@@ -198,57 +191,66 @@ module.exports = ngModule => {
     //   }
     //   return deferred.promise;
     // };
-    // service.getSpouses = function (spouseId, individualId){
-    //   var deferred = $q.defer();
-    //   if (spouseId && individualId) {
-    //     $http({
-    //       method: 'GET',
-    //       url: '/api/v1/spouses/' + spouseId + '/' + individualId,
-    //     }).success(function(data, status, headers, config) {
-    //       if (data !== "false") {
-    //         deferred.resolve(data);
-    //       } else {
-    //         deferred.resolve(false);
-    //       }
-    //     });
-    //   } else {
-    //     deferred.resolve(false);
-    //   }
-    //   return deferred.promise;
-    // };
-    // service.getPlace = function (placeId){
-    //   var deferred = $q.defer();
-    //   if (placeId) {
-    //     $http({
-    //       method: 'GET',
-    //       url: '/api/v1/place/' + placeId,
-    //     }).success(function(data, status, headers, config) {
-    //       if (data !== "false") {
-    //         deferred.resolve(data);
-    //       } else {
-    //         deferred.resolve(false);
-    //       }
-    //     });
-    //   } else {
-    //     deferred.resolve(false);
-    //   }
-    //   return deferred.promise;
-    // };
 
-    // service.deleteInd = function(id) {
-    //   var deferred = $q.defer();
-    //   if (id) {
-    //     $http({
-    //       method: 'DELETE',
-    //       url: '/api/v1/individual/'+id
-    //     }).success(function(data, status, headers, config){
-    //       deferred.resolve(data);
-    //     }).error (function(data, status, headers, config){
-    //       deferred.reject('There was an error on the server.')
-    //     })
-    //   }
-    //   return deferred.promise;
-    // }
+    service.getSpouses = (spouseId, individualId) => {
+      const deferred = $q.defer();
+      if (spouseId && individualId) {
+        $http({
+          method: 'GET',
+          url: configs.baseURL + 'api/v1/spouses/' + spouseId + '/' + individualId,
+        }).success((data) => {
+          deferred.resolve(data);
+        }).error(() => {
+          deferred.reject();
+        });
+      } else {
+        deferred.reject(false);
+      }
+      return deferred.promise;
+    };
+
+
+    service.getPlace = (placeId) => {
+      const deferred = $q.defer();
+      if (placeId) {
+        $http({
+          method: 'GET',
+          url: configs.baseURL + 'api/v1/place/' + placeId,
+        }).success((data) => {
+          if (isMaxError(data)) {
+            setTimeout(() => {
+              service.getPlace(placeId).then((result) => {
+                deferred.resolve(result);
+              }, () => {
+                deferred.reject();
+              });
+            }, 50);
+          } else {
+            deferred.resolve(data);
+          }
+        }).error(() => {
+          deferred.reject();
+        });
+      } else {
+        deferred.resolve(false);
+      }
+      return deferred.promise;
+    };
+
+    service.deleteInd = (id) => {
+      const deferred = $q.defer();
+      if (id) {
+        $http({
+          method: 'DELETE',
+          url: configs.baseURL + '/api/v1/individual/' + id
+        }).success((data) => {
+          deferred.resolve(data);
+        }).error(() => {
+          deferred.reject('There was an error on the server.');
+        });
+      }
+      return deferred.promise;
+    };
 
     // service.setProfilePic = function(id, pic){
     //   var deferred = $q.defer();
@@ -286,8 +288,19 @@ module.exports = ngModule => {
             method: 'GET',
             url,
           }).success((data) => {
-            save('childrenOf_' + id + '_' + spouseid, data);
-            deferred.resolve(data);
+            if (isMaxError(data)) {
+              setTimeout(() => {
+                service.getChildren(id, spouseid, override).then((result) => {
+                  save('childrenOf_' + id + '_' + spouseid, result);
+                  deferred.resolve(result);
+                }, () => {
+                  deferred.reject();
+                });
+              }, 50);
+            } else {
+              save('childrenOf_' + id + '_' + spouseid, data);
+              deferred.resolve(data);
+            }
           }).error(() => {
             deferred.resolve([]);
           });
@@ -301,7 +314,7 @@ module.exports = ngModule => {
     service.getFamilies = (letter, all) => {
       const deferred = $q.defer();
       if (letter) {
-        let url = configs.baseURL + '/api/v1/individual/families/' + letter;
+        let url = configs.baseURL + 'api/v1/individual/families/' + letter;
         if (all) {
           url = url + '/true';
         }
@@ -309,7 +322,17 @@ module.exports = ngModule => {
           method: 'GET',
           url,
         }).success((data/* , status, headers, config */) => {
-          deferred.resolve(data);
+          if (isMaxError(data)) {
+            setTimeout(() => {
+              service.getFamilies(letter, all).then((result) => {
+                deferred.resolve(result);
+              }, () => {
+                deferred.reject();
+              });
+            }, 50);
+          } else {
+            deferred.resolve(data);
+          }
         }).error((/* data, status, headers, config */) => {
           deferred.reject('There was an error on the server.');
         });
@@ -336,7 +359,7 @@ module.exports = ngModule => {
     service.getFirstNames = (family, all) => {
       const deferred = $q.defer();
       if (family) {
-        let url = configs.baseURL + '/api/v1/individual/familyNames/' + family;
+        let url = configs.baseURL + 'api/v1/individual/familyNames/' + family;
         if (all) {
           url = url + '/true';
         }
@@ -344,7 +367,17 @@ module.exports = ngModule => {
           method: 'GET',
           url,
         }).success((data/* , status, headers, config */) => {
-          deferred.resolve(data);
+          if (isMaxError(data)) {
+            setTimeout(() => {
+              service.getFirstNames(family, all).then((result) => {
+                deferred.resolve(result);
+              }, () => {
+                deferred.reject();
+              });
+            }, 50);
+          } else {
+            deferred.resolve(data);
+          }
         }).error((/* data, status, headers, config */) => {
           deferred.reject('There was an error on the server.');
         });
@@ -355,7 +388,7 @@ module.exports = ngModule => {
     service.getDocuments = (id, override) => {
       const deferred = $q.defer();
       if (id) {
-        const url = configs.baseURL + '/api/v1/individual/documents/' + id;
+        const url = configs.baseURL + 'api/v1/individual/documents/' + id;
         const value = checkExpire('documentsOf_' + id, minute * 2);
         if (value && !override) {
           deferred.resolve(value);
@@ -364,8 +397,19 @@ module.exports = ngModule => {
             method: 'GET',
             url,
           }).success((data/*, status, headers, config*/) => {
-            save('documentsOf_' + id, data);
-            deferred.resolve(data);
+            if (isMaxError(data)) {
+              setTimeout(() => {
+                service.getDocuments(id, override).then((result) => {
+                  save('documentsOf_' + id, result);
+                  deferred.resolve(result);
+                }, () => {
+                  deferred.reject();
+                });
+              }, 50);
+            } else {
+              save('documentsOf_' + id, data);
+              deferred.resolve(data);
+            }
           });
         }
       } else {
@@ -374,107 +418,85 @@ module.exports = ngModule => {
       return deferred.promise;
     };
 
-    // service.getAllSubmissions = function() {
-    //   var deferred = $q.defer();
-    //   var url = '/api/v1/individual/allSubmissions';
-    //   $http({
-    //     method: 'GET',
-    //     url: url,
-    //   }).success(function(data, status, headers, config) {
-    //     if (data !== "false" && !isMaxError(data)) {
-    //       deferred.resolve(data);
-    //     } else {
-    //       if (isMaxError(data)) {
-    //         var returnCall = angular.copy(utils.httpObj);
-    //         returnCall.method = 'GET';
-    //         returnCall.url = url;
-    //         handleQueue(returnCall).then(function(result){
-    //           deferred.resolve(result);
-    //         });
-    //       } else {
-    //         deferred.resolve([]);
-    //       }
-    //     }
-    //   });
-    //   return deferred.promise;
-    // }
+    service.getAllSubmissions = () => {
+      const deferred = $q.defer();
+      const url = configs.baseURL + '/api/v1/individual/allSubmissions';
+      $http({
+        method: 'GET',
+        url,
+      }).success((data) => {
+        if (isMaxError(data)) {
+          setTimeout(() => {
+            service.getAllSubmissions().then((result) => {
+              deferred.resolve(result);
+            }, () => {
+              deferred.reject();
+            });
+          }, 50);
+        } else {
+          deferred.resolve(data);
+        }
+      }).error(() => {
+        deferred.reject();
+      });
+      return deferred.promise;
+    };
 
-    // service.getMySubmissions = function() {
-    //   var deferred = $q.defer();
-    //   var url = '/api/v1/individual/submissions';
-    //   $http({
-    //     method: 'GET',
-    //     url: url,
-    //   }).success(function(data, status, headers, config) {
-    //     if (data !== "false" && !isMaxError(data)) {
-    //       deferred.resolve(data);
-    //     } else {
-    //       if (isMaxError(data)) {
-    //         var returnCall = angular.copy(utils.httpObj);
-    //         returnCall.method = 'GET';
-    //         returnCall.url = url;
-    //         handleQueue(returnCall).then(function(result){
-    //           deferred.resolve(result);
-    //         });
-    //       } else {
-    //         deferred.resolve([]);
-    //       }
-    //     }
-    //   });
-    //   return deferred.promise;
-    // }
-    // service.activateSubmission = function(id) {
-    //   var deferred = $q.defer();
-    //   var url = '/api/v1/activateIndividual/'+id;
-    //   if (id){
-    //     $http({
-    //       method: 'POST',
-    //       url: url,
-    //     }).success(function(data, status, headers, config) {
-    //       if (data !== "false" && !isMaxError(data)) {
-    //         deferred.resolve(data);
-    //       } else {
-    //         if (isMaxError(data)) {
-    //           var returnCall = angular.copy(utils.httpObj);
-    //           returnCall.method = 'GET';
-    //           returnCall.url = url;
-    //           handleQueue(returnCall).then(function(result){
-    //             deferred.resolve(result);
-    //           });
-    //         } else {
-    //           deferred.resolve([]);
-    //         }
-    //       }
-    //     });
-    //   } else {
-    //     deferred.resolve([]);
-    //   }
-    //   return deferred.promise;
-    // }
-    // service.deactivateSubmission = function(id) {
-    //   var deferred = $q.defer();
-    //   var url = '/api/v1/deactivateIndividual/'+id;
-    //   $http({
-    //     method: 'POST',
-    //     url: url,
-    //   }).success(function(data, status, headers, config) {
-    //     if (data !== "false" && !isMaxError(data)) {
-    //       deferred.resolve(data);
-    //     } else {
-    //       if (isMaxError(data)) {
-    //         var returnCall = angular.copy(utils.httpObj);
-    //         returnCall.method = 'GET';
-    //         returnCall.url = url;
-    //         handleQueue(returnCall).then(function(result){
-    //           deferred.resolve(result);
-    //         });
-    //       } else {
-    //         deferred.resolve([]);
-    //       }
-    //     }
-    //   });
-    //   return deferred.promise;
-    // }
+    service.getMySubmissions = () => {
+      const deferred = $q.defer();
+      const url = configs.baseURL + '/api/v1/individual/submissions';
+      $http({
+        method: 'GET',
+        url,
+      }).success((data) => {
+        if (isMaxError(data)) {
+          setTimeout(() => {
+            service.getMySubmissions().then((result) => {
+              deferred.resolve(result);
+            }, () => {
+              deferred.reject();
+            });
+          }, 50);
+        } else {
+          deferred.resolve(data);
+        }
+      }).error(() => {
+        deferred.reject();
+      });
+      return deferred.promise;
+    };
+
+    service.activateSubmission = (id) => {
+      const deferred = $q.defer();
+      const url = configs.baseURL + '/api/v1/activateIndividual/' + id;
+      if (id) {
+        $http({
+          method: 'POST',
+          url,
+        }).success((data) => {
+          deferred.resolve(data);
+        }).error(() => {
+          deferred.reject();
+        });
+      } else {
+        deferred.reject();
+      }
+      return deferred.promise;
+    };
+
+    service.deactivateSubmission = (id) => {
+      const deferred = $q.defer();
+      const url = '/api/v1/deactivateIndividual/' + id;
+      $http({
+        method: 'POST',
+        url,
+      }).success((data) => {
+        deferred.resolve(data);
+      }).error(() => {
+        deferred.reject();
+      });
+      return deferred.promise;
+    };
 
     return service;
   }

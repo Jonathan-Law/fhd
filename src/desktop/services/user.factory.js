@@ -83,6 +83,11 @@ module.exports = ngModule => {
 
       return $http.get(configs.baseURL + 'api/v1/user/isLoggedIn')
         .success((data) => {
+          if (data.data) {
+            handleWatches(data.data);
+            resolveKey('isLoggedIn', data.data);
+            return promise;
+          }
           handleWatches(data);
           resolveKey('isLoggedIn', data);
           return promise;
@@ -99,7 +104,8 @@ module.exports = ngModule => {
           resolve(true);
         });
       }
-      return user.isLoggedIn().then((result) => {
+      return user.isLoggedIn().then((isLoggedIn) => {
+        const result = isLoggedIn && isLoggedIn.data ? isLoggedIn.data : isLoggedIn;
         if (result && result.rights) {
           if (result.rights === 'super' || result.rights === 'admin') {
             return true;
@@ -129,7 +135,8 @@ module.exports = ngModule => {
         return promise;
       }
 
-      return user.isLoggedIn().then((result) => {
+      return user.isLoggedIn().then((isLoggedIn) => {
+        const result = isLoggedIn && isLoggedIn.data ? isLoggedIn.data : isLoggedIn;
         if (result && result.rights) {
           switch (result.rights) {
             case 'super':

@@ -47,6 +47,7 @@ $session = mySession::getInstance();
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel='shortcut icon' type='image/x-icon' href='http://familyhistorydatabase.org/favicon.ico'/>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
   <title>{%= o.htmlWebpackPlugin.options.title %}</title>
 
   <!-- Disable tap highlight on IE -->

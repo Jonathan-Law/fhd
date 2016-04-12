@@ -1,0 +1,10 @@
+<div class="adminAdd" ng-if="!addSelection">
+  <div class="addItem" ng-repeat="selection in selections">
+    <div class="addButton" ng-click="setAddSelection(selection)">{{selection.name}}</div>
+  </div>
+</div>
+<div ng-if="addSelection" dynamichtml="addSelection.content"></div>
+<!-- <div>Add Individual</div> -->
+<!-- 
+  
+ -->

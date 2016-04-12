@@ -9,10 +9,12 @@ module.exports = ngModule => {
     business.individual = individual;
     // business.file = FileService;
 
-    business.getTypeahead = (val) => {
+    business.getTypeahead = (val, limit) => {
+      const limNum = isNaN(limit) ? 10 : +limit;
       return $http.get(configs.baseURL + 'api/v1/typeahead/', {
         params: {
           typeahead: val,
+          limit: limNum,
           sensor: false
         }
       }).then((res) => {
@@ -27,41 +29,8 @@ module.exports = ngModule => {
       });
     };
 
-    business.getLocation = (val) => {
-      return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
-        params: {
-          address: val,
-          sensor: false
-        }
-      }).then((res) => {
-        const addresses = [];
-        angular.forEach(res.data.results, (item) => {
-          addresses.push(item);
-        });
-        return addresses;
-      });
-    };
-
-    business.getOtherTypeahead = (val) => {
-      return $http.get(configs.baseURL + 'api/v1/tags/other', {
-        params: {
-          typeahead: val,
-          sensor: false
-        }
-      }).then((res) => {
-        if (res.data !== 'false') {
-          const typeahead = [];
-          _.each(res.data, (item) => {
-            typeahead.push(item);
-          });
-          return typeahead;
-        }
-        return [];
-      });
-    };
     return business;
   }
-
   ngModule.factory('business', businessFn);
 
   return ngModule;
