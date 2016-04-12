@@ -1,11 +1,14 @@
 const _ = require('lodash');
 module.exports = ngModule => {
-  ngModule.directive('datepicker', /* @ngInject */ (/*datepickerFactory*/) => {
+  ngModule.directive('datepicker', /* @ngInject */ ($timeout/*datepickerFactory*/) => {
     require('./datepicker.css');
 
     function preFn(scope) {
       const disabled = false;
-      scope.confident = scope.confident === undefined ? true : +scope.confident;
+      $timeout(() => {
+        scope.confident = scope.confident === undefined ? true : +scope.confident;
+      });
+      console.log('scope.confident', scope.confident);
       scope.today = () => {
         scope.dt = new Date();
       };
@@ -28,8 +31,8 @@ module.exports = ngModule => {
           scope.formatConfig = 'yyyy';
         } else {
           scope.dateOptions.minMode = 'day';
-          scope.format = 'YYYY-MM-DD';
-          scope.formatConfig = 'yyyy-MM-dd';
+          scope.format = 'MM-DD-YYYY';
+          scope.formatConfig = 'MM-dd-yyyy';
         }
       };
 
@@ -40,8 +43,8 @@ module.exports = ngModule => {
           scope.formatConfig = 'yyyy';
         } else {
           scope.dateOptions.minMode = 'day';
-          scope.format = 'YYYY-MM-DD';
-          scope.formatConfig = 'yyyy-MM-dd';
+          scope.format = 'MM-DD-YYYY';
+          scope.formatConfig = 'MM-dd-yyyy';
         }
       });
 

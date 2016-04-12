@@ -232,7 +232,6 @@ module.exports = ngModule => {
         if (test) {
           business.individual.deleteInd(id).then((result) => {
             if (result) {
-              console.log('result', result);
               setupEdit(null);
             }
           });
