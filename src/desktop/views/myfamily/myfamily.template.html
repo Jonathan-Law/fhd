@@ -1,0 +1,46 @@
+<div>
+  <div style="text-align: center; margin: 10px;">
+<!--     <button class="btn btn-default" ng-click="goTo('admin/edit')" style="margin: 0px 10px 10px 10px;">Go To Edit</button>
+    <br>
+    <button class="btn btn-primary" ng-show="mass === false" ng-click="mass = !mass">Switch To <strong>Mass</strong> Upload Mode</button>
+    <button class="btn btn-primary" ng-show="mass === true" ng-click="mass = !mass">Switch To <strong>Normal</strong> Upload Mode</button> -->
+    <button class="btn btn-primary" ng-click="editIndividual()"> Add an individual&nbsp;<i class="fa fa-user"></i> </button>
+  </div>
+
+  <h2 ng-if="approveThese.length && approveThese !== 'null'" >Individuals that I've Submitted</h2>
+  <div ng-if="approveThese.length && approveThese !== 'null'" >
+    <table class="table table-stripped table-hover">
+      <thead>
+        <tr>
+          <th>Submitter Name</th>
+          <th>Ind. First Name</th>
+          <th>Ind. Middle Name</th>
+          <th>Ind. Last Name</th>
+          <th>Ind. Birth</th>
+          <th>Ind. Death</th>
+          <th>Ind. Gender</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="cursor:pointer" ng-repeat="individual in approveThese track by $index" ng-click="editIndividual(individual.id, true)">
+          <td>{{individual.displayableName}}</td>
+          <td>{{individual.firstName}} &mdash; ({{individual.id}})</td>
+          <td>{{individual.middleName}}</td>
+          <td>{{individual.lastName}}</td>
+          <td>{{individual.yearBorn}}</td>
+          <td>{{individual.yearDead}}</td>
+          <td>{{individual.sex}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<!--   <div>
+
+  </div>
+  <div ng-if="!mass">
+    <dropzone config="dropzoneConfig"></dropzone>
+  </div>
+  <div ng-if="mass">
+    <mass-Dropzone config="dropzoneConfig" templateUrl="views/dropzone/massDropzoneTemplate.html"></mass-Dropzone>
+  </div> -->
+</div>

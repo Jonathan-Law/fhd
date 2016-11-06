@@ -6,6 +6,7 @@ module.exports = angular => {
     require('./individual')(angular).name,
     require('./main')(angular).name,
     require('./searchByFamily')(angular).name,
+    require('./myfamily')(angular).name,
   ]);
 
   return ngModule;
