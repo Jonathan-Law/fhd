@@ -55,6 +55,7 @@ module.exports = ngModule => {
       scope.setUser = (user) => {
         scope.user = user;
         if (user && scope.user) {
+          scope.user.notNormal = scope.user.rights !== 'normal';
           business.user.getIsAdmin(user).then((isAdmin) => {
             $timeout(() => {
               scope.user.isAdmin = isAdmin;
