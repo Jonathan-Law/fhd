@@ -1,5 +1,4 @@
-module.exports = angular => {
-  const ngModule = angular.module('pageslide-directive', []);
+module.exports = ngModule => {
   /* eslint-disable */
   ngModule.directive('pageslide', ['$timeout', '$compile',
     function($timeout, $compile) {
@@ -294,5 +293,4 @@ module.exports = angular => {
     }
   ]);
   /* eslint-enable */
-  return ngModule;
 };

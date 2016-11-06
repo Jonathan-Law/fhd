@@ -1,10 +1,20 @@
+import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 import inquirer from 'inquirer';
 import kebabCase from 'lodash.kebabcase';
 import shelljs from 'shelljs';
 
-const questions = [
+const STARTER_REPO = 'https://github.com/DomoApps/starter-kit.git';
+const GENERATOR_KEYWORDS = ['da-webpack', 'starter-kit'];
+
+const DOMO_STRICT_LICENSE = [
+  'Copyright (C) 2016 Domo, Inc - All Rights Reserved',
+  'Unauthorized copying of any files, via any medium is strictly prohibited',
+  'Proprietary and confidential'
+].join('\n');
+
+const QUESTIONS = [
   {
     type: 'input',
     name: 'name',
@@ -22,18 +32,70 @@ const questions = [
   }
 ];
 
-inquirer.prompt(questions, answers => {
-  setupPackage({ name: kebabCase(answers.name), description: answers.description, git: answers.git })
-    .then(setupGit)
-    .then(() => {
-      console.log(chalk.green('Success!'));
-      console.log(chalk.white('Don\'t forget to finish the setup process'));
-    })
-    .catch((err) => {
-      console.log(chalk.red('There was an error!'));
-      console.error(err);
+const remotes = getRemotesAsMap();
+if (remotes.has('generator')) {
+  console.log(`Your repo is already setup to receive dev tool updates. Run ${chalk.bold('npm run update-tools')} for updates.`);
+} else if (hasChangedOriginRemote(remotes)) {
+  addGeneratorRemote();
+} else {
+  initializeProject();
+}
+
+function getRemotesAsMap() {
+  const remotes = new Map();
+
+  const remotesOutput = shelljs.exec('git remote -v', { silent: true }).output;
+  remotesOutput.trim()
+    .split('\n')
+    .filter(line => line.indexOf('(fetch)') !== -1)
+    .forEach(remoteLine => {
+      const [name, verboseLocation] = remoteLine.split('\t');
+      const location = verboseLocation.replace(' (fetch)', '');
+      remotes.set(name, location);
     });
-});
+
+  return remotes;
+}
+
+function hasChangedOriginRemote(remotes) {
+  const originRemote = remotes.get('origin');
+
+  let hasChanged = true;
+  for (const keyword of GENERATOR_KEYWORDS) {
+    if (originRemote.indexOf(keyword) !== -1) {
+      hasChanged = false;
+      break;
+    }
+  }
+
+  return hasChanged;
+}
+
+function addGeneratorRemote() {
+  const results = shelljs.exec(`git remote add generator ${STARTER_REPO}`);
+  if (results.code === 0) {
+    console.log(`${chalk.green('SUCCESS!')} The ${chalk.bold('generator')} remote has been setup. ` +
+                `Run ${chalk.bold('npm run update-tools')} for updates.`);
+  } else {
+    console.log(`${chalk.red('ERROR:')} ${results.output}`);
+  }
+}
+
+function initializeProject() {
+  inquirer.prompt(QUESTIONS, answers => {
+    setupPackage({ name: kebabCase(answers.name), description: answers.description, git: answers.git })
+      .then(setupGit)
+      .then(replaceLicense)
+      .then(() => {
+        console.log(chalk.green('Success!'));
+        console.log(chalk.white('Don\'t forget to setup your manifest.json and run `npm run upload`'));
+      })
+      .catch((err) => {
+        console.log(chalk.red('There was an error!'));
+        console.error(err);
+      });
+  });
+}
 
 function setupPackage({ name, description, git }) {
   return new Promise((resolve, reject) => {
@@ -47,7 +109,7 @@ function setupPackage({ name, description, git }) {
       p.description = description;
       p.repository = git;
 
-      fs.writeFile(filePath, JSON.stringify(p, null, 4), (err, data) => {
+      fs.writeFile(filePath, JSON.stringify(p, null, 2), (err, data) => {
         if (err) reject(err);
 
         resolve({ name, description, git });
@@ -60,6 +122,17 @@ function setupGit({ name, description, git }) {
   shelljs.exec('git remote rename origin generator');
   shelljs.exec(`git remote add origin ${git}`);
   shelljs.exec('git push -u origin master');
+}
+
+function replaceLicense() {
+  return new Promise((resolve, reject) => {
+    const licensePath = path.resolve(__dirname, '../LICENSE');
+    fs.writeFile(licensePath, DOMO_STRICT_LICENSE, (err, data) => {
+      if (err) return reject(err);
+
+      resolve();
+    });
+  });
 }
 
 

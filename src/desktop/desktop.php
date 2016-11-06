@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
@@ -54,14 +54,9 @@ $session = mySession::getInstance();
   <meta name="msapplication-tap-highlight" content="no">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap-theme.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.10/d3.min.js" charset="utf-8"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular-animate.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+  {% for (var dependency in o.htmlWebpackPlugin.options.pkg.cdnDependencies) { %}
+    <script src="{%= o.htmlWebpackPlugin.options.pkg.cdnDependencies[dependency] %}"></script>
+  {% } %}
 </head>
 <body ng-cloak ng-app="da.desktop">
   <div id="appContainer" class="appContainer">

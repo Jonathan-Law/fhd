@@ -15,7 +15,7 @@
         <i class="glyphicon glyphicon-user"></i>
       </button>
       <div class="navbarCenter">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" ui-sref="main">
           <span class="fullWidth"><img id="logo" src="http://familyhistorydatabase.org/images/title.png" style="width: 215px; margin-right: -15px; margin-top: -5px;" />
             </span>
           <!--             <span class="notFullWidth">
@@ -60,7 +60,7 @@
 <div id="sidebar-wrapper" class="side-wrapper-nav">
   <ul class="sidebar-nav">
     <!-- <a id="menu-close" href="javascript:void(0);" class="btn btn-default btn-lg pull-right toggle"><i class="fa fa-times"></i></a> -->
-    <li class="sidebar-brand"><a class="imitateLink" id="sidebar-brand" ui-sref="main">FamilyHistoryDatabase</a>
+    <li class="sidebar-brand"><a class="imitateLink" id="sidebar-brand" ui-sref="main({})">FamilyHistoryDatabase</a>
       <hr style="margin-top:-1px">
     </li>
     <li class="notAlmostFullWidth">
@@ -95,24 +95,24 @@
       </div>
     </li>
     <li ng-if="user && user.notNormal">
-      <a href="#/myfamily" class="imitateLink" id="sidebar-brand-extra">My Family</a>
+      <a ui-sref="myfamily" class="imitateLink" id="sidebar-brand-extra">My Family</a>
     </li>
     <li ng-if="user && user.isAdmin" class="sidebar-brand">
       <hr style="margin-top:-1px; margin-bottom:-1px">
-      <a ui-sref="admin" class="imitateLink" id="sidebar-brand-extra">ADMIN</a>
+      <a ui-sref="admin({})" class="imitateLink" id="sidebar-brand-extra">ADMIN</a>
       <hr style="margin-top:-1px">
     </li>
     <li ng-if="user && user.isAdmin">
-      <a role="menuitem" tabindex="-1" ui-sref="admin.individuals">Manage Individuals</a>
+      <a role="menuitem" tabindex="-1" ui-sref="admin.individuals({})">Manage Individuals</a>
     </li>
     <li ng-if="user && user.isAdmin">
-      <a role="menuitem" tabindex="-1" ui-sref="admin.files">Manage Files</a>
+      <a role="menuitem" tabindex="-1" ui-sref="admin.files({})">Manage Files</a>
     </li>
     <li ng-if="user && user.isAdmin">
-      <a role="menuitem" tabindex="-1" ui-sref="admin.users">Manage Users</a>
+      <a role="menuitem" tabindex="-1" ui-sref="admin.users({})">Manage Users</a>
     </li>
     <li ng-if="user && user.isAdmin">
-      <a role="menuitem" tabindex="-1" ui-sref="admin.configs">Manage Site</a>
+      <a role="menuitem" tabindex="-1" ui-sref="admin.configs({})">Manage Site</a>
     </li>
   </ul>
   </nav>
