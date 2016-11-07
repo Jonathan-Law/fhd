@@ -1,0 +1,13 @@
+fhdropzone {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  .dropzone {
+    flex: 1 1 100%;
+    display: flex;
+    flex-direction: row;
+    > .dz-default {
+      flex: 1 1 100%;
+    }
+  }
+}

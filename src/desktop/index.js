@@ -4,6 +4,8 @@ const angular = require('angular');
 require('angular-ui-bootstrap');
 require('./desktop.css');
 require('ngtouch');
+require('angular-dropzone');
+
 const ngDependencies = [
   'ui.router',
   'ngAnimate',

@@ -83,7 +83,7 @@ module.exports = function getConfig(configOptions) {
       ),
       new webpack.optimize.DedupePlugin(),
       new NgAnnotatePlugin({
-        add: true,
+        add: false,
         remove: false
       }),
       new webpack.BannerPlugin(bannerText),
@@ -165,7 +165,8 @@ module.exports = function getConfig(configOptions) {
       formatter: require('eslint-friendly-formatter'),
     },
 
-    devtool: ON_PROD ? 'source-map' : 'cheap-module-eval-source-map',
+    // devtool: ON_PROD ? 'source-map' : 'cheap-module-eval-source-map',
+    devtool: 'source-map',
 
     devServer: {
       contentBase: 'dist/',
@@ -179,11 +180,7 @@ module.exports = function getConfig(configOptions) {
    * If on production then minify code else (on dev) and turn on hot module replacement.
    */
   if (ON_PROD) {
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    }));
+    config.plugins.push();
   } else {
     config.plugins.push(new webpack.HotModuleReplacementPlugin());
   }

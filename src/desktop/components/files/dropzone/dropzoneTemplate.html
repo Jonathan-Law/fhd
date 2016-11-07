@@ -1,0 +1,54 @@
+<div class="dz-preview dz-file-preview " style="max-width: 400px; width: 300px;">
+  <div style="display: inline-block" class="dz-details modelNumber">
+    <img data-ngId="image" data-dz-thumbnail />
+  </div>
+  <div style=" float:Right; max-width: 175px;">
+    <div class="dz-filename"><span data-dz-name></span></div>
+    <div class="dz-size" data-dz-size></div>
+  </div>
+  <div style="clear: both;"></div>
+  <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+
+  <div class="form-group" ng-class="(validName && validName.state)? 'has-feedback ' + validName.state: ''">
+    <label class="control-label" for="newName">New Name (no extension)</label>
+    <input type="text" class="form-control" id="newName" data-ngModel='newName'>
+    <span ng-show="validName.state === 'has-success'" class="glyphicon glyphicon-ok form-control-feedback"></span>
+    <span ng-show="validName.state === 'has-warning'" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+    <span ng-show="validName.state === 'has-error'" class="glyphicon glyphicon-remove form-control-feedback"></span>
+  </div>
+  <div class="form-group">
+    <label class="control-label" for="title">Title</label>
+    <input type="text" class="form-control" id="title" data-ngModel='title'>
+  </div>
+  <div class="form-group">
+    <label class="control-label" for="author">Author</label>
+    <input type="text" class="form-control" data-ngModel="author" id="author">
+  </div>
+  <p><strong>Description</strong></p>
+  <textarea data-ngModel="description" class="boxsizingBorder form-control"></textarea>
+
+  <div class="btn-group" style="width: 100%; margin: 10px 0px 10px 0px;" data-toggle="buttons">
+    <button class="btn btn-primary btn-xs" data-ngClass="$ctrl.docType === 'image'? 'active':''" style="width: 50%;" data-ngClick="$ctrl.docType = 'image'; $event.stopPropagation();">
+      Image
+    </button>
+    <button class="btn btn-primary btn-xs" data-ngClass="$ctrl.docType === 'document'? 'active':''" style="width: 50%;" data-ngClick="$ctrl.docType = 'document'; $event.stopPropagation();">
+      Document
+    </button>
+  </div>
+
+  <p><strong>Person Tags</strong></p>
+  <tags-input class="bootstrap" min-length="1" data-tags="person" replace-spaces-with-dashes="false" add-from-autocomplete-only="true"> <auto-complete min-length="1" source="getTagTypeahead('person', $query)"></auto-complete> </tags-input>
+
+  <p><strong>Place Tags</strong></p>
+  <tags-input class="bootstrap" min-length="1" data-tags="place" replace-spaces-with-dashes="false" add-from-autocomplete-only="true"> <auto-complete min-length="1" source="getTagTypeahead('place', $query)"></auto-complete> </tags-input>
+
+  <p><strong>Other Tags</strong></p>
+  <tags-input class="bootstrap" min-length="1" data-tags="other" replace-spaces-with-dashes="false"> <auto-complete min-length="1" source="getTagTypeahead('other', $query)"></auto-complete> </tags-input>
+
+  <div class="dz-success-mark"><span>✔</span></div>
+  <div class="dz-error-mark"><span>✘</span></div>
+  <div class="dz-error-message"><span data-dz-errormessage></span></div>
+  <div style="clear:both"></div>
+  <button class="processMe btn btn-primary pull-left"><i class="fa fa-save"></i></button>
+  <button data-dz-remove class="btn btn-danger pull-right"><i class="fa fa-times"></i></button>
+</div>

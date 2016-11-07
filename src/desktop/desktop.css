@@ -1,6 +1,9 @@
 @import '../common/styles/variables.css';
 @import '../common/styles/typebase.css';
 @import '../common/styles/bootstrap.css';
+@import '../../node_modules/dropzone/dist/basic.css';
+@import '../../node_modules/dropzone/dist/dropzone.css';
+
 
 html, body, #appContainer {
   height: 100%;
