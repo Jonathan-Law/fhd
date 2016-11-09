@@ -73,7 +73,7 @@ class Place
 
    public static function getByAll($place)
    {
-      if ($place->town)
+      if (is_object($place) && isset($place->town))
       {
          $database = cbSQLConnect::connect('object');
          if (isset($database))

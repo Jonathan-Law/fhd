@@ -1,47 +1,25 @@
 // const _ = require('lodash');
 module.exports = ngModule => {
   /* @nginject */
-  function fileService() {
+  function fileService($http, $q, configs) {
     const service = {};
 
-    // service.getFileData = function (id){
-    //   const deferred = $q.defer();
-    //   if (id) {
-    //     $http({
-    //       method: 'GET',
-    //       url: '/api/v1/file/' + id,
-    //     }).success(function(data, status, headers, config) {
-    //       if (data !== "false") {
-    //         deferred.resolve(data);
-    //       } else {
-    //         deferred.resolve([]);
-    //       }
-    //     });
-    //   } else {
-    //     deferred.resolve([]);
-    //   }
-    //   return deferred.promise;
-    // };
+    service.getAllFiles = () => {
+      return $http({
+        method: 'GET',
+        url: `${configs.baseURL}api/v1/file/getAll`,
+      }).then((data) => data && data.data ? data.data : [], () => []);
+    };
 
-    // service.updateFile = function (data){
-    //   const deferred = $q.defer();
-    //   if (data) {
-    //     $http({
-    //       method: 'POST',
-    //       url: '/api/v1/file/update',
-    //       data: data
-    //     }).success(function(data, status, headers, config) {
-    //       if (data !== "false") {
-    //         deferred.resolve(data);
-    //       } else {
-    //         deferred.resolve(false);
-    //       }
-    //     });
-    //   } else {
-    //     deferred.resolve(false);
-    //   }
-    //   return deferred.promise;
-    // };
+    service.getByTag = (val = '', type = 'person') => {
+      if (val && type) {
+        return $http({
+          method: 'GET',
+          url: `${configs.baseURL}/api/v1/file/getTypeahead/${val}/${type}`,
+        }).then((data) => data && data.data ? data.data : [], () => []);
+      }
+      return Promise.reject();
+    };
 
     // service.getTypeahead = function(val, switchTrigger){
     //   let deferred = $q.defer();

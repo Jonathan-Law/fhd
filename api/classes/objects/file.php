@@ -10,10 +10,10 @@ class File
 {
 
    protected static $table_name = "file";
-   protected static $db_fields = array('id', 'link', 'thumblink', 'viewlink', 'title', 'author', 'comments', 'date', 'type', 'gco');
+   protected static $db_fields = array('id', 'link', 'thumblink', 'viewlink', 'title', 'author', 'comments', 'date', 'type');
    public static function get_db_fields()
    {
-      $fields = array('id', 'link', 'thumblink', 'viewlink', 'title', 'author', 'comments', 'date', 'type', 'gco');
+      $fields = array('id', 'link', 'thumblink', 'viewlink', 'title', 'author', 'comments', 'date', 'type');
       return $fields;
    }
    public static function nameMe()
@@ -32,7 +32,7 @@ class File
    public $date;
    public $message;
    public $type;
-   public $gco;
+
 
    public static function dropFile($temp_id = NULL)
    {
@@ -130,6 +130,18 @@ class File
          $params = array(':id' => $id, ':type'=>$type);
          array_unshift($params, '');
          unset($params[0]);
+         $results_array = $database->QueryForObject($sql, $params);
+         return !empty($results_array) ? $results_array : false;
+      }
+   }
+
+   public static function getAll(){
+      $database = cbSQLConnect::connect('object');
+      if (isset($database))
+      {
+         $name = 'file';
+         $sql = "SELECT * FROM $name";
+         $params = array();
          $results_array = $database->QueryForObject($sql, $params);
          return !empty($results_array) ? $results_array : false;
       }
@@ -326,7 +338,6 @@ class File
       $places = isset($data['place'])? $data['place'] : array();
       $title = isset($data['title'])? $data['title'] : "No Title";
       $author = isset($data['author'])? $data['author'] : "Unknown";
-      $gco = isset($data['gco'])? $data['gco']: false;
 
       $comments = $data['file_comments'];
       $newname = $data['newname'];
@@ -404,7 +415,6 @@ class File
                $init->author = $author;
                $init->comments = $comments;
                $init->date = null;
-               $init->gco = $gco;
                $init_id = $init->save();
                if ($init_id)
                {
