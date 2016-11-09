@@ -39,7 +39,6 @@ module.exports = ngModule => {
               tempFiles.set(file.id, file);
             });
             ctrl.files = Array.from(tempFiles.values())[0];
-            console.log('files', ctrl.files);
           });
         });
       } else {
