@@ -11,10 +11,12 @@ module.exports = ngModule => {
     }
   });
 
-  function dropzoneCtrl($element) {
+  function dropzoneCtrl($element, $compile, $scope) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
+    $scope.tags = {};
+    $scope.docType = '';
 
     const config = {
       url: '/api/v1/file',
@@ -31,6 +33,7 @@ module.exports = ngModule => {
 
     const eventHandlers = {
       addedfile: function addedFile(file) {
+        $compile(file.previewElement)($scope);
         const dropzone = this;
         angular.element(file.previewElement).find('.processMe').on('click', () => {
           dropzone.processFile(file);
@@ -72,8 +75,9 @@ module.exports = ngModule => {
         upFile.size = file.size;
         upFile.type = file.type;
         upFile.name = file.name;
+        form.tags = $scope.tags;
         form.fileInfo = upFile;
-        form.docType = ctrl.docType || 'image';
+        form.docType = $scope.docType || 'image';
         form.new = true;
         const blob = dataURItoBlob(element.find('[data-ngId="image"]').attr('src'));
         formData.append('thumbnail', blob);
@@ -83,11 +87,14 @@ module.exports = ngModule => {
         const dropzone = this;
         if (file.status === Dropzone.CANCELED) {
           file.status = Dropzone.QUEUED;
-        } else {
+        } else if (file.status !== Dropzone.ERROR) {
+          $scope.tags = {};
           this.removeFile(file);
           if (dropzone.autoProcessQueue) {
             return dropzone.processQueue();
           }
+        } else if (file.status === Dropzone.ERROR) {
+          file.status = Dropzone.QUEUED;
         }
       },
       cancled: (file) => {
@@ -149,5 +156,5 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  dropzoneCtrl.$inject = ['$element'];
+  dropzoneCtrl.$inject = ['$element', '$compile', '$scope'];
 };

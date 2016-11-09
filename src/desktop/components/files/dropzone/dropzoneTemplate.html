@@ -28,27 +28,24 @@
   <textarea data-ngModel="description" class="boxsizingBorder form-control"></textarea>
 
   <div class="btn-group" style="width: 100%; margin: 10px 0px 10px 0px;" data-toggle="buttons">
-    <button class="btn btn-primary btn-xs" data-ngClass="$ctrl.docType === 'image'? 'active':''" style="width: 50%;" data-ngClick="$ctrl.docType = 'image'; $event.stopPropagation();">
+    <button class="btn btn-primary btn-xs" ng-class="{'active': docType === 'image'}" style="width: 50%;" ng-click="docType = 'image'; $event.stopPropagation();">
       Image
     </button>
-    <button class="btn btn-primary btn-xs" data-ngClass="$ctrl.docType === 'document'? 'active':''" style="width: 50%;" data-ngClick="$ctrl.docType = 'document'; $event.stopPropagation();">
+    <button class="btn btn-primary btn-xs" ng-class="{'active': docType === 'document'}" style="width: 50%;" ng-click="docType = 'document'; $event.stopPropagation();">
       Document
     </button>
   </div>
 
   <p><strong>Person Tags</strong></p>
-  <tags-input class="bootstrap" min-length="1" data-tags="person" replace-spaces-with-dashes="false" add-from-autocomplete-only="true"> <auto-complete min-length="1" source="getTagTypeahead('person', $query)"></auto-complete> </tags-input>
-
+  <tagpicker tag="tags.person" type="person"></tagpicker>
   <p><strong>Place Tags</strong></p>
-  <tags-input class="bootstrap" min-length="1" data-tags="place" replace-spaces-with-dashes="false" add-from-autocomplete-only="true"> <auto-complete min-length="1" source="getTagTypeahead('place', $query)"></auto-complete> </tags-input>
-
+  <tagpicker tag="tags.place" type="place"></tagpicker>
   <p><strong>Other Tags</strong></p>
-  <tags-input class="bootstrap" min-length="1" data-tags="other" replace-spaces-with-dashes="false"> <auto-complete min-length="1" source="getTagTypeahead('other', $query)"></auto-complete> </tags-input>
-
-  <div class="dz-success-mark"><span>✔</span></div>
-  <div class="dz-error-mark"><span>✘</span></div>
-  <div class="dz-error-message"><span data-dz-errormessage></span></div>
-  <div style="clear:both"></div>
+  <tagpicker tag="tags.other" type="other"></tagpicker>
+  <!-- <div class="dz-success-mark"><span>✔</span></div> -->
+  <!-- <div class="dz-error-mark"><span>✘</span></div> -->
+  <!-- <div class="dz-error-message"><span data-dz-errormessage></span></div> -->
+  <!-- <div style="clear:both"></div> -->
   <button class="processMe btn btn-primary pull-left"><i class="fa fa-save"></i></button>
   <button data-dz-remove class="btn btn-danger pull-right"><i class="fa fa-times"></i></button>
 </div>

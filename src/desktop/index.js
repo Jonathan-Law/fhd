@@ -5,6 +5,7 @@ require('angular-ui-bootstrap');
 require('./desktop.css');
 require('ngtouch');
 require('angular-dropzone');
+require('ng-tags-input');
 
 const ngDependencies = [
   'ui.router',
@@ -12,6 +13,7 @@ const ngDependencies = [
   'ngTouch',
   'ngRedux',
   'ui.bootstrap',
+  'ngTagsInput',
   require('../common').name,
   require('./components/utilities.js')(angular).name,
   // Add additional external Angular dependencies here

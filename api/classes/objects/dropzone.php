@@ -3,10 +3,10 @@ class Dropzone
 {
 
   protected static $table_name = "birth";
-  protected static $db_fields = array('author', 'description', 'docType', 'fileInfo', 'newName', 'tags', 'title', 'file', 'new', 'thumbnail');
+  protected static $db_fields = array('author', 'description', 'docType', 'fileInfo', 'newName', 'tags', 'title', 'file', 'new', 'thumbnail', 'gco');
   public static function get_db_fields()
   {
-    $fields = array('author', 'description', 'docType', 'fileInfo', 'newName', 'tags', 'title', 'file', 'new', 'thumbnail');
+    $fields = array('author', 'description', 'docType', 'fileInfo', 'newName', 'tags', 'title', 'file', 'new', 'thumbnail', 'gco');
     return $fields;
   }
   public static function nameMe()
@@ -24,6 +24,7 @@ class Dropzone
   public $file;
   public $new;
   public $thumbnail;
+  public $gco;
 
   public static function updateFile($data = NULL){
     $file = recast('File', File::getById($data->id));
@@ -31,6 +32,7 @@ class Dropzone
     $file->description = isset($data->description)? $data->description: NULL;
     $file->author = isset($data->author)? $data->author: NULL;
     $file->tile = isset($data->tile)? $data->tile: NULL;
+    $file->gco = isset($data->gco)? $data->gco: NULL;
 
     if (isset($data->tags)){
 
@@ -204,6 +206,7 @@ class Dropzone
       $place = isset($this->tags->place)? $this->tags->place : array();
     }
     $title = isset($this->title)? $this->title : "No Title";
+    $gco = isset($this->gco)? $this->gco : false;
     $author = isset($this->author)? $this->author : "Unknown";
     $comments = $this->description;
     $newname = $this->newName;
@@ -282,6 +285,7 @@ class Dropzone
           $init->comments = $comments;
           $init->date = null;
           $init->type = $this->docType;
+          $init->gco = $gco;
           $init_id = $init->save();
           if ($init_id)
           {
