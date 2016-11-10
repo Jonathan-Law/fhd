@@ -2,6 +2,7 @@ fhdropzone {
   display: flex;
   flex-direction: row;
   height: 100%;
+  flex: 1;
   .dropzone {
     flex: 1 1 100%;
     display: flex;

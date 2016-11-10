@@ -15,7 +15,7 @@ module.exports = ngModule => {
       if (val && type) {
         return $http({
           method: 'GET',
-          url: `${configs.baseURL}/api/v1/file/getTypeahead/${val}/${type}`,
+          url: `${configs.baseURL}/api/v1/file/getTypeahead/${val}/${type}/false`,
         }).then((data) => data && data.data ? data.data : [], () => []);
       }
       return Promise.reject();

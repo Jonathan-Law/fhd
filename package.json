@@ -90,6 +90,7 @@
   "dependencies": {
     "angular-dropzone": "git+https://github.com/tbenbrahim/angular-dropzone.git",
     "angular-ui-bootstrap": "^1.2.5",
+    "angular-vs-repeat": "^1.1.7",
     "babel-polyfill": "^6.3.14",
     "dropzone": "^4.3.0",
     "enquire.js": "^2.1.1",

@@ -10,12 +10,15 @@ module.exports = ngModule => {
     }
   });
 
-  function fileListCtrl(Business) {
+  function fileListCtrl(Business, configs, $scope, $element) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
+    ctrl.makeSelection = makeSelection;
+    ctrl.getAllFiles = getAllFiles;
+    ctrl.baseURL = configs.baseURL;
     ctrl.files = [];
-    ctrl.typeahead = 'Salt Lake';
+    ctrl.typeahead = '';
     ctrl.types = [
       'person',
       'place',
@@ -28,6 +31,10 @@ module.exports = ngModule => {
       getAllFiles();
     }
 
+    function makeSelection(thing) {
+      ctrl.selection = thing;
+    }
+
     function getAllFiles() {
       const tempFiles = new Map();
       const promises = [];
@@ -38,17 +45,23 @@ module.exports = ngModule => {
             results.forEach(file => {
               tempFiles.set(file.id, file);
             });
-            ctrl.files = Array.from(tempFiles.values())[0];
+            $scope.$applyAsync(() => {
+              ctrl.files = Array.from(tempFiles.values())[0];
+              $element.find('.file-list').scrollTop(0);
+            });
           });
         });
       } else {
         Business.file.getAllFiles().then((results) => {
-          ctrl.files = results;
+          $scope.$applyAsync(() => {
+            ctrl.files = results;
+            $element.find('.file-list').scrollTop(0);
+          });
         });
       }
     }
   }
 
   // inject dependencies here
-  fileListCtrl.$inject = ['business'];
+  fileListCtrl.$inject = ['business', 'configs', '$scope', '$element'];
 };

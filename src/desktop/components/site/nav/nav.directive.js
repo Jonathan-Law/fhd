@@ -40,7 +40,9 @@ module.exports = ngModule => {
             scope.user = result;
             business.user.getIsAdmin(result).then((isAdmin) => {
               $timeout(() => {
-                scope.user.isAdmin = isAdmin;
+                if (scope.user) {
+                  scope.user.isAdmin = isAdmin;
+                }
               });
             });
           } else {

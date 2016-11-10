@@ -99,22 +99,38 @@ class File
    }
 
 
-   public static function getByTagType($val, $type = NULL){
+   public static function getByTagType($val, $type = NULL, $limit){
       $database = cbSQLConnect::connect('object');
+      $limitNum = isset($limit) && $limit === true ? 10 : false;
       if (isset($database)){
          if ($type !== NULL && $type === 'person'){
-            $query = "SELECT * FROM `file` WHERE `id` IN (SELECT `fileid` FROM `tag` WHERE `foreignid` IN (SELECT `id` FROM `person` WHERE MATCH(`firstName`, `middleName`, `lastName`) AGAINST('".$val."' IN BOOLEAN MODE))) LIMIT 0, 10";
+            $query = "SELECT * FROM `file` WHERE `id` IN (SELECT `fileid` FROM `tag` WHERE `foreignid` IN (SELECT `id` FROM `person` WHERE MATCH(`firstName`, `middleName`, `lastName`) AGAINST('".$val."' IN BOOLEAN MODE)))";
+            if ($limitNum) {
+               $query .= "LIMIT 0, $limitNum";
+            }
          } else if ($type !== NULL && $type === 'place'){
             $place = Place::getByAll($val);
             if ($place){
-               $query = "SELECT * FROM `file` WHERE `id` IN (SELECT `fileid` FROM `tag` WHERE `foreignid` IN (SELECT `id` FROM `place` WHERE `id`=".$place->id.")) LIMIT 0, 10";
+               $query = "SELECT * FROM `file` WHERE `id` IN (SELECT `fileid` FROM `tag` WHERE `foreignid` IN (SELECT `id` FROM `place` WHERE `id`=".$place->id."))";
+               if ($limitNum) {
+                  $query .= "LIMIT 0, $limitNum";
+               }
             } else {
-               $query = "SELECT *, MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) AS score FROM `file` WHERE MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) ORDER BY score DESC LIMIT 0, 10";
+               $query = "SELECT *, MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) AS score FROM `file` WHERE MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) ORDER BY score DESC";
+               if ($limitNum) {
+                  $query .= "LIMIT 0, $limitNum";
+               }
             }
          } else if ($type !== NULL && $type === 'collection'){
-            $query = "SELECT * FROM `file` WHERE `id` IN (SELECT `fileid` FROM `tag` WHERE MATCH(`text`) AGAINST('".$val."' IN BOOLEAN MODE)) LIMIT 0, 10";
+            $query = "SELECT * FROM `file` WHERE `id` IN (SELECT `fileid` FROM `tag` WHERE MATCH(`text`) AGAINST('".$val."' IN BOOLEAN MODE))";
+            if ($limitNum) {
+               $query .= "LIMIT 0, $limitNum";
+            }
          } else {
-            $query = "SELECT *, MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) AS score FROM `file` WHERE MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) ORDER BY score DESC LIMIT 0, 10";
+            $query = "SELECT *, MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) AS score FROM `file` WHERE MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) ORDER BY score DESC";
+            if ($limitNum) {
+               $query .= "LIMIT 0, $limitNum";
+            }
          }
          return $database->QuerySingle($query);
       }

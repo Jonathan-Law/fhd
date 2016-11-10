@@ -36,6 +36,7 @@
         return File::getAll();
       } else if ($that->verb === 'getTypeahead'){
         $type = isset($args[1])? $args[1]: 'person';
+        $limit = isset($args[2])? $args[2] : true;
         $val = $args[0];
         if ($val === 'object' && $type === 'place'){
           $val = json_decode($_GET['place']);
@@ -43,7 +44,7 @@
             $val = $val[0];
           }
         }
-        return File::getByTagType($val, $type);
+        return File::getByTagType($val, $type, $limit);
         return $type;
       } else if ($that->verb === "") {
           // Get all edit information required for file edits.
