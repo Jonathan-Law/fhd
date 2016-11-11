@@ -11,18 +11,19 @@ module.exports = ngModule => {
     }
   });
 
+  let uniqueId = 0;
   function dropzoneCtrl($element, $compile, $scope) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
-    $scope.tags = {};
-    $scope.docType = '';
+    ctrl.total = 0;
 
     const config = {
       url: '/api/v1/file',
       // maxFilesize: 100,
       // 'createImageThumbnails': true,
       // 'thumbnailWidth': 70,
+      previewsContainer: 'div.dz-default',
       paramName: 'uploadfile',
       maxThumbnailFilesize: 10,
       parallelUploads: 1,
@@ -33,6 +34,27 @@ module.exports = ngModule => {
 
     const eventHandlers = {
       addedfile: function addedFile(file) {
+        file.eleHash = `hash${uniqueId}`;
+        uniqueId++;
+        if (uniqueId > 100000) {
+          uniqueId = 0;
+        }
+        $scope[file.eleHash] = {
+          tags: {},
+          docType: '',
+        };
+        angular.element(file.previewElement).find('[data-hashkey]').each(function handleAttrs() {
+          const ele = angular.element(this);
+          if (ele.attr('ng-class')) {
+            ele.attr('ng-class', ele.attr('ng-class').replace('HASH_KEY', file.eleHash));
+          }
+          if (ele.attr('ng-click')) {
+            ele.attr('ng-click', ele.attr('ng-click').replace('HASH_KEY', file.eleHash));
+          }
+          if (ele.attr('tag')) {
+            ele.attr('tag', ele.attr('tag').replace('HASH_KEY', file.eleHash));
+          }
+        });
         $compile(file.previewElement)($scope);
         const dropzone = this;
         angular.element(file.previewElement).find('.processMe').on('click', () => {
@@ -40,15 +62,23 @@ module.exports = ngModule => {
         });
         angular.element(file.previewElement).find('input').keypress(function enter(e) {
           if (e.which === 13) {
-            angular.element(this).next().focus();  //Use whatever selector necessary to focus the 'next' input
+            angular.element(this).next().focus(); //Use whatever selector necessary to focus the 'next' input
             return false;
           }
         });
         angular.element(file.previewElement).find('.tags').keypress(function enter(e) {
           if (e.which === 13) {
-            angular.element(this).next().focus();  //Use whatever selector necessary to focus the 'next' input
+            angular.element(this).next().focus(); //Use whatever selector necessary to focus the 'next' input
             return false;
           }
+        });
+        $scope.$applyAsync(() => {
+          ctrl.total++;
+        });
+      },
+      removedfile: function removedfile() {
+        $scope.$applyAsync(() => {
+          ctrl.total--;
         });
       },
       success: (/*file, response*/) => {
@@ -75,9 +105,9 @@ module.exports = ngModule => {
         upFile.size = file.size;
         upFile.type = file.type;
         upFile.name = file.name;
-        form.tags = $scope.tags;
+        form.tags = $scope[file.eleHash].tags;
         form.fileInfo = upFile;
-        form.docType = $scope.docType || 'image';
+        form.docType = $scope[file.eleHash].docType || 'image';
         form.new = true;
         const blob = dataURItoBlob(element.find('[data-ngId="image"]').attr('src'));
         formData.append('thumbnail', blob);
@@ -93,13 +123,14 @@ module.exports = ngModule => {
           if (dropzone.autoProcessQueue) {
             return dropzone.processQueue();
           }
+          $scope.$applyAsync(() => {
+            ctrl.total--;
+          });
         } else if (file.status === Dropzone.ERROR) {
           file.status = Dropzone.QUEUED;
         }
       },
-      cancled: (file) => {
-        console.log('file', file.status);
-      },
+      cancled: () => {},
     };
 
     // here we set up the actual dropzone.
@@ -134,7 +165,9 @@ module.exports = ngModule => {
       for (let i = 0; i < byteString.length; i++) {
         ia[i] = byteString.charCodeAt(i);
       }
-      return new Blob([ia], { type: mimeString });
+      return new Blob([ia], {
+        type: mimeString
+      });
     }
 
     function init() {

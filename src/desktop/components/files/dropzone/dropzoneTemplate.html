@@ -1,10 +1,12 @@
-<div class="dz-preview dz-file-preview " style="max-width: 400px; width: 300px;">
-  <div style="display: inline-block" class="dz-details modelNumber">
-    <img data-ngId="image" data-dz-thumbnail />
-  </div>
-  <div style=" float:Right; max-width: 175px;">
-    <div class="dz-filename"><span data-dz-name></span></div>
-    <div class="dz-size" data-dz-size></div>
+<div class="dz-preview dz-file-preview " style="max-width: 400px; width: 300px;" ng-click="$event.stopPropagation();">
+  <div style="display: flex; flex-direction: row; align-items: center;">
+    <div style="" class="dz-details modelNumber">
+      <img data-ngId="image" data-dz-thumbnail />
+    </div>
+    <div style="">
+      <div class="dz-filename"><span data-dz-name></span></div>
+      <div class="dz-size" data-dz-size></div>
+    </div>
   </div>
   <div style="clear: both;"></div>
   <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
@@ -28,20 +30,20 @@
   <textarea data-ngModel="description" class="boxsizingBorder form-control"></textarea>
 
   <div class="btn-group" style="width: 100%; margin: 10px 0px 10px 0px;" data-toggle="buttons">
-    <button class="btn btn-primary btn-xs" ng-class="{'active': docType === 'image'}" style="width: 50%;" ng-click="docType = 'image'; $event.stopPropagation();">
+    <button data-hashkey class="btn btn-primary btn-xs" ng-class="{'active': HASH_KEY.docType === 'image'}" style="width: 50%;" ng-click="HASH_KEY.docType = 'image'; $event.stopPropagation();">
       Image
     </button>
-    <button class="btn btn-primary btn-xs" ng-class="{'active': docType === 'document'}" style="width: 50%;" ng-click="docType = 'document'; $event.stopPropagation();">
+    <button data-hashkey class="btn btn-primary btn-xs" ng-class="{'active': HASH_KEY.docType === 'document'}" style="width: 50%;" ng-click="HASH_KEY.docType = 'document'; $event.stopPropagation();">
       Document
     </button>
   </div>
 
   <p><strong>Person Tags</strong></p>
-  <tagpicker tag="tags.person" type="person"></tagpicker>
+  <tagpicker data-hashkey tag="HASH_KEY.tags.person" type="person"></tagpicker>
   <p><strong>Place Tags</strong></p>
-  <tagpicker tag="tags.place" type="place"></tagpicker>
+  <tagpicker data-hashkey tag="HASH_KEY.tags.place" type="place"></tagpicker>
   <p><strong>Other Tags</strong></p>
-  <tagpicker tag="tags.other" type="other"></tagpicker>
+  <tagpicker data-hashkey tag="HASH_KEY.tags.other" type="other"></tagpicker>
   <!-- <div class="dz-success-mark"><span>✔</span></div> -->
   <!-- <div class="dz-error-mark"><span>✘</span></div> -->
   <!-- <div class="dz-error-message"><span data-dz-errormessage></span></div> -->

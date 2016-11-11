@@ -3,9 +3,38 @@
   min-width: 320px;
   height: 100%;
   .file-quick-search {
+    .dropdown-menu {
+      li i {
+        padding-right: 4px;
+      }
+      li div.checkbox {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857;
+        color: #333333;
+        white-space: nowrap;
+        margin: 0;
+      }
+    }
+    .overrideButtonStyles {
+      > :last-child {
+        border-radius: 0px;
+        > a {
+          border-radius: 0px;
+        }
+      }
+      > :first-child {
+        border-radius: 4px 0px 0px 0px;
+        > a {
+          border-radius: 4px 0px 0px 0px;
+        }
+      }
+    }
   }
   .file-list {
-    height: calc(100% - 34px);
+    height: calc(100% - 56px);
     overflow: auto;
     width: 320px;
     > .list {
@@ -23,6 +52,19 @@
       &:first-child {
         border-top: 1px solid #ccc;
       }
+      span.img {
+        min-width: 25%;
+        max-width: 25%;
+        img {
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+    .overflow-cutoff {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }

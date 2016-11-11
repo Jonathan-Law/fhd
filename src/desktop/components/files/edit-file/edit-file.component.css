@@ -1,0 +1,13 @@
+.edit-file {
+  display: flex;
+  flex-direction: row;
+  .item {
+    display: flex;
+    text-align: left;
+    file-preview {
+      display: flex;
+      flex: 1 1 100%;
+      flex-direction: row;
+    }
+  }
+}

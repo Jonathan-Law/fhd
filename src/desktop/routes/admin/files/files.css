@@ -2,4 +2,14 @@
   height: 100%;
   display: flex;
   flex-direction: row;
+  overflow: hidden;
+  .fhdropzone {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    &.column {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
 }

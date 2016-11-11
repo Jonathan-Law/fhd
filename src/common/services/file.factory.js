@@ -11,8 +11,8 @@ module.exports = ngModule => {
       }).then((data) => data && data.data ? data.data : [], () => []);
     };
 
-    service.getByTag = (val = '', type = 'person') => {
-      if (val && type) {
+    service.getByTag = (val = '', type = '') => {
+      if (val) {
         return $http({
           method: 'GET',
           url: `${configs.baseURL}/api/v1/file/getTypeahead/${val}/${type}/false`,

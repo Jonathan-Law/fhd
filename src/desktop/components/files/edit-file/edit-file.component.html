@@ -1,0 +1,39 @@
+<div class="edit-file">
+  <div class="item" style="flex: 1 1 30%; max-width: 30%; min-width: 30%;">
+    <file-preview file="$ctrl.file"></file-preview>
+  </div>
+  <div class="item" style="flex: 1 1 70%; max-width: 70%; min-width: 70%; padding-left: 10px; padding-right: 10px;">
+    <div>
+      <div class="form-group" ng-class="(validName && validName.state)? 'has-feedback ' + validName.state: ''">
+        <label class="control-label" for="newName">File Location</label>
+        <input type="text" class="form-control" id="newName" ng-model='$ctrl.file.link' disabled="disabled">
+      </div>
+      <div class="form-group">
+        <label class="control-label" for="title">Title</label>
+        <input type="text" class="form-control" id="title" ng-model='$ctrl.file.title'>
+      </div>
+      <div class="form-group">
+        <label class="control-label" for="author">Author</label>
+        <input type="text" class="form-control" ng-model="$ctrl.file.author" id="author">
+      </div>
+      <p><strong>Description</strong></p>
+      <textarea ng-model="$ctrl.file.comments" class="boxsizingBorder form-control"></textarea>
+      <div class="btn-group" style="width: 100%; margin: 10px 0px 10px 0px;" data-toggle="buttons">
+        <button class="btn btn-primary btn-xs" ng-class="{'active': $ctrl.file.type === 'image'}" style="width: 50%;" ng-click="$ctrl.file.type = 'image'; $event.stopPropagation();">
+          Image
+        </button>
+        <button class="btn btn-primary btn-xs" ng-class="{'active': $ctrl.file.type === 'document'}" style="width: 50%;" ng-click="$ctrl.file.type = 'document'; $event.stopPropagation();">
+          Document
+        </button>
+      </div>
+      <p><strong>Person Tags</strong></p>
+      <tagpicker tag="tags.person" type="person"></tagpicker>
+      <p><strong>Place Tags</strong></p>
+      <tagpicker tag="tags.place" type="place"></tagpicker>
+      <p><strong>Other Tags</strong></p>
+      <tagpicker tag="tags.other" type="other"></tagpicker>
+      <button class="processMe btn btn-primary pull-left"><i class="fa fa-save"></i></button>
+      <button data-dz-remove class="btn btn-danger pull-right"><i class="fa fa-trash"></i></button>
+    </div>
+  </div>
+</div>

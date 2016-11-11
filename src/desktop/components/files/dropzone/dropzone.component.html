@@ -1,5 +1,5 @@
 <form action="" class="dropzone" method="post" enctype="multipart/form-data" onsubmit="return false" id="dropzone">
-  <div class="dz-default dz-message">
-    <span>Drop files here to upload</span>
+  <div class="dz-default dz-message" ng-class="{'align-top' : $ctrl.total}">
+    <span ng-show="!$ctrl.total">Drop files here to upload</span>
   </div>
 <form>

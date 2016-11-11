@@ -5,10 +5,38 @@ fhdropzone {
   flex: 1;
   .dropzone {
     flex: 1 1 100%;
+    line-height: 100%;
     display: flex;
     flex-direction: row;
+    padding: 0px;
     > .dz-default {
       flex: 1 1 100%;
+      margin: 0px;
+      display: flex;
+      align-items: center;
+      align-content: center;
+      &.align-top {
+        align-items: flex-start;
+      }
+      span {
+        flex: 1 1 100%;
+      }
+    }
+    .dz-preview {
+      .dz-details {
+        position: static;
+        display: inline-block;
+        opacity: 1;
+        max-width: auto;
+        min-width: auto;
+      }
+      .dz-progress {
+        top: auto;
+        bottom: 0px;
+      }
+    }
+    .autocomplete {
+      z-index: 1010;
     }
   }
 }

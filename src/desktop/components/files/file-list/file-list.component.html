@@ -1,20 +1,63 @@
 <div class="file-list-container">
   <div class="file-quick-search">
     <div class="input-group" style="width:100%;">
-      <!-- <div class="btn-group btn-group-justified overrideButtonStyles" role="group"> -->
-      <!-- <a type="button" class="btn btn-default" ng-click="getSubmissionsList()"><i class="fa fa-user" tooltip-placement="right" uib-tooltip="Inactive individuals needing approval" ></i></a> -->
-      <!-- <a type="button" class="btn btn-default"><i class="fa fa-user" tooltip-placement="top" uib-tooltip="Something else"></i></a> -->
-      <!-- <a type="button" class="btn btn-default"><i class="fa fa-user" tooltip-placement="top" uib-tooltip="Another"></i></a> -->
-      <!-- </div> -->
+      <div class="btn-group btn-group-justified overrideButtonStyles" role="group">
+        <div class="btn-group" role="group">
+          <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="sortOptions" aria-haspopup="true" aria-expanded="true"><i class="fa fa-filter" tooltip-placement="right" uib-tooltip="Sort Quick Search"></i></a>
+          <ul class="dropdown-menu" aria-labelledby="sortOptions">
+            <li><a ng-click="$ctrl.reverse = true; $ctrl.sortBy = ''; $ctrl.label = 'title';"><i class="fa fa-times"></i>Clear Sort</a></li>
+            <li><a ng-click="$ctrl.reverse = $ctrl.sortBy !== 'title' ? true : (($ctrl.sortBy === 'title' ? true : false) && (!$ctrl.reverse)); $ctrl.sortBy = 'title'; $ctrl.label = 'title';"><i class="fa fa-sort"></i>Title</a></li>
+            <li><a ng-click="$ctrl.reverse = $ctrl.sortBy !== 'type' ? true : (($ctrl.sortBy === 'type' ? true : false) && (!$ctrl.reverse)); $ctrl.sortBy = 'type'; $ctrl.label = 'type';"><i class="fa fa-file-image-o"></i>Type</a></li>
+            <li><a ng-click="$ctrl.reverse = $ctrl.sortBy !== 'author' ? true : (($ctrl.sortBy === 'author' ? true : false) && (!$ctrl.reverse)); $ctrl.sortBy = 'author'; $ctrl.label = 'author';"><i class="fa fa-user"></i>Author</a></li>
+            <li><a ng-click="$ctrl.reverse = $ctrl.sortBy !== 'date' ? true : (($ctrl.sortBy === 'date' ? true : false) && (!$ctrl.reverse)); $ctrl.sortBy = 'date'; $ctrl.label = 'date';"><i class="fa fa-calendar"></i>Date Added</a></li>
+            <li><a ng-click="$ctrl.reverse = $ctrl.sortBy !== 'id' ? true : (($ctrl.sortBy === 'id' ? true : false) && (!$ctrl.reverse)); $ctrl.sortBy = 'id'; $ctrl.label = 'id';"><i class="fa fa-list-ol"></i>Id</a></li>
+          </ul>
+        </div>
+        <div class="btn-group" role="group">
+          <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="tagSearchOptions" aria-haspopup="true" aria-expanded="true"><i class="fa fa-tags" tooltip-placement="top" uib-tooltip="Which tags to quicksearch"></i></a>
+          <ul class="dropdown-menu" aria-labelledby="tagSearchOptions">
+            <li>
+              <div class="checkbox">
+                <label ng-click="$event.stopPropagation();">
+                  <input type="checkbox" ng-change="$ctrl.getAllFiles();" ng-model-options="{debounce: 200}" ng-model="$ctrl.types.person" ng-checked="$ctrl.types.person"><i class="fa fa-user"></i>Person
+                </label>
+              </div>
+            </li>
+            <li>
+              <div class="checkbox">
+                <label ng-click="$event.stopPropagation();">
+                  <input type="checkbox" ng-change="$ctrl.getAllFiles();" ng-model-options="{debounce: 200}" ng-model="$ctrl.types.place" ng-checked="$ctrl.types.place"><i class="fa fa-globe"></i>Place
+                </label>
+              </div>
+            </li>
+            <li>
+              <div class="checkbox">
+                <label ng-click="$event.stopPropagation();">
+                  <input type="checkbox" ng-change="$ctrl.getAllFiles();" ng-model-options="{debounce: 200}" ng-model="$ctrl.types.collection" ng-checked="$ctrl.types.collection"><i class="fa fa-briefcase"></i>Collection
+                </label>
+              </div>
+            </li>
+            <li>
+              <div class="checkbox">
+                <label ng-click="$event.stopPropagation();">
+                  <input type="checkbox" ng-change="$ctrl.getAllFiles();" ng-model-options="{debounce: 200}" ng-model="$ctrl.types.other" ng-checked="$ctrl.types.other"><i class="fa fa-briefcase"></i>Other Metadata
+                </label>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <!-- <a type="button" class="btn btn-default"><i class="fa fa-user" tooltip-placement="top" uib-tooltip="Another"></i></a> -->
+      </div>
       <input class="form-control" type="text" ng-model="$ctrl.typeahead" ng-model-options="{debounce: 200}" ng-change="$ctrl.getAllFiles()" placeholder="Quick Search">
-      <label class="input-group-addon" style="width:38px;" ng-click="searchKey = null; getNewList(); makeSelection({});" tooltip-placement="right" uib-tooltip="Add/Edit file">
+      <label class="input-group-addon" style="width:38px;" ng-click="$ctrl.typeahead = ''; $ctrl.sortBy = ''; $ctrl.label = 'title'; $ctrl.reverse = true; $ctrl.getAllFiles(); $ctrl.makeSelection(null);" tooltip-placement="right" uib-tooltip="Clear Search">
         <i class="fa fa-times"></i>
       </label>
     </div>
   </div>
   <div class="file-list" vs-repeat>
-    <div class="list" ng-repeat="item in $ctrl.files" ng-class="{'bg-info': $ctrl.selection.id === item.id}" ng-click="$ctrl.makeSelection(item)">
-      <img src="{{$ctrl.baseURL + item.thumblink}}" alt="">
+    <div class="list" ng-repeat="item in $ctrl.files | orderBy: $ctrl.sortBy : !$ctrl.reverse" ng-class="{'bg-info': $ctrl.selection.id === item.id}" ng-click="$ctrl.makeSelection(item)">
+      <span class="img"><file-preview file="item" hide-other="true" thumbnails="true"></file-preview></span>
+      <span class="overflow-cutoff" style="padding-left: 5px; padding-right: 15px;">{{item[$ctrl.label]}}</span>
     </div>
   </div>
 </div>

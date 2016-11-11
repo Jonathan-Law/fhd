@@ -1,0 +1,13 @@
+.file-preview {
+  display: flex;
+  flex: 1 1 100%;
+  .preview-container {
+    flex: 1 1 100%;
+    .flex-other {
+      display: flex;
+      flex-direction: row;
+      flex: 1 1 100%;
+      min-height: 100%;
+    }
+  }
+}

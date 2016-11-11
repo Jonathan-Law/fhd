@@ -1,0 +1,14 @@
+<div class="file-preview">
+  <div ng-switch="$ctrl.type" class="preview-container">
+    <div ng-switch-when="image">
+      <img ng-if="$ctrl.configs.baseURL && $ctrl.file.link" style="width: 100%; height: auto;" onerror="this.src='http://familyhistorydatabase.org/images/familytree.jpg'" ng-src="{{$ctrl.configs.baseURL + ($ctrl.thumbnails ? $ctrl.file.thumblink : $ctrl.file.link)}}" alt="">
+    </div>
+    <div ng-switch-when="video">
+      <video ng-if="$ctrl.configs.baseURL && $ctrl.file.link" src="{{$ctrl.configs.baseURL + ($ctrl.thumbnails ? $ctrl.file.thumblink : $ctrl.file.link)}}"></video>
+    </div>
+    <div ng-switch-when="other" ng-class="{'flex-other': !$ctrl.hideOther}">
+      <img ng-if="$ctrl.configs.baseURL && $ctrl.file.link && $ctrl.hideOther" style="width: 100%; height: auto;" onerror="this.src='http://familyhistorydatabase.org/images/familytree.jpg'" ng-src="{{$ctrl.configs.baseURL + ($ctrl.thumbnails ? $ctrl.file.thumblink : $ctrl.file.link)}}" alt="">
+      <iframe ng-if="$ctrl.configs.baseURL && $ctrl.file.link && !$ctrl.hideOther" src="" style="flex: 1"></iframe>
+    </div>
+  </div>
+</div>

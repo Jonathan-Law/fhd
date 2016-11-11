@@ -16,3 +16,10 @@ body {
   color: $text-color;
   background: $background-color;
 }
+
+
+.btn {
+  i.padding {
+    padding-right: 5px;
+  }
+}

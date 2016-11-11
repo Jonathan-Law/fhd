@@ -127,10 +127,12 @@ class File
                $query .= "LIMIT 0, $limitNum";
             }
          } else {
-            $query = "SELECT *, MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) AS score FROM `file` WHERE MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) ORDER BY score DESC";
+            $query = "SELECT *, MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) AS score FROM `file` WHERE MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) OR `link` LIKE '%".$val."%' ORDER BY score DESC";
             if ($limitNum) {
                $query .= "LIMIT 0, $limitNum";
             }
+            $database = cbSQLConnect::connect('array');
+            return $database->QuerySingle($query);
          }
          return $database->QuerySingle($query);
       }
