@@ -12,6 +12,7 @@ module.exports = ngModule => {
   });
 
   let uniqueId = 0;
+
   function dropzoneCtrl($element, $compile, $scope) {
     const ctrl = this;
 
@@ -73,15 +74,20 @@ module.exports = ngModule => {
           }
         });
         $scope.$applyAsync(() => {
-          ctrl.total++;
+          ctrl.total = dropzone.files.length;
         });
       },
       removedfile: function removedfile() {
+        const dropzone = this;
         $scope.$applyAsync(() => {
-          ctrl.total--;
+          ctrl.total = dropzone.files.length;
         });
       },
       success: (/*file, response*/) => {
+        const dropzone = this;
+        $scope.$applyAsync(() => {
+          ctrl.total = dropzone.files.length;
+        });
         // const dropzone = this;
         // dropzone.processQueue.bind(dropzone);
       },
@@ -124,7 +130,7 @@ module.exports = ngModule => {
             return dropzone.processQueue();
           }
           $scope.$applyAsync(() => {
-            ctrl.total--;
+            ctrl.total = dropzone.files.length;
           });
         } else if (file.status === Dropzone.ERROR) {
           file.status = Dropzone.QUEUED;
