@@ -58,6 +58,9 @@ module.exports = ngModule => {
           });
           $scope.$applyAsync(() => {
             ctrl.files = Array.from(tempFiles.values())[0];
+            ctrl.files.forEach(file => {
+              file.id = +file.id;
+            });
             $element.find('.file-list').scrollTop(0);
           });
         });
@@ -65,6 +68,9 @@ module.exports = ngModule => {
         Business.file.getAllFiles().then((results) => {
           $scope.$applyAsync(() => {
             ctrl.files = results;
+            ctrl.files.forEach(file => {
+              file.id = +file.id;
+            });
             $element.find('.file-list').scrollTop(0);
           });
         });

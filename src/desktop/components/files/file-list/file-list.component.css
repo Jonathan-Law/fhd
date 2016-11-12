@@ -1,6 +1,7 @@
 .file-list-container {
   width: 320px;
-  min-width: 320px;
+  padding: 0px 10px;
+  min-width: 300px;
   height: 100%;
   .file-quick-search {
     .dropdown-menu {
@@ -36,10 +37,10 @@
   .file-list {
     height: calc(100% - 56px);
     overflow: auto;
-    width: 320px;
+    width: 300px;
     > .list {
       overflow: hidden;
-      width: 320px;
+      width: 300px;
       height: 50px;
       line-height: 50px;
       padding:5px;

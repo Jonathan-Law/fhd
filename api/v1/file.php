@@ -46,6 +46,13 @@
         }
         return File::getByTagType($val, $type, $limit);
         return $type;
+      } else if ($that->verb === "getTags") {
+          // Get all edit information required for file edits.
+        $id = intval($args[0]);
+        if (isset($id) && is_numeric($id)){
+          return Tag::getByFileId($id);
+        }
+        return false;
       } else if ($that->verb === "") {
           // Get all edit information required for file edits.
         $id = intval($args[0]);

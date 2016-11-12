@@ -9,15 +9,28 @@ module.exports = ngModule => {
     }
   });
 
-  function editFileCtrl() {
+  function editFileCtrl(Business) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
+    ctrl.$onChanges = $onChanges;
 
     function $onInit() {
+      handleTags();
+    }
+    function $onChanges() {
+      handleTags();
+    }
+
+    function handleTags() {
+      if (ctrl.file) {
+        Business.file.getTags(ctrl.file.id).then(tags => {
+          ctrl.file.tags = tags;
+        });
+      }
     }
   }
 
   // inject dependencies here
-  editFileCtrl.$inject = [];
+  editFileCtrl.$inject = ['business'];
 };

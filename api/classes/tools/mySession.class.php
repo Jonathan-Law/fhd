@@ -31,7 +31,7 @@ class mySession
     /*
      * STATIC FIELD
      */
-    
+
     /**
      * Store che class istance (according Singleton desing pattern)
      *
@@ -338,7 +338,7 @@ class mySession
     /**
      * The SQL Statement used for retriving session info's
      *
-     * @uses $SQLStatement_GetSessionInfos->bindParam(':sid', $sid, PDO::PARAM_STR, $this->sid_len);     
+     * @uses $SQLStatement_GetSessionInfos->bindParam(':sid', $sid, PDO::PARAM_STR, $this->sid_len);
      *
      * @var PDO Statement
      */
@@ -460,7 +460,7 @@ class mySession
     public static function getInstance($_MYSESSION_CONF = '')
     {
         if ($_MYSESSION_CONF === '') {
-          global $_MYSESSION_CONF;          
+          global $_MYSESSION_CONF;
         }
         if (!isset(self::$instance)) {
             $c = __CLASS__;
@@ -480,8 +480,8 @@ class mySession
      * @param string $name The name of the session variable
      * @param string $value The value of the session variable.
      */
-    public function save($name,$value) {                   
-                    
+    public function save($name,$value) {
+
                     $this->finalizeSaving($name, $value);
     }
 
@@ -499,7 +499,7 @@ class mySession
      *          The vars array will be: $this->VARS["myVars"] = "fooo";
      */
     public function register(&$name) {
-                    
+
                     $this->finalizeSaving($this->varName($name), $name);
 
     }
@@ -558,13 +558,13 @@ class mySession
      */
     private function loadSesionVars() {
 
-            $this->VARS = array();           
+            $this->VARS = array();
 
             $this->updateSessionExpireTime();
 
             $dati = $this->selectSessionVars();
 
-            foreach($dati as $infos) {            
+            foreach($dati as $infos) {
                     $this->VARS[$infos["name"]]=unserialize($infos["value"]);
             }
 
@@ -578,9 +578,9 @@ class mySession
      * @access private
      */
     private function readSessionId() {
-        
+
             if ($this->use_cookie==true) { //cookie enabled
-        
+
                     if (isset($_COOKIE[$this->sid_name])) { //there some jam in the cookie
 
                             $this->sessionId=$_COOKIE[$this->sid_name];
@@ -601,27 +601,27 @@ class mySession
                                 } else {
                                     //ok the jam is good!
                                     if (!$this->overwrite) {
-                                        setcookie ($this->sid_name, $this->sessionId,time()+$this->session_duration,"/",'',false,true);                                        
+                                        setcookie ($this->sid_name, $this->sessionId,time()+$this->session_duration,"/",'',false,true);
                                     }
                                     $this->loadSesionVars();
                                 }
-                                
+
                             } else {
                                 //bad bad bad think ... something goes wrong with the
-                                //jam .. maybe uncle tom eated it before ..                                
+                                //jam .. maybe uncle tom eated it before ..
                                 $this->destroySession(FALSE);
                                 trigger_error("Unable to load session.",E_USER_ERROR);
                             }
 
-                    } else { 
+                    } else {
                             //Damn, no id ... i create some jam!
-                                    
+
                                         if (!$this->newSid()) {
                                             trigger_error("Unable to load session.",E_USER_ERROR);
                                         } else {
                                             if (!$this->overwrite) setcookie ($this->sid_name, $this->sessionId,time()+$this->session_duration,"/",'',false,true);
                                         }
-                            
+
 
                     }
 
@@ -648,7 +648,7 @@ class mySession
             }
         }
 
-    
+
 
     /**
      * Check if the session id found is able ti be used
@@ -658,7 +658,7 @@ class mySession
     private function checkSessionId() {
 
         $hijackTest = FALSE;
-       
+
         if ($this->hijackBlock) {
             $this->SQLStatement_GetSessionInfos->bindParam(':sid', $this->sessionId, PDO::PARAM_STR, $this->sid_len);
             $this->SQLStatement_GetSessionInfos->execute();
@@ -676,7 +676,7 @@ class mySession
 
         if ($hijackTest==TRUE) return true;
             else return false;
-        
+
     }
 
     /**
@@ -688,7 +688,7 @@ class mySession
     private function newSid() {
 
             $this->sessionId=$this->generateString($this->sid_len);
-            
+
             while ( $this->getSidCount($this->sessionId) > 0 || is_int($this->sessionId) ) {
 
                     $this->sessionId=$this->generateString($this->sid_len);
@@ -711,7 +711,7 @@ class mySession
      * Generate user agent string based on
      * User Agent and Salt.
      * The return string is the SHA1 hash.
-     * 
+     *
      * @return string
      */
     private function getUa() {
@@ -783,6 +783,27 @@ class mySession
                     $this->connessione = new PDO($this->db_type.":dbname=".$this->db_name.";host=".$this->db_server, $this->db_username, $this->db_pass );
                     //echo "PDO connection object created";
                     $this->setupSQLStatement();
+                }
+            catch(PDOException $e)
+                {
+                    echo $e->getMessage();
+                    die();
+                }
+
+
+    }
+
+    /**
+     * Create a database connection
+     *
+     * @access private
+     */
+    private function closeConnection() {
+        //if (!is_resource($this->connessione))
+        //    $this->connessione = mysql_connect($this->db_server,$this->db_username,$this->db_pass) or die("Error connectin to the DBMS: " . mysql_error());
+        if (is_resource($this->connessione))
+            try {
+                    $this->connessione = null;
                 }
             catch(PDOException $e)
                 {
@@ -866,11 +887,11 @@ class mySession
         if ($this->overwrite) {
             //yes.. i'm the best so i overwrite php function
             //Make sure session cookies expire when we want it to expires
-            ini_set('session.cookie_lifetime', $this->session_duration);            
+            ini_set('session.cookie_lifetime', $this->session_duration);
             //set the value of the garbage collector
             ini_set('session.gc_maxlifetime', $this->session_max_duration);
             // set the session name to our fantastic name
-            ini_set('session.name', $this->sid_name);                        
+            ini_set('session.name', $this->sid_name);
 
             // register the new handler
             session_set_save_handler(
@@ -887,9 +908,9 @@ class mySession
             session_id($this->getSessionId());
             session_start();
 
-        }        
+        }
 
-        
+        $this->closeConnection();
         //echo "<hr>".$this->sessionId."<hr>";
         //if ($this->expireSession()) $this->destroy();
         //$_REQUEST[$this->_MYSESSION_CONF['SESSION_VAR_NAME']]=$this->sessionId;
@@ -904,7 +925,7 @@ class mySession
      *  @access private
      */
     function open($save_path, $session_name)
-    {        
+    {
         return true;
 
     }
@@ -927,7 +948,7 @@ class mySession
      *  @access private
      */
     function read($session_id)
-    {        
+    {
         return (string) $this->serializePhpSession($this->getVars());
     }
 
@@ -937,8 +958,8 @@ class mySession
      *  @access private
      */
     function write($session_id, $session_data)
-    {       
-        
+    {
+
         $myData = $this->unserializePhpSession($session_data);
         foreach ($myData as $name => $value) {
             $this->save($name, $value);
@@ -949,7 +970,7 @@ class mySession
     /**
      * Helper function that serialize an object to a string
      * in the Php session format
-     * 
+     *
      * @param mixed object $data Session data (or any object)
      * @return string serialied object
      * @access private
@@ -1011,7 +1032,7 @@ class mySession
      *  @access private
      */
     function destroy($session_id)
-    {        
+    {
         return $this->destroySession(true);
     }
 
@@ -1056,7 +1077,7 @@ class mySession
 
         /*** SQL statement: Get Session Vars ***/
         $this->SQLStatement_GetSessionVars = $this->connessione->prepare("SELECT ".$this->table_column_value." as value, ".$this->table_column_name." as name FROM ".$tabella_variabili." WHERE ".$this->table_column_sid." = :sid");
-        
+
         /*** SQL statement: Get Encrypted Session Vars ***/
         $this->SQLStatement_GetEncryptedSessionVars = $this->connessione->prepare("SELECT AES_DECRYPT(".$this->table_column_value.",'".$this->encrypt_key."') as value,AES_DECRYPT(".$this->table_column_name.",'".$this->encrypt_key."') as name FROM ".$tabella_variabili." WHERE ".$this->table_column_sid." = :sid");
 
@@ -1088,13 +1109,13 @@ class mySession
      * @return int: The number of records
      */
     private function getSidCount($sid) {
-        
-        
+
+
         $this->SQLStatement_CountSid->bindParam(':sid', $sid, PDO::PARAM_STR, $this->sid_len);
-        $this->SQLStatement_CountSid->execute();        
+        $this->SQLStatement_CountSid->execute();
 
         $val=$this->SQLStatement_CountSid->fetchColumn();
-        
+
         return $val;
 
     }
@@ -1126,16 +1147,16 @@ class mySession
     /**
      * Update current session expires
      *
-     * @access private     
+     * @access private
      * @return boolean - True if the query succesfully done. False in any other case
      */
     private function updateSessionExpireTime() {
-        
+
             $newExprireTime = time()+$this->session_duration;
             $this->SQLStatement_UpdateSessionExpires->bindParam(':expires', $newExprireTime, PDO::PARAM_INT);
             $this->SQLStatement_UpdateSessionExpires->bindParam(':sid', $this->sessionId, PDO::PARAM_STR, $this->sid_len);
             return $this->SQLStatement_UpdateSessionExpires->execute();
-            
+
 
     }
 
@@ -1191,7 +1212,7 @@ class mySession
              $this->SQLStatement_InsertSessionVars->bindParam('name', $name, PDO::PARAM_STR);
              $this->SQLStatement_InsertSessionVars->bindParam('value', $val, PDO::PARAM_STR);
              $result = $this->SQLStatement_InsertSessionVars->execute();
- 
+
        }
 
         return $result;

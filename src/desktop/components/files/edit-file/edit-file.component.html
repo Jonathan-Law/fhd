@@ -1,8 +1,8 @@
 <div class="edit-file">
-  <div class="item" style="flex: 1 1 30%; max-width: 30%; min-width: 30%;">
+  <div class="item" style="flex: 1 1 70%; max-width: 70%;">
     <file-preview file="$ctrl.file"></file-preview>
   </div>
-  <div class="item" style="flex: 1 1 70%; max-width: 70%; min-width: 70%; padding-left: 10px; padding-right: 10px;">
+  <div class="item" style="flex: 1 1 30%; max-width: 30%; min-width: 300px; padding-left: 10px; padding-right: 10px;">
     <div>
       <div class="form-group" ng-class="(validName && validName.state)? 'has-feedback ' + validName.state: ''">
         <label class="control-label" for="newName">File Location</label>
@@ -27,11 +27,11 @@
         </button>
       </div>
       <p><strong>Person Tags</strong></p>
-      <tagpicker tag="tags.person" type="person"></tagpicker>
+      <tagpicker tag="$ctrl.file.tags.person" type="person"></tagpicker>
       <p><strong>Place Tags</strong></p>
-      <tagpicker tag="tags.place" type="place"></tagpicker>
+      <tagpicker tag="$ctrl.file.tags.place" type="place"></tagpicker>
       <p><strong>Other Tags</strong></p>
-      <tagpicker tag="tags.other" type="other"></tagpicker>
+      <tagpicker tag="$ctrl.file.tags.other" type="other"></tagpicker>
       <button class="processMe btn btn-primary pull-left"><i class="fa fa-save"></i></button>
       <button data-dz-remove class="btn btn-danger pull-right"><i class="fa fa-trash"></i></button>
     </div>

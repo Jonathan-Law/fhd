@@ -7,6 +7,7 @@
     flex: 1;
     display: flex;
     flex-direction: row;
+    overflow-y: auto;
     &.column {
       flex-direction: column;
       align-items: center;

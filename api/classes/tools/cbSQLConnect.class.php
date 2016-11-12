@@ -65,13 +65,10 @@ private $FetchType; // stores type of fetch result of querys
 private $PDOInstance; // class global PDO Instance
 
 public function __construct(cbSQLConnectConfig &$setup, $mode = cbSQLConnectVar::FETCH_ASSOC){
-
   $this->db = &$setup;
   $this->FetchType = $mode;
-
   $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_FUNC);
-
-  $this->PDOInstance = cbSQLConnectConfig::CreatePDOInstance();
+  // $this->PDOInstance = cbSQLConnectConfig::CreatePDOInstance();
 }
 
 public function QuerySingle($query, $class = 'stdClass'){
@@ -102,6 +99,7 @@ public function QuerySingle($query, $class = 'stdClass'){
     break;
 
   }
+  $instance = null;
   return $tp;
 }
 
@@ -237,8 +235,6 @@ private function addQuotes($word, $doublequotes = true){
 
 
 public function SQLInsert($array, $table){
-
-
   $inst = cbSQLConnectConfig::CreatePDOInstance();
 
   $fieldname = array_keys($array);
@@ -253,21 +249,18 @@ public function SQLInsert($array, $table){
   $stmt = $inst->prepare($query);
 
   foreach($array  as $param => $key){
-
     $stmt->bindValue(':'.$param,  $array[$param]);
-
-
-
   }
 
   $stmt->execute();
 
   if($stmt->rowCount() != 0){
-
     $stmt->closeCursor();
-    return $inst->lastInsertId();
+    $insertedID = $inst->lastInsertId();
+    $inst = null;
+    return $insertedID;
   }else {
-
+    $inst = null;
     $stmt->closeCursor();
     return false;
   }
@@ -276,27 +269,15 @@ public function SQLInsert($array, $table){
 
 
 public function SQLUpdate($table, $fieldToChange, $fieldValue, $idField, $idValue){
-
-
-//$inst = cbSQLConnectConfig::CreatePDOInstance();
-
   $query = sprintf("UPDATE %s SET %s = :value WHERE %s = :comparevalue", $table, $fieldToChange, $idField);
-
-
-
   $stmt = $this->db->prepare($query);
-
 
   if(!$stmt){
     print_r( $stmt->errorInfo());
     return 'fail';
-
   }
   $stmt->bindParam(":value",  $fieldValue, PDO::PARAM_INT | PDO::PARAM_STR);
   $stmt->bindParam(":comparevalue",$idValue, PDO::PARAM_INT | PDO::PARAM_STR);
-
-
-
 
   $stmt->execute();
 
@@ -307,9 +288,6 @@ public function SQLUpdate($table, $fieldToChange, $fieldValue, $idField, $idValu
 
   $stmt->closeCursor();
   return 'unchanged';
-
-
-
 }
 
 
@@ -324,6 +302,7 @@ public function SQLDelete($table, $idTable, $idValue){
   $stmt->bindParam(":value", $idValue);
   $result = $stmt->execute();
   $stmt->closeCursor();
+  $inst = null;
   return $result;
 }
 
