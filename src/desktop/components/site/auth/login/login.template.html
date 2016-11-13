@@ -16,6 +16,7 @@
         </span>
         <input enter-event="login()" class="form-control" style="width: auto; display:inline-block;" type="password" ng-model="password" placeholder="Password" required/>
       </label>
+      <p ng-if="error" class="text-danger">ERROR: Invalid username or password</p>
     </div>
   </form>
 </div>
