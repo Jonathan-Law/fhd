@@ -1,0 +1,8 @@
+<div class="message-admin">
+  <form ng-submit="$ctrl.doCallback({ form: messageForm, model: $ctrl.message })" name="messageForm">
+    <textarea class="form-control" ng-model="$ctrl.message.message" cols="120" rows="20" placeholder="Send a message to the admin..."></textarea>
+    <br>
+    <button class="btn btn-default" type="button" ng-click="$ctrl.reset()">Clear</button>
+    <button class="btn btn-primary" type="submit">Send</button>
+  </form>
+</div>

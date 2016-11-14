@@ -20,6 +20,11 @@
 
         $result = register($result);
         return User::current_user();
+      } else if ($that->verb === 'sendAdminMessage') {
+        $user = User::current_user();
+        $that->file->name = $user->displayableName;
+        $that->file->email = $user->email;
+        return sendAdminMessage($that->file);
       }
     }
     if ($that->method === 'GET') {
@@ -59,5 +64,16 @@
     } else {
       return "Only accepts GET AND POSTS requests";
     }
+  }
+
+  function sendAdminMessage($message) {
+    $body = "<div>
+      Message from User: ".$message->name." &mdash; ".$message->email."
+      <br>
+      <br>
+      ".$message->message."
+    </div>";
+    $body;
+    return sendOwnerUpdate($body, 'FHD: User Message from '.$message->name);
   }
 ?>

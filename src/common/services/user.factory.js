@@ -105,6 +105,14 @@ module.exports = ngModule => {
         });
     };
 
+    user.sendAdminMessage = (message) => {
+      return $http({
+        method: 'POST',
+        url: `${configs.baseURL}api/v1/user/sendAdminMessage`,
+        data: message,
+      }).then(data => data.data);
+    };
+
     user.getIsAdmin = (userInstance) => {
       if (userInstance && userInstance.rights && (userInstance.rights === 'super' || userInstance.rights === 'admin')) {
         return new Promise((resolve) => {

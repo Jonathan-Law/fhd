@@ -1,0 +1,11 @@
+<div class="contact-route">
+  <div class="item" ng-if="$ctrl.isValidated">
+    <p style="padding-bottom: 10px">
+      As administrators of the Family History Database, we would like to make your experience a good one. If you have any feedback that would assist us in this effort, please feel free to contact us!
+    </p>
+    <message-admin callback="$ctrl.handleCallback(form, model)" form-sent="$ctrl.formSent"></message-admin>
+  </div>
+  <div class="item" ng-if="!$ctrl.isValidated">
+    Tools to contact the admin can be made available by validating your account. Please register, and then check your email for a message from "noreply@familyhistorydatabase.org" that contains a validation link.
+  </div>
+</div>
