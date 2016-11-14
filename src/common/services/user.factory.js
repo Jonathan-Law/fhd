@@ -173,6 +173,16 @@ module.exports = ngModule => {
       user.getIsValidated();
     }, 1000);
 
+    user.resetPassword = (username) => {
+      return $http({
+        method: 'POST',
+        url: configs.baseURL + 'api/v1/user/resetPassword',
+        data: {
+          username,
+        },
+      }).then(data => data.data);
+    };
+
     user.login = (username, password) => {
       const deferred = $q.defer();
       if (!username || !password) {

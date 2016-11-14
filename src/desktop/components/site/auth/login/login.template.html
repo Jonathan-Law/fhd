@@ -5,13 +5,13 @@
   <form role="form" ng-submit="submitLogin()">
     <div class="form-group" style="display: inline-block;">
       <label style="display: block;">
-        <span style="width: 75px; display: inline-block; text-align:right;">
-          Username:&nbsp;
+        <span style="width: 175px; display: inline-block; text-align:right;">
+          Username/Email:&nbsp;
         </span>
         <input enter-event="login()" class="form-control" style="width: auto; display:inline-block;" type="text" ng-model="username" placeholder="Username" required autofocus/>
       </label>
       <label style="display: block;">
-        <span style="width: 75px; display: inline-block; text-align:right;">
+        <span style="width: 175px; display: inline-block; text-align:right;">
           Password:&nbsp;
         </span>
         <input enter-event="login()" class="form-control" style="width: auto; display:inline-block;" type="password" ng-model="password" placeholder="Password" required/>
@@ -24,4 +24,5 @@
   <button class="btn btn-primary" type="button" ng-click="login()">Login</button>
   <button class="btn btn-default" type="button" ng-click="register()">Register</button>
   <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+  <button class="btn btn-warning pull-left" type="button" ng-click="resetPassword()">Forgot Password</button>
 </div>

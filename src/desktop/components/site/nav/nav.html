@@ -43,7 +43,10 @@
           <button style="line-height: 48px; padding: 0px 10px; margin: 0px;" type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{user.displayableName}}&nbsp;<span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li ng-show="user && user.notNormal"><a ui-sref="myFamily({})">My Family</a></li>
+            <li ng-show="user && user.notNormal"><a ui-sref="myfamily({})">My Family</a></li>
+            <li ng-show="user">
+              <a ui-sref="profile({})">Profile</a>
+            </li>
             <li ng-show="user">
               <a href="javascript:void(0);" ng-click="logout()">logout</a>
             </li>

@@ -7,6 +7,12 @@ module.exports = ngModule => {
     //   item: $scope.items[0]
     // };
 
+    $scope.resetPassword = () => {
+      if (confirm(`We are about to reset the password for: ${$scope.username}. Is this you, and would you like to continue?`)) {
+        business.user.resetPassword($scope.username);
+      }
+    };
+
     $scope.login = () => {
       $scope.error = false;
       business.user.login($scope.username, $scope.password).then((response) => {

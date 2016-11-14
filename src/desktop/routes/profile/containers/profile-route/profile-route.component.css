@@ -1,0 +1,4 @@
+.profile-route {
+  padding: 20px;
+  > .item { /* ... */ }
+}
