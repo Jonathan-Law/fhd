@@ -32,8 +32,8 @@
       <tagpicker tag="$ctrl.file.tags.place" type="place"></tagpicker>
       <p><strong>Other Tags</strong></p>
       <tagpicker tag="$ctrl.file.tags.other" type="other"></tagpicker>
-      <button class="processMe btn btn-primary pull-left"><i class="fa fa-save"></i></button>
-      <button data-dz-remove class="btn btn-danger pull-right"><i class="fa fa-trash"></i></button>
+      <button class="processMe btn btn-primary pull-left" ng-click="$ctrl.saveChanges($ctrl.file)"><i class="fa fa-save"></i></button>
+      <button class="btn btn-danger pull-right" ng-click="$ctrl.deleteFile($ctrl.file)"><i class="fa fa-trash"></i></button>
     </div>
   </div>
 </div>

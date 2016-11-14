@@ -177,7 +177,7 @@ class File
             $file = $database->getObjectById($name, $id);
             if ($file) {
                $file->tags = Tag::getByFileId($id);
-               return $file;
+               return recast('File', $file);
             } else {
                return false;
             }
@@ -200,7 +200,21 @@ class File
          $results_array = $database->QueryForObject($sql, $params);
          return !empty($results_array) ? $results_array : false;
       }
+   }
 
+   public static function getTagListById($id = null)
+   {
+      $database = cbSQLConnect::connect('object');
+      if (isset($database))
+      {
+         $name = 'tag';
+         $sql = "SELECT * FROM $name WHERE `fileid`=:id";
+         $params = array(':id' => $id);
+         array_unshift($params, '');
+         unset($params[0]);
+         $results_array = $database->QueryForObject($sql, $params);
+         return !empty($results_array) ? $results_array : false;
+      }
    }
 
    public static function getByLink($temp_link = NULL)
@@ -337,6 +351,11 @@ class File
       $database = cbSQLConnect::adminConnect('object');
       if (isset($database))
       {
+         $tags = $this->getTagListById($this->id);
+         foreach ($tags as $tag) {
+            $temp = recast('Tag', $tag);
+            $temp->delete();
+         }
          return ($database->SQLDelete(self::$table_name, 'id', $this->id));
       }
    }

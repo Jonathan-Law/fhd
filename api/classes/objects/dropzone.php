@@ -26,11 +26,11 @@ class Dropzone
   public $thumbnail;
 
   public static function updateFile($data = NULL){
-    $file = recast('File', File::getById($data->id));
+    $file = File::getById($data->id);
     $file->type = isset($data->type)? $data->type: NULL;
-    $file->description = isset($data->description)? $data->description: NULL;
+    $file->comments = isset($data->comments)? $data->comments: NULL;
     $file->author = isset($data->author)? $data->author: NULL;
-    $file->tile = isset($data->tile)? $data->tile: NULL;
+    $file->title = isset($data->title)? $data->title: NULL;
 
     if (isset($data->tags)){
 

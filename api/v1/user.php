@@ -23,7 +23,6 @@
       }
     }
     if ($that->method === 'GET') {
-
       if ($that->verb === '') {
         $session = mySession::getInstance();
         $user_id = $session->getVar('user_id');
@@ -43,12 +42,14 @@
       if ($that->verb === 'isLoggedIn') {
         return User::current_user();
       }
-      if ($that->verb === 'getUserInfo' && $session->isAdmin()){
+      if ($that->verb === 'getUserInfo' && $session->isLoggedIn() && $session->isAdmin()){
         $id = intval(array_shift($args));
         if ($id && is_numeric($id)) {
           $user = User::getById($id);
           unset($user->password);
           return $user;
+        } else {
+          return User::getAllUsers();
         }
       }
       $user = User::current_user();

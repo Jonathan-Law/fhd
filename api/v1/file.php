@@ -2,7 +2,13 @@
   function handleFileAPI($args, $that) {
     $session = mySession::getInstance();
       // if ($that->method === 'POST') {
-    if ($that->method === 'POST' && $session->isLoggedIn()&& $session->isAdmin()) {
+    if ($that->method === 'DELETE' && $session->isLoggedIn()&& $session->isAdmin()) {
+      $id = intval(array_shift($args));
+      if ($id && is_numeric($id)) {
+        $file = File::getById($id);
+        return $file->delete();
+      }
+    }else if ($that->method === 'POST' && $session->isLoggedIn()&& $session->isAdmin()) {
       if ($that->verb === 'update') {
         $file = $that->file;
         return Dropzone::updateFile($file);
@@ -30,8 +36,7 @@
         }
       }
       return false;
-    }
-    if ($that->method === 'GET') {
+    } else if ($that->method === 'GET') {
       if ($that->verb === 'getAll' && $session->isAdmin()) {
         return File::getAll();
       } else if ($that->verb === 'getTypeahead'){
@@ -63,6 +68,6 @@
         return false;
       }
     }
-    return false;
+    return "Only accepts GET AND POSTS requests";
   }
 ?>

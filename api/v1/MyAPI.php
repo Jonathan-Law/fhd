@@ -68,6 +68,7 @@ class MyAPI extends API
     $obj = new stdClass();
     $obj->method = $this->method;
     $obj->endpoint = $this->endpoint;
+    $obj->request = $this->request;
     $obj->verb = $this->verb;
     $obj->args = $this->args;
     $obj->file = $this->file;

@@ -67,6 +67,13 @@ module.exports = ngModule => {
       return deferred.promise;
     };
 
+    user.getUsers = () => {
+      return $http({
+        method: 'GET',
+        url: `${configs.baseURL}api/v1/user/getUserInfo`,
+      }).then(data => data.data);
+    };
+
 
     user.isLoggedIn = (/*override*/) => {
       // create a promise for if we don't have the data

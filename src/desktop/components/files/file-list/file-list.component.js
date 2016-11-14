@@ -40,6 +40,7 @@ module.exports = ngModule => {
       if (ctrl.newSelection !== ctrl.selection) {
         ctrl.selection = ctrl.newSelection;
       }
+      getAllFiles();
     }
 
     function $postLink() {

@@ -5,7 +5,8 @@ module.exports = ngModule => {
     template: require('./edit-file.component.html'),
     controller: editFileCtrl,
     bindings: {
-      file: '<'
+      file: '<',
+      callback: '&',
     }
   });
 
@@ -14,12 +15,28 @@ module.exports = ngModule => {
 
     ctrl.$onInit = $onInit;
     ctrl.$onChanges = $onChanges;
+    ctrl.saveChanges = saveChanges;
+    ctrl.deleteFile = deleteFile;
 
     function $onInit() {
       handleTags();
     }
     function $onChanges() {
       handleTags();
+    }
+
+    function saveChanges(file) {
+      Business.file.updateFile(file).then(() => {
+        ctrl.callback({ file });
+      });
+    }
+
+    function deleteFile(file) {
+      if (confirm('Are you sure you want to delete this file?')) {
+        Business.file.deleteFile(file).then(() => {
+          ctrl.callback();
+        });
+      }
     }
 
     function handleTags() {

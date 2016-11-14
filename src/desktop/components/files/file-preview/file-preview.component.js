@@ -32,7 +32,6 @@ module.exports = ngModule => {
         ctrl.type = 'video';
       } else {
         ctrl.type = 'other';
-        console.log('ctrl.file', ctrl.file);
         if (!ctrl.hideOther) {
           $timeout(() => {
             if (getExtension(ctrl.file.link) === 'html') {

@@ -6,7 +6,7 @@
   <div class="fhdropzone column" ng-hide="!$ctrl.selection">
     <button class="btn btn-primary" style="width: 150px; min-height: 34px; margin: 20px;" ng-click="$ctrl.selection = null;"><i class="fa fa-file-o padding"></i>Add New Files</button>
     <div style="width: 100%;">
-      <edit-file style="width: 100%;" file="$ctrl.selection"></edit-file>
+      <edit-file callback="$ctrl.fileEdited(file)" style="width: 100%;" file="$ctrl.selection"></edit-file>
     </div>
   </div>
 </div>

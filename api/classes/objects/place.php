@@ -81,10 +81,10 @@ class Place
             $name = self::$table_name;
             $sql = "SELECT * FROM $name WHERE `town` LIKE '%".$place->town."%'";
             if (isset($place->county) && !empty($place->county)) {
-              $sql .= "OR `county` LIKE '%".$place->county."%'";
+              $sql .= "AND `county` LIKE '%".$place->county."%'";
             }
-            $sql .= "OR `state` LIKE '%".$place->state."%'";
-            $sql .= "OR `country` LIKE '%".$place->country."%'";
+            $sql .= "AND `state` LIKE '%".$place->state."%'";
+            $sql .= "AND `country` LIKE '%".$place->country."%'";
             $params = array();
             $results_array = $database->QueryForObject($sql, $params);
             return !empty($results_array) ? array_shift($results_array) : false;

@@ -1,0 +1,8 @@
+.user {
+  text-align: left;
+  padding-bottom: 10px;
+  > div {
+    display: inline-block;
+  }
+  > .item { /* ... */ }
+}

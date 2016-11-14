@@ -1,1 +1,3 @@
-USERS
+<div class="admin-users">
+  <user ng-repeat="user in $ctrl.users" user-info="user" action-callback="$ctrl.actionCallback(action, user);"></user>
+</div>

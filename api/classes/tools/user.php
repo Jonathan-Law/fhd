@@ -119,9 +119,9 @@ class User{
             $user = recast('User', $user);
             $user->displayableName = $user->displayName();
          }
-         unset($user->password); 
+         unset($user->password);
          return $user;
-      }      
+      }
    }
 
    public static function current_user()
@@ -138,7 +138,7 @@ class User{
             $user = recast('User', $user);
             $user->displayableName = $user->displayName();
          }
-         unset($user->password); 
+         unset($user->password);
          return $user;
       }
    }
@@ -148,7 +148,7 @@ class User{
       $database = cbSQLConnect::connect('object');
       if (isset($database))
       {
-         $users = $database->QuerySingle("SELECT * FROM `user` WHERE `valid`='1' AND `status`='current' ORDER BY `id`");
+         $users = $database->QuerySingle("SELECT * FROM `user` ORDER BY `id`");
          if ($users)
          {
             $data = array();
