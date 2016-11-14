@@ -10,12 +10,13 @@ module.exports = ngModule => {
     }
   });
 
-  function fileListCtrl(Business, configs, $scope, $element) {
+  function fileListCtrl(Business, configs, $scope, $element, $filter) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
     ctrl.$onChanges = $onChanges;
     ctrl.$postLink = $postLink;
+    ctrl.$onDestroy = $onDestroy;
     ctrl.makeSelection = makeSelection;
     ctrl.getAllFiles = getAllFiles;
     ctrl.baseURL = configs.baseURL;
@@ -42,30 +43,38 @@ module.exports = ngModule => {
     }
 
     function $postLink() {
-      angular.element('body').on('keydown', (e) => {
-        if (e.keyCode === 40) {
-          const foundIndex = ctrl.files.findIndex((thing) => thing === ctrl.selection);
-          if (foundIndex >= 0 && foundIndex !== (ctrl.files.length - 1)) {
-            $scope.$applyAsync(() => {
-              ctrl.makeSelection(ctrl.files[foundIndex + 1]);
-              $element.find('.file-list').scrollTop((foundIndex + 1) * 50);
-            });
-          }
-        } else if (e.keyCode === 38) {
-          const foundIndex = ctrl.files.findIndex((thing) => thing === ctrl.selection);
-          if (foundIndex >= 1) {
-            $scope.$applyAsync(() => {
-              ctrl.makeSelection(ctrl.files[foundIndex - 1]);
-              $element.find('.file-list').scrollTop((foundIndex - 1) * 50);
-            });
-          }
-        }
-      });
+      angular.element('body').on('keydown', bodyKeydown);
+    }
+
+    function $onDestroy() {
+      angular.element('body').off('keydown', bodyKeydown);
     }
 
     function makeSelection(thing) {
       ctrl.selection = thing;
-      ctrl.callback({ selection: thing });
+      ctrl.callback({
+        selection: thing
+      });
+    }
+
+    function bodyKeydown(e) {
+      if (e.keyCode === 40) {
+        const foundIndex = $filter('orderBy')(ctrl.files, ctrl.sortBy, !ctrl.reverse).findIndex((thing) => thing === ctrl.selection);
+        if (foundIndex >= 0 && foundIndex !== (ctrl.files.length - 1)) {
+          $scope.$applyAsync(() => {
+            ctrl.makeSelection($filter('orderBy')(ctrl.files, ctrl.sortBy, !ctrl.reverse)[foundIndex + 1]);
+            $element.find('.file-list').scrollTop((foundIndex + 1) * 50);
+          });
+        }
+      } else if (e.keyCode === 38) {
+        const foundIndex = $filter('orderBy')(ctrl.files, ctrl.sortBy, !ctrl.reverse).findIndex((thing) => thing === ctrl.selection);
+        if (foundIndex >= 1) {
+          $scope.$applyAsync(() => {
+            ctrl.makeSelection($filter('orderBy')(ctrl.files, ctrl.sortBy, !ctrl.reverse)[foundIndex - 1]);
+            $element.find('.file-list').scrollTop((foundIndex - 1) * 50);
+          });
+        }
+      }
     }
 
     function getAllFiles() {
@@ -102,5 +111,5 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  fileListCtrl.$inject = ['business', 'configs', '$scope', '$element'];
+  fileListCtrl.$inject = ['business', 'configs', '$scope', '$element', '$filter'];
 };
