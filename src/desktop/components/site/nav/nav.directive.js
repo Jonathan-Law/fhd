@@ -60,7 +60,9 @@ module.exports = ngModule => {
           scope.user.notNormal = scope.user.rights !== 'normal';
           business.user.getIsAdmin(user).then((isAdmin) => {
             $timeout(() => {
-              scope.user.isAdmin = isAdmin;
+              if (scope.user) {
+                scope.user.isAdmin = isAdmin;
+              }
             });
           });
         }
