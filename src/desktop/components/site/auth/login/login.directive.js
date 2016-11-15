@@ -8,8 +8,8 @@ module.exports = ngModule => {
     // };
 
     $scope.resetPassword = () => {
-      if (confirm(`We are about to reset the password for: ${$scope.username}. Is this you, and would you like to continue?`)) {
-        business.user.resetPassword($scope.username);
+      if ($scope.forgottenPassword && confirm(`We are about to reset the password for: ${$scope.forgottenPassword}. Is this you, and would you like to continue?`)) {
+        business.user.resetPassword($scope.forgottenPassword);
       }
     };
 

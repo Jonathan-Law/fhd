@@ -24,5 +24,16 @@
   <button class="btn btn-primary" type="button" ng-click="login()">Login</button>
   <button class="btn btn-default" type="button" ng-click="register()">Register</button>
   <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-  <button class="btn btn-warning pull-left" type="button" ng-click="resetPassword()">Forgot Password</button>
+  <div class="dropdown pull-left">
+    <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown" type="button">Forgot Password</button>
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <input style="width: 200px;"class="form-control" type="text" ng-model="forgottenPassword" placeholder="Username (NOT email)">
+      </li>
+      <li>
+        <button class="btn btn-primary" ng-click="resetPassword()">Go</button>
+      </li>
+    </ul>
+  </div>
 </div>
