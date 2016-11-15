@@ -176,14 +176,31 @@ class User{
          $sql .= "`username` =  :username ";       //
          $sql .= "OR  `email` =  :email";       //
          $sql .= ") ";                             //
-$sql .= "AND  `valid` =  '1';";
-$params = array(':username' => $username, ':email' => $email);
-array_unshift($params, '');
-unset($params[0]);
-$results_array = $database->QueryForObject($sql, $params);
-return !empty($results_array) ? array_shift($results_array) : false;
-}
-}
+         $sql .= "AND  `valid` =  '1';";
+         $params = array(':username' => $username, ':email' => $email);
+         array_unshift($params, '');
+         unset($params[0]);
+         $results_array = $database->QueryForObject($sql, $params);
+         return !empty($results_array) ? array_shift($results_array) : false;
+      }
+   }
+   public static function getByUsername($username = null)
+   {
+      $database = cbSQLConnect::connect('object');
+      if (isset($database))
+      {
+         $sql = "SELECT *  ";
+         $sql .= "FROM  `user`  ";
+         $sql .= "WHERE ";
+         $sql .= "`username` =  :username ";       //
+         $sql .= "AND  `valid` =  '1';";
+         $params = array(':username' => $username);
+         array_unshift($params, '');
+         unset($params[0]);
+         $results_array = $database->QueryForObject($sql, $params);
+         return !empty($results_array) ? recast('User', array_shift($results_array)) : false;
+      }
+   }
 
 public static function getUserById($user_id = null)
 {
@@ -292,6 +309,37 @@ protected function create()
       {
          return ($database->SQLDelete(self::$table_name, 'id', $this->id));
       }
+   }
+
+   // reset password
+   public function resetPassword()
+   {
+      $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+';
+      $random_string_length = 10;
+      $string = '';
+      $max = strlen($characters) - 1;
+      for ($i = 0; $i < $random_string_length; $i++) {
+         $string .= $characters[mt_rand(0, $max)];
+      }
+      $from = "noreply@familyhistorydatabase.org";
+      $headers  = 'MIME-Version: 1.0' . "\r\n";
+      $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+      $headers .= "From: " . $from;
+      $subject = 'FHD: Password Reset';
+      $message = '<div>
+      The password has been reset for '.$this->displayName().' The new password is:
+      <br />
+      <br />
+      <bold>'.$string.'</bold>
+      <br />
+      <br />
+      Please log in using this password and go to your <a href="http://familyhistorydatabase.org/#/profile">profile page</a> to change it to your own password.
+      ';
+      $this->password = sha1($string);
+      if ($this->save()) {
+         return mail($this->email,$subject,$message,$headers);
+      }
+      return false;
    }
 }
 

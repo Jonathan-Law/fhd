@@ -25,6 +25,11 @@
         $that->file->name = $user->displayableName;
         $that->file->email = $user->email;
         return sendAdminMessage($that->file);
+      } else if ($that->verb === 'resetPassword') {
+        $user = User::getByUsername($that->file->username);
+        if ($user) {
+          return $user->resetPassword();
+        }
       }
     }
     if ($that->method === 'GET') {
