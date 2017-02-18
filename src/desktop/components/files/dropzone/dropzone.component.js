@@ -20,7 +20,7 @@ module.exports = ngModule => {
     ctrl.total = 0;
 
     const config = {
-      url: '/api/v1/file',
+      url: '/api/v1/files/',
       // maxFilesize: 100,
       // 'createImageThumbnails': true,
       // 'thumbnailWidth': 70,
@@ -57,9 +57,8 @@ module.exports = ngModule => {
           }
         });
         $compile(file.previewElement)($scope);
-        const dropzone = this;
         angular.element(file.previewElement).find('.processMe').on('click', () => {
-          dropzone.processFile(file);
+          ctrl.dropzone.processFile(file);
         });
         angular.element(file.previewElement).find('input').keypress(function enter(e) {
           if (e.which === 13) {
@@ -74,25 +73,21 @@ module.exports = ngModule => {
           }
         });
         $scope.$applyAsync(() => {
-          ctrl.total = dropzone.files.length;
+          ctrl.total = ctrl.dropzone.files.length;
         });
       },
       removedfile: function removedfile() {
-        const dropzone = this;
         $scope.$applyAsync(() => {
-          ctrl.total = dropzone.files.length;
+          ctrl.total = ctrl.dropzone.files.length;
         });
       },
       success: (/*file, response*/) => {
-        const dropzone = this;
         $scope.$applyAsync(() => {
-          ctrl.total = dropzone.files.length;
+          ctrl.total = ctrl.dropzone.files.length;
         });
-        // const dropzone = this;
         // dropzone.processQueue.bind(dropzone);
       },
       sending: function sending(file, xhr, formData) {
-        const dropzone = this;
         const element = angular.element(file.previewElement);
         const models = element.find('[data-ngModel]');
         const form = {};
@@ -104,7 +99,7 @@ module.exports = ngModule => {
         }
         const upFile = {};
         if (!form.newName || form.newName === '') {
-          dropzone.cancelUpload(file);
+          ctrl.dropzone.cancelUpload(file);
         }
         upFile.height = file.height;
         upFile.width = file.width;
@@ -120,17 +115,16 @@ module.exports = ngModule => {
         formData.append('info', JSON.stringify(form));
       },
       complete: function complete(file) {
-        const dropzone = this;
         if (file.status === Dropzone.CANCELED) {
           file.status = Dropzone.QUEUED;
         } else if (file.status !== Dropzone.ERROR) {
           $scope.tags = {};
           this.removeFile(file);
-          if (dropzone.autoProcessQueue) {
-            return dropzone.processQueue();
+          if (ctrl.dropzone.autoProcessQueue) {
+            return ctrl.dropzone.processQueue();
           }
           $scope.$applyAsync(() => {
-            ctrl.total = dropzone.files.length;
+            ctrl.total = ctrl.dropzone.files.length;
           });
         } else if (file.status === Dropzone.ERROR) {
           file.status = Dropzone.QUEUED;

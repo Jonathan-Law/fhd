@@ -100,7 +100,7 @@ class Person
       if (is_object($user)) {
         $searchCrit = "AND (`status`='A' OR `submitter`='".$user->id."')";
       } else {
-        $searchCrit = ""; 
+        $searchCrit = "";
       }
       if (empty($search) || $search === null) {
         $people = $database->QuerySingle("SELECT DISTINCT * FROM `person` WHERE `status`='A' ORDER BY firstName ASC");
@@ -182,13 +182,8 @@ class Person
       if (isset($user) && isset($user->id)){
         $data = $database->QuerySingle("SELECT DISTINCT * FROM `person` WHERE `submitter`='".$user->id."'");
       } else {
-        $user = User::current_user();
-        if (isset($user) && isset($user->rights) && ($user->rights === 'super' || $user->rights === 'admin')) {
-          $data = $database->QuerySingle("SELECT DISTINCT * FROM `person` WHERE `status`='I'");
-        } else {
-          $data = array();
-        }
-      } 
+        $data = $database->QuerySingle("SELECT DISTINCT * FROM `person` WHERE `status`='I'");
+      }
       if (count($data) == 0)
       {
         return false;
@@ -280,11 +275,26 @@ class Person
       return NULL;
   }
 
+  public static function getAll($orderBy = 'lastName, firstName', $submissions = false) {
+    $database = cbSQLConnect::connect('object');
+    if (isset($database)) {
+      $orders = array("firstName", "lastName", "middleName", "yearBorn", "yearDead", "lastName, firstName", "firstName, lastName");
+      $key = array_search($orderBy, $orders);
+      $order = $orders[$key];
+      $submissionsKey = $submissions ? 'I' : 'A';
+      $sql = "SELECT * FROM `person` WHERE `status`=:submissionsKey ORDER BY $order";
+      $params = array(':submissionsKey' => $submissionsKey);
+      $results = $database->QueryForObject($sql, $params);
+      return !empty($results)? $results : NULL;
+    }
+    return NULL;
+  }
+
   public static function getChildrenByParents($id, $spouseid) {
     if ($id && $spouseid) {
       $database = cbSQLConnect::connect('object');
       if (isset($database))
-      { 
+      {
         $sql = "SELECT * FROM `parents` WHERE `child` IN (SELECT child FROM `parents` WHERE `parentId`=:id) AND `parentId`=:spouseId";
         $params = array(':id'=>$id, ':spouseId'=>$spouseid);
         $results = $database->QueryForObject($sql, $params);

@@ -54,7 +54,7 @@ module.exports = ngModule => {
       const deferred = $q.defer();
       $http({
         method: 'GET',
-        url: configs.baseURL + '/api/v1/user/getUserInfo/' + id
+        url: configs.baseURL + '/api/v1/users/getUserInfo/' + id
       }).success((data) => {
         if (data) {
           deferred.resolve(data);
@@ -70,7 +70,7 @@ module.exports = ngModule => {
     user.getUsers = () => {
       return $http({
         method: 'GET',
-        url: `${configs.baseURL}api/v1/user/getUserInfo`,
+        url: `${configs.baseURL}api/v1/users/getUserInfo`,
       }).then(data => data.data);
     };
 
@@ -88,7 +88,7 @@ module.exports = ngModule => {
         return promise;
       }
 
-      return $http.get(configs.baseURL + 'api/v1/user/isLoggedIn')
+      return $http.get(configs.baseURL + 'api/v1/users/isLoggedIn')
         .success((data) => {
           if (data.data) {
             handleWatches(data.data);
@@ -108,7 +108,7 @@ module.exports = ngModule => {
     user.sendAdminMessage = (message) => {
       return $http({
         method: 'POST',
-        url: `${configs.baseURL}api/v1/user/sendAdminMessage`,
+        url: `${configs.baseURL}api/v1/users/sendAdminMessage`,
         data: message,
       }).then(data => data.data);
     };
@@ -176,7 +176,7 @@ module.exports = ngModule => {
     user.resetPassword = (username) => {
       return $http({
         method: 'POST',
-        url: configs.baseURL + 'api/v1/user/resetPassword',
+        url: configs.baseURL + 'api/v1/users/resetPassword',
         data: {
           username,
         },
@@ -191,7 +191,7 @@ module.exports = ngModule => {
       } else {
         $http({
           method: 'POST',
-          url: configs.baseURL + 'api/v1/user/login',
+          url: configs.baseURL + 'api/v1/users/login',
           data: {
             username,
             password,
@@ -215,7 +215,7 @@ module.exports = ngModule => {
       } else {
         $http({
           method: 'POST',
-          url: configs.baseURL + '/api/v1/user/register',
+          url: configs.baseURL + '/api/v1/users/register',
           data: {
             username: username ? username : null,
             password: password ? password : null,
@@ -243,7 +243,7 @@ module.exports = ngModule => {
     user.logout = () => {
       return $http({
         method: 'POST',
-        url: configs.baseURL + '/api/v1/user/logout',
+        url: configs.baseURL + '/api/v1/users/logout',
       }).success(() => {
         return user.isLoggedIn();
       });

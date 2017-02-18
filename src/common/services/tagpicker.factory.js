@@ -31,7 +31,7 @@ module.exports = ngModule => {
     }
 
     tagpickerService.getTypeahead = (val) => {
-      return $http.get(configs.baseURL + 'api/v1/typeahead/', {
+      return $http.get(configs.baseURL + 'api/v1/core/typeahead/', {
         params: {
           typeahead: val,
           sensor: false
@@ -61,11 +61,11 @@ module.exports = ngModule => {
             }
           };
           newval = 'object';
-          body.url = configs.baseURL + '/api/v1/file/getTypeahead/' + newval + '/' + switchTrigger;
+          body.url = configs.baseURL + '/api/v1/files/getTypeahead/' + newval + '/' + switchTrigger;
         } else {
           body = {
             method: 'GET',
-            url: configs.baseURL + '/api/v1/file/getTypeahead/' + newval + '/' + switchTrigger,
+            url: configs.baseURL + '/api/v1/files/getTypeahead/' + newval + '/' + switchTrigger,
           };
         }
         $http(body).success((data) => {
@@ -102,7 +102,7 @@ module.exports = ngModule => {
     };
 
     tagpickerService.getTypeaheadOther = (val) => {
-      return $http.get(configs.baseURL + 'api/v1/tags/other', {
+      return $http.get(configs.baseURL + 'api/v1/core/tags/other', {
         params: {
           typeahead: val,
           sensor: false

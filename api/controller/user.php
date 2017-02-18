@@ -1,9 +1,12 @@
 <?php
 $session = mySession::getInstance();
 
-function login($username, $password){
+function login($username, $password, $initial = false){
   $session = mySession::getInstance();
-  if ($session->isLoggedIn())
+  if ($session->isLoggedIn() && $initial) {
+    $session->logout();
+  }
+  if ($session->isLoggedIn() && !$initial)
   {
     $user = User::current_user();
     unset($user->password);
@@ -96,7 +99,7 @@ function register($info = null){
           $subject = "familyhistorydatabase.org verification email";
           $message = "You are now registered at familyhistorydatabase.org.\n";
           $message = $message."\nTo verify your membership click on the link below.\nIf you weren't requesting membership, please ignore this email, and we send our appologies!";
-          $message = $message."\n".APIURL."user/validate/?id=".$found_user->id."&validate=$check";
+          $message = $message."\n".APIURL."users/validate/?id=".$found_user->id."&validate=$check";
 
           $from = "noreply@familyhistorydatabase.org";
           $headers = "From:" . $from;

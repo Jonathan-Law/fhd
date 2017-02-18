@@ -11,7 +11,7 @@ module.exports = ngModule => {
 
     business.getTypeahead = (val, limit) => {
       const limNum = isNaN(limit) ? 10 : +limit;
-      return $http.get(configs.baseURL + 'api/v1/typeahead/', {
+      return $http.get(configs.baseURL + 'api/v1/core/typeahead/', {
         params: {
           typeahead: val,
           limit: limNum,

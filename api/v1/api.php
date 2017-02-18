@@ -1,12 +1,17 @@
 <?php
 
-require_once("../library/paths.php");
+defined('DS')             ? null : define('DS', '/');
+defined('ROOT')           ? null : define('ROOT', $_SERVER['DOCUMENT_ROOT'].DS);
+defined('APIROOT')        ? null : define('APIROOT', ROOT.'api'.DS);
+require_once(APIROOT."/library/paths.php");
 
 // Load the Config File
 require_once(LIBRARY."config.php");
 
 // Load the functions so that everything can use them
 require_once(LIBRARY."functions.php");
+require_once(LIBRARY."exceptions.php");
+
 
 // Load the core objects
 // require_once(CLASSES."mysqli_database.php");
@@ -80,7 +85,6 @@ abstract class API
     if (array_key_exists(0, $this->args) && !is_numeric($this->args[0])) {
       $this->verb = array_shift($this->args);
     }
-
     $this->method = $_SERVER['REQUEST_METHOD'];
     if ($this->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $_SERVER)) {
       if ($_SERVER['HTTP_X_HTTP_METHOD'] == 'DELETE') {
@@ -113,9 +117,53 @@ abstract class API
 
   public function processAPI() {
     if ((int)method_exists($this, $this->endpoint) > 0) {
-      return $this->_response($this->{$this->endpoint}($this->args));
+      $body = new stdClass();
+      try {
+        return $this->_response($this->{$this->endpoint}($this->args));
+      } catch(ForbiddenException $e) {
+        $body->message = "Forbidden";
+        $body->type = "ForbiddenException";
+        return $this->_response($body, 403);
+      } catch (NoEndpointException $e) {
+        $body->message = "No Endpoint: $this->endpoint";
+        $body->type = "NotFoundException";
+        return $this->_response($body, 404);
+      } catch (NoMethodException $e) {
+        $body->message = "Method Not Allowed: $this->method";
+        $body->type = "MethodNotAllowedException";
+        return $this->_response($body, 405);
+      } catch (Exception $e) {
+        $body->message = $e->getMessage();
+        $body->type = "BadRequestException";
+        return $this->_response($body, 400);
+      }
     }
-    return $this->_response("No Endpoint: $this->endpoint", 404);
+    if ((int)method_exists($this, "doDefault") > 0) {
+      array_unshift($this->args, $this->endpoint);
+      $body = new stdClass();
+      try {
+        return $this->_response($this->doDefault($this->args));
+      } catch(ForbiddenException $e) {
+        $body->message = "Forbidden";
+        $body->type = "ForbiddenException";
+        return $this->_response($body, 403);
+      } catch (NoEndpointException $e) {
+        $body->message = "No Endpoint: $this->endpoint";
+        $body->type = "NotFoundException";
+        return $this->_response($body, 404);
+      } catch (NoMethodException $e) {
+        $body->message = "Method Not Allowed: $this->method";
+        $body->type = "MethodNotAllowedException";
+        return $this->_response($body, 405);
+      } catch (Exception $e) {
+        $body->message = $e->getMessage();
+        $body->type = "BadRequestException";
+        return $this->_response($body, 400);
+      }
+    }
+    $body->message = "No Endpoint: $this->endpoint";
+    $body->type = "NotFoundException";
+    return $this->_response($body, 404);
   }
 
   private function _response($data, $status = 200) {
@@ -138,6 +186,8 @@ abstract class API
   private function _requestStatus($code) {
     $status = array(
       200 => 'OK',
+      400 => 'Bad Request',
+      403 => 'Forbidden',
       404 => 'Not Found',
       405 => 'Method Not Allowed',
       500 => 'Internal Server Error',

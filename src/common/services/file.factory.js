@@ -10,13 +10,15 @@ module.exports = ngModule => {
       updateFile,
     };
 
+    const BASE = 'api/v1/files/';
+
     return service;
 
     function deleteFile(file) {
       if (file && file.id) {
         return $http({
           method: 'DELETE',
-          url: `${configs.baseURL}api/v1/file/${file.id}`
+          url: `${configs.baseURL}${BASE}${file.id}`
         });
       }
     }
@@ -24,7 +26,7 @@ module.exports = ngModule => {
     function getAllFiles() {
       return $http({
         method: 'GET',
-        url: `${configs.baseURL}api/v1/file/getAll`,
+        url: `${configs.baseURL}${BASE}getAll`,
       }).then((data) => data && data.data ? data.data : [], () => []);
     }
 
@@ -32,7 +34,7 @@ module.exports = ngModule => {
       if (val) {
         return $http({
           method: 'GET',
-          url: `${configs.baseURL}api/v1/file/getTypeahead/${val}/${type}/false`,
+          url: `${configs.baseURL}${BASE}getTypeahead/${val}/${type}/false`,
         }).then((data) => data && data.data ? data.data : [], () => []);
       }
       return Promise.reject();
@@ -42,7 +44,7 @@ module.exports = ngModule => {
       if (id) {
         return $http({
           method: 'GET',
-          url: `${configs.baseURL}api/v1/file/getTags/${id}`,
+          url: `${configs.baseURL}${BASE}getTags/${id}`,
         }).then((data) => data && data.data ? data.data : [], () => []);
       }
     }
@@ -52,7 +54,7 @@ module.exports = ngModule => {
       if (file && file.id) {
         return $http({
           method: 'POST',
-          url: `${configs.baseURL}api/v1/file/update`,
+          url: `${configs.baseURL}${BASE}update`,
           data: file,
         });
       }

@@ -58,7 +58,7 @@ module.exports = ngModule => {
     service.getIndData = (id, override) => {
       const deferred = $q.defer();
       if (id) {
-        const url = configs.baseURL + 'api/v1/individual/' + id;
+        const url = configs.baseURL + 'api/v1/core/individual/' + id;
         let value = null;
         value = checkExpire('indData' + id, minute * 2);
         if (value && !override) {
@@ -95,7 +95,7 @@ module.exports = ngModule => {
       if (id) {
         $http({
           method: 'GET',
-          url: configs.baseURL + 'api/v1/individual/pictures/' + id,
+          url: configs.baseURL + 'api/v1/core/individual/pictures/' + id,
         }).success((data) => {
           if (isMaxError(data)) {
             setTimeout(() => {
@@ -122,7 +122,7 @@ module.exports = ngModule => {
       if (data) {
         $http({
           method: 'POST',
-          url: configs.baseURL + 'api/v1/individual/',
+          url: configs.baseURL + 'api/v1/core/individual/',
           data,
         }).success((result) => {
           deferred.resolve(result);
@@ -138,7 +138,7 @@ module.exports = ngModule => {
     //   var deferred = $q.defer();
 
     //   if (picId) {
-    //     var url = '/api/v1/profilePic/'+ picId;
+    //     var url = '/api/v1/core/profilePic/'+ picId;
     //     var value = null;
     //     value = checkExpire('indProfilePic'+picId, minute * 1440);
     //     if (value && !override) {
@@ -178,7 +178,7 @@ module.exports = ngModule => {
     //   if (personId) {
     //     $http({
     //       method: 'GET',
-    //       url: '/api/v1/profilePic/person/'+ personId,
+    //       url: '/api/v1/core/profilePic/person/'+ personId,
     //     }).success(function(data, status, headers, config) {
     //       if (data !== "false") {
     //         deferred.resolve(data);
@@ -197,7 +197,7 @@ module.exports = ngModule => {
       if (spouseId && individualId) {
         $http({
           method: 'GET',
-          url: configs.baseURL + 'api/v1/spouses/' + spouseId + '/' + individualId,
+          url: configs.baseURL + 'api/v1/core/spouses/' + spouseId + '/' + individualId,
         }).success((data) => {
           deferred.resolve(data);
         }).error(() => {
@@ -215,7 +215,7 @@ module.exports = ngModule => {
       if (placeId) {
         $http({
           method: 'GET',
-          url: configs.baseURL + 'api/v1/place/' + placeId,
+          url: configs.baseURL + 'api/v1/core/place/' + placeId,
         }).success((data) => {
           if (isMaxError(data)) {
             setTimeout(() => {
@@ -242,7 +242,7 @@ module.exports = ngModule => {
       if (id) {
         $http({
           method: 'DELETE',
-          url: configs.baseURL + '/api/v1/individual/' + id
+          url: configs.baseURL + '/api/v1/core/individual/' + id
         }).success((data) => {
           deferred.resolve(data);
         }).error(() => {
@@ -256,7 +256,7 @@ module.exports = ngModule => {
     //   var deferred = $q.defer();
     //   if (id && pic)
     //   {
-    //     var url = '/api/v1/profilePic/' + id + '/' + pic;
+    //     var url = '/api/v1/core/profilePic/' + id + '/' + pic;
     //     $http({
     //       method: 'POST',
     //       url: url,
@@ -276,7 +276,7 @@ module.exports = ngModule => {
     service.getChildren = (id, spouseid, override) => {
       const deferred = $q.defer();
       if (id && spouseid) {
-        const url = configs.baseURL + 'api/v1/individual/children/' + id + '/' + spouseid;
+        const url = configs.baseURL + 'api/v1/core/individual/children/' + id + '/' + spouseid;
         let value = checkExpire('childrenOf_' + id + '_' + spouseid, minute * 2);
         if (!value) {
           value = checkExpire('childrenOf_' + spouseid + '_' + id, minute * 2);
@@ -314,7 +314,7 @@ module.exports = ngModule => {
     service.getFamilies = (letter, all) => {
       const deferred = $q.defer();
       if (letter) {
-        let url = configs.baseURL + 'api/v1/individual/families/' + letter;
+        let url = configs.baseURL + 'api/v1/core/individual/families/' + letter;
         if (all) {
           url = url + '/true';
         }
@@ -346,7 +346,7 @@ module.exports = ngModule => {
     //   if (id) {
     //     $http({
     //       method: 'GET',
-    //       url: '/api/v1/individual/family/'+id
+    //       url: '/api/v1/core/individual/family/'+id
     //     }).success(function(data, status, headers, config){
     //       deferred.resolve(data);
     //     }).error (function(data, status, headers, config){
@@ -359,7 +359,7 @@ module.exports = ngModule => {
     service.getFirstNames = (family, all) => {
       const deferred = $q.defer();
       if (family) {
-        let url = configs.baseURL + 'api/v1/individual/familyNames/' + family;
+        let url = configs.baseURL + 'api/v1/core/individual/familyNames/' + family;
         if (all) {
           url = url + '/true';
         }
@@ -388,7 +388,7 @@ module.exports = ngModule => {
     service.getDocuments = (id, override) => {
       const deferred = $q.defer();
       if (id) {
-        const url = configs.baseURL + 'api/v1/individual/documents/' + id;
+        const url = configs.baseURL + 'api/v1/core/individual/documents/' + id;
         const value = checkExpire('documentsOf_' + id, minute * 2);
         if (value && !override) {
           deferred.resolve(value);
@@ -420,7 +420,7 @@ module.exports = ngModule => {
 
     service.getAllSubmissions = () => {
       const deferred = $q.defer();
-      const url = configs.baseURL + '/api/v1/individual/allSubmissions';
+      const url = configs.baseURL + '/api/v1/core/individual/allSubmissions';
       $http({
         method: 'GET',
         url,
@@ -444,7 +444,7 @@ module.exports = ngModule => {
 
     service.getMySubmissions = () => {
       const deferred = $q.defer();
-      const url = configs.baseURL + '/api/v1/individual/submissions';
+      const url = configs.baseURL + '/api/v1/core/individual/submissions';
       $http({
         method: 'GET',
         url,
@@ -468,7 +468,7 @@ module.exports = ngModule => {
 
     service.activateSubmission = (id) => {
       const deferred = $q.defer();
-      const url = configs.baseURL + '/api/v1/activateIndividual/' + id;
+      const url = configs.baseURL + '/api/v1/core/activateIndividual/' + id;
       if (id) {
         $http({
           method: 'POST',
@@ -486,7 +486,7 @@ module.exports = ngModule => {
 
     service.deactivateSubmission = (id) => {
       const deferred = $q.defer();
-      const url = '/api/v1/deactivateIndividual/' + id;
+      const url = '/api/v1/core/deactivateIndividual/' + id;
       $http({
         method: 'POST',
         url,

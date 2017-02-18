@@ -12,6 +12,8 @@ require_once(LIBRARY."config.php");
 
 // Load the functions so that everything can use them
 require_once(LIBRARY."functions.php");
+require_once(LIBRARY."exceptions.php");
+
 
 // Load the core objects
 // require_once(CLASSES."mysqli_database.php");
@@ -308,6 +310,10 @@ try {
   $API = new MyAPI($_REQUEST['request'], $_SERVER['HTTP_ORIGIN']);
   echo $API->processAPI();
 } catch (Exception $e) {
-  echo json_encode(Array('error' => $e->getMessage()));
+  $body = stdClass();
+  $body->message = $e.getMessage();
+  $body->type = "Internal Server Error";
+  header("HTTP/1.1 " . 500 . " " . $API->_requestStatus(500));
+  echo json_encode($body);
 }
 ?>
