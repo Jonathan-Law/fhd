@@ -167,8 +167,7 @@ class IndividualsEndpoint extends API
       if (!$user->id) { return false; };
       $result = $this->file;
       if (empty($result) || empty($result->person) || empty($result->birth) || empty($result->death)) {
-        return 'we failed on check1';
-        return false;
+        throw new Exception('Missing required information on request body');
       }
       // return $result;
       $person = recast('Person', $result->person);
@@ -177,14 +176,13 @@ class IndividualsEndpoint extends API
         $person->submitter = $tempPerson->submitter;
         $person->status = $tempPerson->status;
         if ($person->submitter !== $user->id && !($user->rights === 'super' || $user->rights === 'admin')) {
-          return 'we failed on check2';
-          return false;
+          throw new ForbiddenException();
         }
       }
       if (!empty($person)) {
         $personId = $person->save($user);
       } else {
-        return false;
+        throw new Exception('Missing person infromation');
       }
       if (!!$personId) {
         $person->id = $personId;
@@ -205,8 +203,7 @@ class IndividualsEndpoint extends API
           $burial = false;
         }
         if (empty($personId) || empty($birthId) || empty($deathId)) {
-          return 'test';
-          return false;
+          throw new Exception('Missing person, birth, or death information');
         }
         if ($result->birthPlace) {
           $birthPlace = recast('Place', $result->birthPlace);
@@ -279,7 +276,7 @@ class IndividualsEndpoint extends API
               }
             }
           } else {
-            return 'We have an error';
+            throw new Exception('Person was not saved correctly');
           }
         } else {
           $parents = Parents::getParentsOf($person->id);
@@ -359,9 +356,9 @@ class IndividualsEndpoint extends API
         }
         return $person;
       }
-      return false;
+      throw new Exception('Person did not save correctly');
     } else if ($this->method === 'POST') {
-      throw ForbiddenException();
+      throw new ForbiddenException();
     }
     throw new NoMethodException();
   }
@@ -522,8 +519,8 @@ class IndividualsEndpoint extends API
 
   protected function familyNames($args) {
     if ($this->method === 'GET') {
-      if (!empty($args)) {
-        $lastName = array_shift($args);
+      if (!empty($this->verb)) {
+        $lastName = $this->verb;
       } else {
         $lastName = 'Law';
       }
@@ -577,6 +574,46 @@ class IndividualsEndpoint extends API
         }
       } else {
         return false;
+      }
+    }
+    throw new NoMethodException();
+  }
+
+  protected function activateIndividual($args) {
+    $session = mySession::getInstance();
+    if (($this->method === 'POST' || $this->method === 'PUT') && $session->isLoggedIn() && $session->isAdmin()){
+      $id = intval(array_shift($args));
+      if ($id && is_numeric($id)) {
+        $person = Person::getById($id);
+        if (isset($person) && $person){
+          $user = User::current_user();
+          $person->activate($user);
+          return $person;
+        } else {
+          throw new Exception('Person not found');
+        }
+      } else {
+        throw new Exception('Must provide valide ID number');
+      }
+    }
+    throw new NoMethodException();
+  }
+
+  protected function deactivateIndividual($args) {
+    $session = mySession::getInstance();
+    if (($this->method === 'POST' || $this->method === 'PUT') && $session->isLoggedIn() && $session->isAdmin()){
+      $id = intval(array_shift($args));
+      if ($id && is_numeric($id)) {
+        $person = Person::getById($id);
+        if (isset($person) && $person){
+          $user = User::current_user();
+          $person->deactivate($user);
+          return $person;
+        } else {
+          throw new Exception('Person not found');
+        }
+      } else {
+        throw new Exception('Must provide valid ID number');
       }
     }
     throw new NoMethodException();

@@ -16,14 +16,18 @@ function individuals($scope, business/*, individual, $state*/) {
 
   $scope.getSubmissionsList = () => {
     business.individual.getAllSubmissions().then((result) => {
-      $scope.collection = result.sort((person1, person2) => {
-        if (person1.firstName.toLowerCase() < person2.firstName.toLowerCase()) {
-          return -1;
-        } else if (person1.firstName.toLowerCase() > person2.firstName.toLowerCase()) {
-          return 1;
-        }
-        return 0;
-      });
+      if (result) {
+        $scope.collection = result.sort((person1, person2) => {
+          if (person1.firstName.toLowerCase() < person2.firstName.toLowerCase()) {
+            return -1;
+          } else if (person1.firstName.toLowerCase() > person2.firstName.toLowerCase()) {
+            return 1;
+          }
+          return 0;
+        });
+      } else {
+        $scope.collection = [];
+      }
     });
   };
 

@@ -186,9 +186,9 @@ class UsersEndpoint extends API
           $user = User::getById($id);
           unset($user->password);
           return $user;
-        } else {
-          return User::getAllUsers();
         }
+      } else if ($session->isLoggedIn() && $session->isAdmin()) {
+        return User::getAllUsers();
       }
       throw new ForbiddenException();
     }

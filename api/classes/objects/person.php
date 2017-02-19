@@ -285,7 +285,15 @@ class Person
       $sql = "SELECT * FROM `person` WHERE `status`=:submissionsKey ORDER BY $order";
       $params = array(':submissionsKey' => $submissionsKey);
       $results = $database->QueryForObject($sql, $params);
-      return !empty($results)? $results : NULL;
+      $result = array();
+      foreach($results as $aperson) {
+        $aperson = recast("Person", $aperson);
+        $aperson->displayableName = $aperson->displayName();
+        $aperson->selectableName = $aperson->selectName();
+        $aperson->typeahead = $aperson->selectName()." (".$aperson->yearBorn.")";
+        $result[] = $aperson;
+      }
+      return !empty($result)? $result : NULL;
     }
     return NULL;
   }
