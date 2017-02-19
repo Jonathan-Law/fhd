@@ -130,16 +130,6 @@ class MyAPI extends API
     }
   }
 
-
-  /**
-   * User Endpoint
-   */
-  protected function user($args) {
-    require_once('./user.php');
-    $that = $this->getThat();
-    return handleUserAPI($args, $that);
-  }
-
   protected function typeahead($args) {
     $session = mySession::getInstance();
     if ($this->method === 'GET') {
@@ -243,60 +233,6 @@ class MyAPI extends API
       }
     }
     return false;
-  }
-
-  protected function file($args){
-    require_once('./file.php');
-    $that = $this->getThat();
-    return handleFileAPI($args, $that);
-  }
-
-  protected function activateIndividual($args) {
-    $session = mySession::getInstance();
-    if (($this->method === 'POST' || $this->method === 'PUT') && $session->isLoggedIn() && $session->isAdmin()){
-      $id = intval(array_shift($args));
-      if ($id && is_numeric($id)) {
-        $person = Person::getById($id);
-        if (isset($person) && $person){
-          $user = User::current_user();
-          $person->activate($user);
-          return $person;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    } else {
-      return 'You may only POST/PUT to this endpoint and Admin is required';
-    }
-  }
-
-  protected function deactivateIndividual($args) {
-    $session = mySession::getInstance();
-    if (($this->method === 'POST' || $this->method === 'PUT') && $session->isLoggedIn() && $session->isAdmin()){
-      $id = intval(array_shift($args));
-      if ($id && is_numeric($id)) {
-        $person = Person::getById($id);
-        if (isset($person) && $person){
-          $user = User::current_user();
-          $person->deactivate($user);
-          return $person;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    } else {
-      return 'You may only POST/PUT to this endpoint and Admin is required';
-    }
-  }
-
-  protected function individual($args) {
-    require_once('./individual.php');
-    $that = $this->getThat();
-    return handleIndividualAPI($args, $that);
   }
 }
 // End Class
