@@ -91,7 +91,7 @@ function myfamily($timeout, Business, $location, scope, $uibModal) {
           <div class="fh-files">
             <file-list individual="${id}" callback="$ctrl.selectionMade(selection)" new-selection="$ctrl.selection"></file-list>
             <div class="fhdropzone" ng-hide="$ctrl.selection">
-              <fhdropzone><fhdropzone>
+              <fhdropzone individual="${id}"><fhdropzone>
             </div>
             <div class="fhdropzone column" ng-hide="!$ctrl.selection">
               <button class="btn btn-primary" style="width: 150px; min-height: 34px; margin: 20px;" ng-click="$ctrl.selection = null;"><i class="fa fa-file-o padding"></i>Add New Files</button>
