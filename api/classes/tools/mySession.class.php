@@ -66,9 +66,9 @@ class mySession
      * PDO connection
      *
      * @access private
-     * @var resource connesione
+     * @var resource connection
      */
-    private $connessione;
+    private $connection;
 
     /**
      * DBMS Types (only MySql supported)
@@ -205,7 +205,7 @@ class mySession
 
     /**
      * Session duration in seconds
-     * Session will expires if no reload was made in this period
+     * Session will expire if no reload was made in this period
      *
      * @access private
      * @var int
@@ -776,11 +776,11 @@ class mySession
      * @access private
      */
     private function dbConnection() {
-        //if (!is_resource($this->connessione))
-        //    $this->connessione = mysql_connect($this->db_server,$this->db_username,$this->db_pass) or die("Error connectin to the DBMS: " . mysql_error());
-        if (!is_resource($this->connessione))
+        //if (!is_resource($this->connection))
+        //    $this->connection = mysql_connect($this->db_server,$this->db_username,$this->db_pass) or die("Error connectin to the DBMS: " . mysql_error());
+        if (!is_resource($this->connection))
             try {
-                    $this->connessione = new PDO($this->db_type.":dbname=".$this->db_name.";host=".$this->db_server, $this->db_username, $this->db_pass );
+                    $this->connection = new PDO($this->db_type.":dbname=".$this->db_name.";host=".$this->db_server, $this->db_username, $this->db_pass );
                     //echo "PDO connection object created";
                     $this->setupSQLStatement();
                 }
@@ -799,11 +799,11 @@ class mySession
      * @access private
      */
     private function closeConnection() {
-        //if (!is_resource($this->connessione))
-        //    $this->connessione = mysql_connect($this->db_server,$this->db_username,$this->db_pass) or die("Error connectin to the DBMS: " . mysql_error());
-        if (is_resource($this->connessione))
+        //if (!is_resource($this->connection))
+        //    $this->connection = mysql_connect($this->db_server,$this->db_username,$this->db_pass) or die("Error connectin to the DBMS: " . mysql_error());
+        if (is_resource($this->connection))
             try {
-                    $this->connessione = null;
+                    $this->connection = null;
                 }
             catch(PDOException $e)
                 {
@@ -832,7 +832,7 @@ class mySession
             }
 
             if ($this->use_cookie==true) {
-                if (setcookie ($this->sid_name, $this->sessionId,time()-3600,"/",'',false,true) === FALSE)  $check = FALSE;
+                if (setcookie ($this->sid_name, $this->sessionId,time() - $this->session_duration,"/",'',false,true) === FALSE)  $check = FALSE;
             }
 
             unset ($_REQUEST[$this->sid_name]);
@@ -1043,7 +1043,8 @@ class mySession
      */
     function gc($maxlifetime)
     {
-        $this->SQLStatement_DeleteExpiredSession->bindParam('time', time() - $this->session_max_duration, PDO::PARAM_INT);
+        $time = time() - $this->session_max_duration;
+        $this->SQLStatement_DeleteExpiredSession->bindParam('time', $time, PDO::PARAM_INT);
         if ($this->SQLStatement_DeleteExpiredSession->execute()===FALSE) {
             trigger_error("Somenthing goes wrong with the garbace collector", E_USER_ERROR);
         } else {
@@ -1064,40 +1065,40 @@ class mySession
         $tabella_sessioni = $this->db_name.".".$this->table_name_session;
         $tabella_variabili = $this->db_name.".".$this->table_name_variable;
         /*** SQL statement: count SID ***/
-        $this->SQLStatement_CountSid = $this->connessione->prepare("SELECT count(*) FROM ".$tabella_sessioni." WHERE ".$this->table_column_sid." = :sid");
+        $this->SQLStatement_CountSid = $this->connection->prepare("SELECT count(*) FROM ".$tabella_sessioni." WHERE ".$this->table_column_sid." = :sid");
 
         /*** SQL statement: Insert Session ***/
-        $this->SQLStatement_InsertSession = $this->connessione->prepare("INSERT INTO ".$tabella_sessioni."(".$this->table_column_sid.",".$this->table_column_exp.",".$this->table_column_fexp.",".$this->table_column_ua.") VALUES (:sid,:expires,:forcedExpires,:ua)");
+        $this->SQLStatement_InsertSession = $this->connection->prepare("INSERT INTO ".$tabella_sessioni."(".$this->table_column_sid.",".$this->table_column_exp.",".$this->table_column_fexp.",".$this->table_column_ua.") VALUES (:sid,:expires,:forcedExpires,:ua)");
 
         /*** SQL statement: Update Session Expires ***/
-        $this->SQLStatement_UpdateSessionExpires = $this->connessione->prepare("UPDATE ".$tabella_sessioni." SET ".$this->table_column_exp." = :expires WHERE ".$this->table_column_sid." = :sid");
+        $this->SQLStatement_UpdateSessionExpires = $this->connection->prepare("UPDATE ".$tabella_sessioni." SET ".$this->table_column_exp." = :expires WHERE ".$this->table_column_sid." = :sid");
 
         /*** SQL statement: Get Session Infos ***/
-        $this->SQLStatement_GetSessionInfos = $this->connessione->prepare("SELECT * FROM ".$tabella_sessioni." WHERE ".$this->table_column_sid." = :sid");
+        $this->SQLStatement_GetSessionInfos = $this->connection->prepare("SELECT * FROM ".$tabella_sessioni." WHERE ".$this->table_column_sid." = :sid");
 
         /*** SQL statement: Get Session Vars ***/
-        $this->SQLStatement_GetSessionVars = $this->connessione->prepare("SELECT ".$this->table_column_value." as value, ".$this->table_column_name." as name FROM ".$tabella_variabili." WHERE ".$this->table_column_sid." = :sid");
+        $this->SQLStatement_GetSessionVars = $this->connection->prepare("SELECT ".$this->table_column_value." as value, ".$this->table_column_name." as name FROM ".$tabella_variabili." WHERE ".$this->table_column_sid." = :sid");
 
         /*** SQL statement: Get Encrypted Session Vars ***/
-        $this->SQLStatement_GetEncryptedSessionVars = $this->connessione->prepare("SELECT AES_DECRYPT(".$this->table_column_value.",'".$this->encrypt_key."') as value,AES_DECRYPT(".$this->table_column_name.",'".$this->encrypt_key."') as name FROM ".$tabella_variabili." WHERE ".$this->table_column_sid." = :sid");
+        $this->SQLStatement_GetEncryptedSessionVars = $this->connection->prepare("SELECT AES_DECRYPT(".$this->table_column_value.",'".$this->encrypt_key."') as value,AES_DECRYPT(".$this->table_column_name.",'".$this->encrypt_key."') as name FROM ".$tabella_variabili." WHERE ".$this->table_column_sid." = :sid");
 
         /*** SQL statement: Delete Session Vars ***/
-        $this->SQLStatement_DeleteSessionVars = $this->connessione->prepare("DELETE FROM ".$tabella_variabili."  WHERE ".$this->table_column_sid." = :sid AND ".$this->table_column_name."= :name ");
+        $this->SQLStatement_DeleteSessionVars = $this->connection->prepare("DELETE FROM ".$tabella_variabili."  WHERE ".$this->table_column_sid." = :sid AND ".$this->table_column_name."= :name ");
 
         /*** SQL statement: Delete Encrypted Session Vars ***/
-        $this->SQLStatement_DeleteEncryptedSessionVars = $this->connessione->prepare("DELETE FROM ".$tabella_variabili."  WHERE ".$this->table_column_sid." = :sid AND ".$this->table_column_name."= AES_ENCRYPT(:name,'".$this->encrypt_key."') ");
+        $this->SQLStatement_DeleteEncryptedSessionVars = $this->connection->prepare("DELETE FROM ".$tabella_variabili."  WHERE ".$this->table_column_sid." = :sid AND ".$this->table_column_name."= AES_ENCRYPT(:name,'".$this->encrypt_key."') ");
 
         /*** SQL statement: Insert Session Vars ***/
-        $this->SQLStatement_InsertSessionVars = $this->connessione->prepare("INSERT INTO ".$tabella_variabili."(".$this->table_column_sid.",".$this->table_column_name.",".$this->table_column_value.") VALUE(:sid,:name,:value)");
+        $this->SQLStatement_InsertSessionVars = $this->connection->prepare("INSERT INTO ".$tabella_variabili."(".$this->table_column_sid.",".$this->table_column_name.",".$this->table_column_value.") VALUE(:sid,:name,:value)");
 
         /*** SQL statement: Insert Encrypted Session Vars ***/
-        $this->SQLStatement_InsertEncryptedSessionVars = $this->connessione->prepare("INSERT INTO ".$tabella_variabili."(".$this->table_column_sid.",".$this->table_column_name.",".$this->table_column_value.") VALUE(:sid,AES_ENCRYPT(:name,'".$this->encrypt_key."'),AES_ENCRYPT(:value,'".$this->encrypt_key."'))");
+        $this->SQLStatement_InsertEncryptedSessionVars = $this->connection->prepare("INSERT INTO ".$tabella_variabili."(".$this->table_column_sid.",".$this->table_column_name.",".$this->table_column_value.") VALUE(:sid,AES_ENCRYPT(:name,'".$this->encrypt_key."'),AES_ENCRYPT(:value,'".$this->encrypt_key."'))");
 
         /*** SQL statement: Delete Session ***/
-        $this->SQLStatement_DeleteSession = $this->connessione->prepare("DELETE FROM ".$tabella_sessioni."  WHERE ".$this->table_column_sid." = :sid ");
+        $this->SQLStatement_DeleteSession = $this->connection->prepare("DELETE FROM ".$tabella_sessioni."  WHERE ".$this->table_column_sid." = :sid ");
 
         /*** SQL statement: Delete Expired Session ***/
-        $this->SQLStatement_DeleteExpiredSession = $this->connessione->prepare("DELETE FROM ".$tabella_sessioni."  WHERE ".$this->table_column_fexp." < :time ");
+        $this->SQLStatement_DeleteExpiredSession = $this->connection->prepare("DELETE FROM ".$tabella_sessioni."  WHERE ".$this->table_column_fexp." < :time ");
 
     }
 
@@ -1151,13 +1152,11 @@ class mySession
      * @return boolean - True if the query succesfully done. False in any other case
      */
     private function updateSessionExpireTime() {
-
-            $newExprireTime = time()+$this->session_duration;
-            $this->SQLStatement_UpdateSessionExpires->bindParam(':expires', $newExprireTime, PDO::PARAM_INT);
-            $this->SQLStatement_UpdateSessionExpires->bindParam(':sid', $this->sessionId, PDO::PARAM_STR, $this->sid_len);
-            return $this->SQLStatement_UpdateSessionExpires->execute();
-
-
+      $newExprireTime = time() + $this->session_duration;
+      if (!$this->overwrite) setcookie ($this->sid_name, $this->sessionId,$newExprireTime,"/",'',false,true);
+      $this->SQLStatement_UpdateSessionExpires->bindParam(':expires', $newExprireTime, PDO::PARAM_INT);
+      $this->SQLStatement_UpdateSessionExpires->bindParam(':sid', $this->sessionId, PDO::PARAM_STR, $this->sid_len);
+      return $this->SQLStatement_UpdateSessionExpires->execute();
     }
 
     /**
@@ -1295,10 +1294,11 @@ class mySession
   }
 
   public function isLoggedIn() {
-    if (isset($this->VARS['login']))
+    if (isset($this->VARS['login'])) {
+      $this->updateSessionExpireTime();
       return $this->getVar('login');
-    else
-      return false;
+    } else
+    return false;
   }
 
   public function getPage() {

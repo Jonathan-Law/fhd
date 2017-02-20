@@ -24,8 +24,8 @@ $_MYSESSION_CONF['VALUE']           =   'value';
 #Section 2.1: General configuration
 $_MYSESSION_CONF['OVERWRITE_PHP_FUNCTION']   =   1;         //the class overwrite php session function
 $_MYSESSION_CONF['SID_LEN']         =   32;                 //session_id chars length
-$_MYSESSION_CONF['DURATION']        =   1800;               //Session duration (seconds) - Session will expires if no reload was made in this period
-$_MYSESSION_CONF['MAX_DURATION']    =   3600;               //Max session duration (seconds) - Session will expires after this time interval - 0 if no forced expired needed
+$_MYSESSION_CONF['DURATION']        =   28800;               //Session duration (seconds) - Session will expires if no reload was made in this period
+$_MYSESSION_CONF['MAX_DURATION']    =   0;                  //Max session duration (seconds) - Session will expires after this time interval - 0 if no forced expired needed
 $_MYSESSION_CONF['SESSION_VAR_NAME']=   'MYPHPSESSID';      //Session variable name - You will use this name to propagate session (like PHPSESSID)
 
 #Section 2.2: Cookie

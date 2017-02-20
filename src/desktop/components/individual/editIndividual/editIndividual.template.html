@@ -14,10 +14,10 @@
     <div class="col-sm-12 initial" ng-show="result.profilePicture && result.profilePicture.viewlink">
       <a ui-sref="individual({id: result.id})" target="_blank"><img ng-src="{{configs.baseURL + result.profilePicture.viewlink}}" alt="Profile Picture" width="auto" height="150" style="border-radius:4px; border: 1px solid darkgray;"></a>
     </div>
-    <div class="col-sm-12 initial" ng-show="!result.profilePicture || !result.profilePicture.viewlink">
+<!--     <div class="col-sm-12 initial" ng-show="!result.profilePicture || !result.profilePicture.viewlink">
       Upload a profile picture...
       <a ui-sref="individual({id: result.id})" target="_blank" ng-show="result.id">Open their page</a>
-    </div>
+    </div> -->
   </div>
   <hr style="margin: 10px 0px;">
   <form name="addAPersonForm" role="form" ng-submit="savePerson()" class="">

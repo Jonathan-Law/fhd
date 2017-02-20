@@ -3,10 +3,10 @@ class Dropzone
 {
 
   protected static $table_name = "birth";
-  protected static $db_fields = array('author', 'description', 'docType', 'fileInfo', 'newName', 'tags', 'title', 'file', 'new', 'thumbnail');
+  protected static $db_fields = array('author', 'description', 'docType', 'fileInfo', 'newName', 'tags', 'title', 'file', 'new', 'thumbnail', 'status');
   public static function get_db_fields()
   {
-    $fields = array('author', 'description', 'docType', 'fileInfo', 'newName', 'tags', 'title', 'file', 'new', 'thumbnail');
+    $fields = array('author', 'description', 'docType', 'fileInfo', 'newName', 'tags', 'title', 'file', 'new', 'thumbnail', 'status');
     return $fields;
   }
   public static function nameMe()
@@ -24,14 +24,15 @@ class Dropzone
   public $file;
   public $new;
   public $thumbnail;
+  public $status;
 
-  public static function updateFile($data = NULL){
+  public static function updateFile($data = NULL) {
     $file = File::getById($data->id);
     $file->type = isset($data->type)? $data->type: NULL;
     $file->comments = isset($data->comments)? $data->comments: NULL;
     $file->author = isset($data->author)? $data->author: NULL;
     $file->title = isset($data->title)? $data->title: NULL;
-
+    $file->status = isset($data->status)? $data->status : (isset($file->status) ? $file->status : 'I');
     if (isset($data->tags)){
 
       if (isset($data->tags->person) && $file->tags['person'] !== NULL) {
@@ -282,6 +283,7 @@ class Dropzone
           $init->comments = $comments;
           $init->date = null;
           $init->type = $this->docType;
+          $init->status = isset($this->status)? $this->status : 'I';
           $init_id = $init->save();
           if ($init_id)
           {

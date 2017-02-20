@@ -137,8 +137,7 @@ abstract class API
         $body->type = "BadRequestException";
         return $this->_response($body, 400);
       }
-    }
-    if ((int)method_exists($this, "doDefault") > 0) {
+    } else if ((int)method_exists($this, "doDefault") > 0) {
       array_unshift($this->args, $this->endpoint);
       $body = new stdClass();
       try {
@@ -160,10 +159,11 @@ abstract class API
         $body->type = "BadRequestException";
         return $this->_response($body, 400);
       }
+    } else {
+      $body->message = "No Endpoint: $this->endpoint";
+      $body->type = "NotFoundException";
+      return $this->_response($body, 404);
     }
-    $body->message = "No Endpoint: $this->endpoint";
-    $body->type = "NotFoundException";
-    return $this->_response($body, 404);
   }
 
   private function _response($data, $status = 200) {

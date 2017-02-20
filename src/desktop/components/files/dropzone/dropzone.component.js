@@ -6,21 +6,20 @@ module.exports = ngModule => {
     template: require('./dropzone.component.html'),
     controller: dropzoneCtrl,
     bindings: {
-      // Inputs should use < and @ bindings.
-      // Outputs should use & bindings.
+      individual: '<',
     }
   });
 
   let uniqueId = 0;
 
-  function dropzoneCtrl($element, $compile, $scope) {
+  function dropzoneCtrl($element, $compile, $scope, business, configs) {
     const ctrl = this;
 
     ctrl.$onInit = $onInit;
     ctrl.total = 0;
 
     const config = {
-      url: '/api/v1/files/',
+      url: configs.baseURL + '/api/v1/files/',
       // maxFilesize: 100,
       // 'createImageThumbnails': true,
       // 'thumbnailWidth': 70,
@@ -44,6 +43,13 @@ module.exports = ngModule => {
           tags: {},
           docType: '',
         };
+        if (ctrl.individual) {
+          business.individual.getIndData(ctrl.individual, true).then((result) => {
+            // config.options.previewTemplate = require('./dropzoneTemplate.html');
+            result.text = result.typeahead;
+            $scope[file.eleHash].tags.person = [result];
+          });
+        }
         angular.element(file.previewElement).find('[data-hashkey]').each(function handleAttrs() {
           const ele = angular.element(this);
           if (ele.attr('ng-class')) {
@@ -171,7 +177,6 @@ module.exports = ngModule => {
     }
 
     function init() {
-      // config.options.previewTemplate = require('./dropzoneTemplate.html');
       ctrl.dropzone = new Dropzone($element[0], config);
 
       angular.forEach(eventHandlers, (handler, event) => {
@@ -189,5 +194,5 @@ module.exports = ngModule => {
   }
 
   // inject dependencies here
-  dropzoneCtrl.$inject = ['$element', '$compile', '$scope'];
+  dropzoneCtrl.$inject = ['$element', '$compile', '$scope', 'business', 'configs'];
 };

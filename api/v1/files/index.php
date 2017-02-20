@@ -83,7 +83,7 @@ class FilesEndpoint extends API
         return $file;
       }
       return File::getAll();
-    } else if ($this->method === "POST" && $session->isLoggedIn() && $session->isAdmin()) {
+    } else if ($this->method === "POST") {
       if (!empty($_POST)) {
         $info = json_decode($_POST['info']);
       } else {
@@ -100,23 +100,21 @@ class FilesEndpoint extends API
           $file->file->size = $_FILES['uploadfile']['size'][0];
           $file->file->tmp_name = $_FILES['uploadfile']['tmp_name'][0];
           $file->file->type = $_FILES['uploadfile']['type'][0];
+          $file->status = $session->isLoggedIn() && $session->isAdmin() ? 'A' : 'I';
           return $file->save();
-        } else {
-          return false;
         }
+        throw new Exception('Failed to save file');
       }
-      throw new NoEndpointException();
-    } else if ($this->method === "POST") {
-      throw new ForbiddenException();
-    } else {
-      throw new NoMethodException();
+      throw new Exception('Failed to retrieve file information');
     }
+    throw new NoMethodException();
   }
 
   protected function update($args) {
     $session = mySession::getInstance();
-    if ($this->method === 'POST' && $session->isLoggedIn() && $session->isAdmin()) {
+    if ($this->method === 'POST') {
       $file = $this->file;
+      $file->status = $session->isLoggedIn() && $session->isAdmin() ? (isset($file->status) ? $file->status : 'I') : 'I';
       return Dropzone::updateFile($file);
     } else if ($this->method === 'POST') {
       throw new ForbiddenException();
@@ -127,6 +125,10 @@ class FilesEndpoint extends API
   protected function getAll($args) {
     $session = mySession::getInstance();
     if ($this->method === 'GET') {
+      $id = intval($args[0]);
+      if (isset($id) && !empty($id) && is_numeric($id)) {
+        return File::getAll($id);
+      }
       return File::getAll();
     }
     throw new NoMethodException();
@@ -137,6 +139,8 @@ class FilesEndpoint extends API
     if ($this->method === 'GET') {
       $type = isset($args[0]) ? $args[0] : 'person';
       $limit = isset($args[1]) ? $args[1] : true;
+      $id = intval($args[2]);
+      $individual = isset($id) && !empty($id) && is_numeric($id) ? $id : null;
       $val = $this->verb;
       if ($val === 'object' && $type === 'place') {
         $val = json_decode($_GET['place']);
@@ -144,7 +148,7 @@ class FilesEndpoint extends API
           $val = $val[0];
         }
       }
-      return File::getByTagType($val, $type, $limit);
+      return File::getByTagType($val, $type, $limit, $individual);
       return $type;
     }
     throw new NoMethodException();

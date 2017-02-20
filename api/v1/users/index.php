@@ -180,9 +180,12 @@ class UsersEndpoint extends API
   protected function getUserInfo($args) {
     $session = mySession::getInstance();
     if ($this->method === 'GET') {
-      if (!empty($args) && $session->isLoggedIn() && $session->isAdmin()) {
+      if (!empty($args)) {
         $id = intval(array_shift($args));
-        if ($id && is_numeric($id)) {
+        $validId = isset($id) && is_numeric($id);
+        $isAdmin = $session->isLoggedIn() && $session->isAdmin();
+        $isUser = $session->isLoggedIn() && intval(User::current_user()->id) === $id;
+        if ($validId && ($isAdmin || $isUser)) {
           $user = User::getById($id);
           unset($user->password);
           return $user;

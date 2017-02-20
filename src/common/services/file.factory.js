@@ -23,18 +23,18 @@ module.exports = ngModule => {
       }
     }
 
-    function getAllFiles() {
+    function getAllFiles(individual) {
       return $http({
         method: 'GET',
-        url: `${configs.baseURL}${BASE}getAll`,
+        url: `${configs.baseURL}${BASE}getAll${individual ? '/' + individual : ''}`,
       }).then((data) => data && data.data ? data.data : [], () => []);
     }
 
-    function getByTag(val = '', type = '') {
+    function getByTag(val = '', type = '', individual) {
       if (val) {
         return $http({
           method: 'GET',
-          url: `${configs.baseURL}${BASE}getTypeahead/${val}/${type}/false`,
+          url: `${configs.baseURL}${BASE}getTypeahead/${val}/${type}/false${individual ? '/' + individual : ''}`,
         }).then((data) => data && data.data ? data.data : [], () => []);
       }
       return Promise.reject();

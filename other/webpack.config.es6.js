@@ -25,7 +25,8 @@ module.exports = function getConfig(configOptions) {
   const ON_PROD = process.env.NODE_ENV === 'production';
   const pkg = require('../package.json');
   const bannerText = fs.readFileSync(path.resolve(__dirname, '../BANNER.txt')).toString();
-
+  const date = new Date();
+  const hash = date.getTime();
   const config = {
     context: path.resolve(__dirname, '../src'),
 
@@ -41,7 +42,7 @@ module.exports = function getConfig(configOptions) {
       // where to put standalone build file
       path: './dist',
       publicPath: '',
-      filename: '/[name]/[name].js',
+      filename: `/[name]/[name]${hash}.js`,
       sourceMapFilename: '[file].map',
       libraryTarget: 'umd'
     },

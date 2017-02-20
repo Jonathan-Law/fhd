@@ -10,10 +10,10 @@ class File
 {
 
    protected static $table_name = "file";
-   protected static $db_fields = array('id', 'link', 'thumblink', 'viewlink', 'title', 'author', 'comments', 'date', 'type');
+   protected static $db_fields = array('id', 'link', 'thumblink', 'viewlink', 'title', 'author', 'comments', 'date', 'type', 'status');
    public static function get_db_fields()
    {
-      $fields = array('id', 'link', 'thumblink', 'viewlink', 'title', 'author', 'comments', 'date', 'type');
+      $fields = array('id', 'link', 'thumblink', 'viewlink', 'title', 'author', 'comments', 'date', 'type', 'status');
       return $fields;
    }
    public static function nameMe()
@@ -32,6 +32,7 @@ class File
    public $date;
    public $message;
    public $type;
+   public $status;
 
 
    public static function dropFile($temp_id = NULL)
@@ -99,12 +100,15 @@ class File
    }
 
 
-   public static function getByTagType($val, $type = NULL, $limit){
+   public static function getByTagType($val, $type = NULL, $limit, $individual){
       $database = cbSQLConnect::connect('object');
       $limitNum = isset($limit) && $limit === true ? 10 : false;
       if (isset($database)){
          if ($type !== NULL && $type === 'person'){
             $query = "SELECT * FROM `file` WHERE `id` IN (SELECT `fileid` FROM `tag` WHERE `foreignid` IN (SELECT `id` FROM `person` WHERE MATCH(`firstName`, `middleName`, `lastName`) AGAINST('".$val."' IN BOOLEAN MODE)))";
+            if ($individual !== null) {
+               $query .= " AND `id` IN (SELECT `fileid` FROM `tag` WHERE `enum`='person' AND `foreignid`=".$individual.")";
+            }
             if ($limitNum) {
                $query .= "LIMIT 0, $limitNum";
             }
@@ -112,22 +116,36 @@ class File
             $place = Place::getByAll($val);
             if ($place){
                $query = "SELECT * FROM `file` WHERE `id` IN (SELECT `fileid` FROM `tag` WHERE `foreignid` IN (SELECT `id` FROM `place` WHERE `id`=".$place->id."))";
+               if ($individual !== null) {
+                  $query .= " AND `id` IN (SELECT `fileid` FROM `tag` WHERE `enum`='person' AND `foreignid`=".$individual.")";
+               }
                if ($limitNum) {
                   $query .= "LIMIT 0, $limitNum";
                }
             } else {
-               $query = "SELECT *, MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) AS score FROM `file` WHERE MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) ORDER BY score DESC";
+               $query = "SELECT *, MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) AS score FROM `file` WHERE MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE)";
+               if ($individual !== null) {
+                  $query .= " AND `id` IN (SELECT `fileid` FROM `tag` WHERE `enum`='person' AND `foreignid`=".$individual.")";
+               }
+               $query .=" ORDER BY score DESC";
                if ($limitNum) {
                   $query .= "LIMIT 0, $limitNum";
                }
             }
          } else if ($type !== NULL && $type === 'collection'){
             $query = "SELECT * FROM `file` WHERE `id` IN (SELECT `fileid` FROM `tag` WHERE MATCH(`text`) AGAINST('".$val."' IN BOOLEAN MODE))";
+            if ($individual !== null) {
+               $query .= " AND `id` IN (SELECT `fileid` FROM `tag` WHERE `enum`='person' AND `foreignid`=".$individual.")";
+            }
             if ($limitNum) {
                $query .= "LIMIT 0, $limitNum";
             }
          } else {
-            $query = "SELECT *, MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) AS score FROM `file` WHERE MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) OR `link` LIKE '%".$val."%' ORDER BY score DESC";
+            $query = "SELECT *, MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) AS score FROM `file` WHERE MATCH(title, author, comments) AGAINST('".$val."' IN BOOLEAN MODE) OR `link` LIKE '%".$val."%'";
+            if ($individual !== null) {
+               $query .= " AND `id` IN (SELECT `fileid` FROM `tag` WHERE `enum`='person' AND `foreignid`=".$individual.")";
+            }
+            $query .= " ORDER BY score DESC";
             if ($limitNum) {
                $query .= "LIMIT 0, $limitNum";
             }
@@ -144,16 +162,22 @@ class File
       if (isset($database))
       {
          $name = 'file';
-         $sql = "SELECT * FROM $name WHERE `id` IN (SELECT `fileid` FROM `tag` WHERE `enum`='person' AND `foreignid`=:id) AND `type`=:type";
-         $params = array(':id' => $id, ':type'=>$type);
-         array_unshift($params, '');
-         unset($params[0]);
+         if ($type != null) {
+            $sql = "SELECT * FROM $name WHERE `id` IN (SELECT `fileid` FROM `tag` WHERE `enum`='person' AND `foreignid`=:id) AND `type`=:type";
+            $params = array(':id' => $id, ':type'=>$type);
+         } else {
+            $sql = "SELECT * FROM $name WHERE `id` IN (SELECT `fileid` FROM `tag` WHERE `enum`='person' AND `foreignid`=:id)";
+            $params = array(':id' => $id);
+         }
          $results_array = $database->QueryForObject($sql, $params);
          return !empty($results_array) ? $results_array : false;
       }
    }
 
-   public static function getAll(){
+   public static function getAll($individual){
+      if (isset($individual)) {
+         return File::getByInd($individual, null);
+      }
       $database = cbSQLConnect::connect('object');
       if (isset($database))
       {
@@ -307,13 +331,14 @@ class File
             }
             else
                $data[$key] = NULL;
-
          }
-         // return data
+         if (!isset($data['status'])) {
+            $data['status'] = 'I';
+         }
          $insert = $database->SQLInsert($data, "file"); // return true if sucess or false
-         if ($insert)
-         {
-            return $insert;
+         if ($insert) {
+            return json_encode($data);
+            // return $insert;
          }
          else
          {
@@ -452,6 +477,7 @@ class File
                $init->author = $author;
                $init->comments = $comments;
                $init->date = null;
+               $init->status = isset($data->status) ? $data->status : isset($this->status) ? $this->status : 'I';
                $init_id = $init->save();
                if ($init_id)
                {

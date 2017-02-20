@@ -7,6 +7,7 @@ module.exports = ngModule => {
     bindings: {
       callback: '&',
       newSelection: '<',
+      individual: '<',
     }
   });
 
@@ -83,7 +84,7 @@ module.exports = ngModule => {
       const promises = [];
       if (ctrl.typeahead) {
         Object.keys(ctrl.types).filter(type => ctrl.types[type]).forEach(type => {
-          promises.push(Business.file.getByTag(ctrl.typeahead, type));
+          promises.push(Business.file.getByTag(ctrl.typeahead, type, ctrl.individual));
         });
         Promise.all(promises).then(results => {
           results.forEach(file => {
@@ -98,7 +99,7 @@ module.exports = ngModule => {
           });
         });
       } else {
-        Business.file.getAllFiles().then((results) => {
+        Business.file.getAllFiles(ctrl.individual).then((results) => {
           $scope.$applyAsync(() => {
             ctrl.files = results;
             ctrl.files.forEach(file => {

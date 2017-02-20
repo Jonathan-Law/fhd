@@ -18,7 +18,7 @@ module.exports = ngModule => {
       restrict: 'E',
       scope: {
         tag: '=?',
-        type: '@?'
+        type: '@?',
       },
       compile: compileFn,
     };
