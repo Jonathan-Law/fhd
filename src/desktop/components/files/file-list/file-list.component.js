@@ -20,6 +20,7 @@ module.exports = ngModule => {
     ctrl.makeSelection = makeSelection;
     ctrl.getAllFiles = getAllFiles;
     ctrl.getSubmissionsList = getSubmissionsList;
+    ctrl.getUserName = getUserName;
     ctrl.baseURL = configs.baseURL;
     ctrl.sortBy = '';
     ctrl.label = 'title';
@@ -128,6 +129,12 @@ module.exports = ngModule => {
           });
           $element.find('.file-list').scrollTop(0);
         });
+      });
+    }
+
+    function getUserName(file) {
+      Business.user.getUserName(file.editorId).then((name) => {
+        file.submitterName = name;
       });
     }
   }

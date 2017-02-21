@@ -58,9 +58,9 @@
     </div>
   </div>
   <div class="file-list" vs-repeat>
-    <div class="list" ng-repeat="item in $ctrl.files | orderBy: $ctrl.sortBy : !$ctrl.reverse track by item.id" ng-class="{'bg-info': $ctrl.selection.id === item.id}" ng-click="$ctrl.makeSelection(item)">
+    <div class="list" ng-init="item.status === 'I' ? $ctrl.getUserName(item) : '';" ng-repeat="item in $ctrl.files | orderBy: $ctrl.sortBy : !$ctrl.reverse track by item.id" ng-class="{'bg-info': $ctrl.selection.id === item.id}" ng-click="$ctrl.makeSelection(item)">
       <span class="img"><file-preview file="item" hide-other="true" thumbnails="true"></file-preview></span>
-      <span class="overflow-cutoff" style="padding-left: 5px; padding-right: 15px;">{{item[$ctrl.label]}}</span>
+      <span class="overflow-cutoff" style="padding-left: 5px; padding-right: 15px;">{{item[$ctrl.label]}} <span ng-if="item.status === 'I'">&nbsp;({{item.submitterName}})</span></span>
     </div>
   </div>
 </div>
