@@ -11,6 +11,8 @@ module.exports = ngModule => {
       scope.$watch('personId', (newval) => {
         setupEdit(newval);
       });
+      scope.setProfilePic = setProfilePic;
+      scope.imgHeight = 40;
 
       business.user.getIsAdmin().then((result) => {
         scope.isAdmin = result;
@@ -52,6 +54,10 @@ module.exports = ngModule => {
 
 
       function clearResult() {
+        if (!scope.result || !angular.isObject(scope.result)) {
+          scope.result = {};
+          return;
+        }
         scope.result.firstName = null;
         scope.result.middleName = null;
         scope.result.lastName = null;
@@ -73,10 +79,19 @@ module.exports = ngModule => {
         scope.result.parentList = [];
         scope.result.spouseList = [];
         scope.result.id = null;
+        scope.result.profile_pic = null;
+        scope.result.profilePicture = null;
       }
 
+      function setProfilePic(pic) {
+        scope.result.profile_pic = pic.id;
+        scope.result.profilePicture = pic;
+      }
 
       function setupEdit(id) {
+        business.individual.getPictures(scope.personId).then((results) => {
+          scope.images = results;
+        });
         if (id) {
           clearResult();
           business.individual.getIndData(id, true).then((result) => {
@@ -156,7 +171,7 @@ module.exports = ngModule => {
         const deathDateObj = getDateObj(temp.deathDate, temp.death.yearD);
         temp.deathPlace = temp.death.deathPlace;
         temp.death = _.merge({}, {
-          yearB: temp.death && temp.death.yearD ? true : false,
+          yearD: temp.death && temp.death.yearD ? true : false,
           id: temp.death && temp.death.id ? temp.death.id : null,
         }, deathDateObj);
         delete temp.deathDate;

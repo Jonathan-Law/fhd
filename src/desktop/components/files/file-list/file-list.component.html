@@ -46,6 +46,9 @@
             </li>
           </ul>
         </div>
+        <div class="btn-group" role="group" ng-if="$ctrl.isAdmin">
+          <a type="button" class="btn btn-default" ng-click="$ctrl.getSubmissionsList()"><i class="fa fa-user" tooltip-placement="right" uib-tooltip="Files needing approval" ></i></a>
+        </div>
         <!-- <a type="button" class="btn btn-default"><i class="fa fa-user" tooltip-placement="top" uib-tooltip="Another"></i></a> -->
       </div>
       <input class="form-control" type="text" ng-model="$ctrl.typeahead" ng-model-options="{debounce: 200}" ng-change="$ctrl.getAllFiles()" placeholder="Quick Search">

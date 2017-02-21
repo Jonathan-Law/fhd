@@ -249,20 +249,20 @@ class Dropzone
                 if (!$viewMade)
                 {
                   unlink($link);
-                  return -6;
+                  throw new Exception('Unable to create view version');
                 }
               }
               else
               {
                 unlink($temp_thumblink);
                 unlink($link);
-                return -6;
+                throw new Exception('Unable to create thumbnail version');
               }
             }
             else
             {
               unlink($link);
-              return -6;
+              throw new Exception('Unable to move file');
             }
             $type = $this->docType;
           }
@@ -330,27 +330,23 @@ class Dropzone
                 }
               }
             }
-            return 1;
+            return $init_id;
           }
           else
           {
             unlink($temp_thumblink);
             unlink($link);
             //database connection wasn't saved
-            return -4;
+            throw new Exception('Database connection unstable');
           }
         }
         else
         {
-          //file wasn't moved
-          return -3;
+          throw new Exception('File wasn\'t moved');
         }
       }
     }
-    //the database entry already exists
-    return -5;
-
-    // save file
+    throw new Exception('File entry already exists');
   }
 
   // update the object if it does already exist.

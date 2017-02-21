@@ -5,6 +5,9 @@ module.exports = ngModule => {
     const service = {
       deleteFile,
       getAllFiles,
+      getAllInactiveFiles,
+      activateFile,
+      deactivateFile,
       getByTag,
       getTags,
       updateFile,
@@ -27,6 +30,13 @@ module.exports = ngModule => {
       return $http({
         method: 'GET',
         url: `${configs.baseURL}${BASE}getAll${individual ? '/' + individual : ''}`,
+      }).then((data) => data && data.data ? data.data : [], () => []);
+    }
+
+    function getAllInactiveFiles() {
+      return $http({
+        method: 'GET',
+        url: `${configs.baseURL}${BASE}getAllInactiveFiles`,
       }).then((data) => data && data.data ? data.data : [], () => []);
     }
 
@@ -58,6 +68,24 @@ module.exports = ngModule => {
           data: file,
         });
       }
+    }
+
+    function activateFile(id) {
+      if (!id) return Promise.reject();
+      const url = configs.baseURL + '/api/v1/files/activate/' + id;
+      return $http({
+        method: 'POST',
+        url,
+      }).then(data => data.data);
+    }
+
+    function deactivateFile(id) {
+      if (!id) return Promise.reject();
+      const url = configs.baseURL + '/api/v1/files/deactivate/' + id;
+      return $http({
+        method: 'POST',
+        url,
+      }).then(data => data.data);
     }
   }
 

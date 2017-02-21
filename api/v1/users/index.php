@@ -198,6 +198,26 @@ class UsersEndpoint extends API
     throw new NoMethodException();
   }
 
+  protected function getUserName($args) {
+    $session = mySession::getInstance();
+    if ($this->method === 'GET') {
+      if (!empty($args)) {
+        $id = intval(array_shift($args));
+        $validId = isset($id) && is_numeric($id);
+        $isAdmin = $session->isLoggedIn() && $session->isAdmin();
+        $isUser = $session->isLoggedIn() && intval(User::current_user()->id) === $id;
+        if ($validId && ($isAdmin || $isUser)) {
+          $user = User::getById($id);
+          return $user->displayableName;
+        }
+      } else if ($session->isLoggedIn() && $session->isAdmin()) {
+        return User::getAllUsers();
+      }
+      throw new ForbiddenException();
+    }
+    throw new NoMethodException();
+  }
+
   private function _sendAdminMessage($message) {
     $body = "<div>
       Message from User: ".$message->name." &mdash; ".$message->email."

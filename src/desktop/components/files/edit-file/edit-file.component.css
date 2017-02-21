@@ -3,6 +3,7 @@
   flex-direction: row;
   .item {
     display: flex;
+    flex-direction: column;
     text-align: left;
     file-preview {
       display: flex;

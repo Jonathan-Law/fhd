@@ -1,7 +1,7 @@
 <div style="margin-left: 20px; margin-right: 20px; min-height: 100px; min-width: 100px;">
   <h2>Documents</h2>
   <loader trigger="documentsLoader"></loader>
-  <div ng-repeat="doc in documents">
+  <div ng-repeat="doc in documents" ng-if="doc.status === 'A'">
     {{$index + 1}}.&nbsp;<a href="{{configs.baseURL + doc.link}}" target="_blank">{{doc.title}}</a>
     <br>
     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;–&nbsp;{{doc.comments}}.</span>

@@ -12,8 +12,8 @@
       </label>
     </div>
     <div style="height: calc(100% - 183px); overflow: auto;" vs-repeat>
-      <div class="individual" ng-class="{'bg-info': selection.id === thing.id}" ng-repeat="thing in collection" ng-click="makeSelection(thing)">
-        {{thing.displayableName + ' (' + thing.yearBorn + ')'}}
+      <div ng-init="thing.status === 'I' ? getUserName(thing) : '';" class="individual" ng-class="{'bg-info': selection.id === thing.id}" ng-repeat="thing in collection" ng-click="makeSelection(thing)">
+        {{thing.displayableName + ' (' + thing.yearBorn + ')'}} <span ng-if="thing.status === 'I'">&nbsp;({{thing.submitterName}})</span>
       </div>
     </div>
   </div>

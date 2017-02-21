@@ -3,6 +3,10 @@
     <file-preview file="$ctrl.file"></file-preview>
   </div>
   <div class="item" style="flex: 1 1 30%; max-width: 30%; min-width: 300px; padding-left: 10px; padding-right: 10px;">
+    <div ng-if="$ctrl.isAdmin" style="display: block">
+      <button ng-if="$ctrl.file.status === 'I'" class="btn btn-primary" ng-click="$ctrl.activateFile()">Activate</button>
+      <button ng-if="$ctrl.file.status !== 'I'" class="btn btn-primary" ng-click="$ctrl.deactivateFile()">Deactivate</button>
+    </div>
     <div>
       <div class="form-group" ng-class="(validName && validName.state)? 'has-feedback ' + validName.state: ''">
         <label class="control-label" for="newName">File Location</label>

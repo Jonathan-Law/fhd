@@ -101,7 +101,11 @@ class FilesEndpoint extends API
           $file->file->tmp_name = $_FILES['uploadfile']['tmp_name'][0];
           $file->file->type = $_FILES['uploadfile']['type'][0];
           $file->status = $session->isLoggedIn() && $session->isAdmin() ? 'A' : 'I';
-          return $file->save();
+          try {
+            return $file->save();
+          } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+          }
         }
         throw new Exception('Failed to save file');
       }
@@ -125,11 +129,19 @@ class FilesEndpoint extends API
   protected function getAll($args) {
     $session = mySession::getInstance();
     if ($this->method === 'GET') {
-      $id = intval($args[0]);
+      $id = isset($args[0]) ? intval($args[0]) : null;
       if (isset($id) && !empty($id) && is_numeric($id)) {
         return File::getAll($id);
       }
-      return File::getAll();
+      return File::getAll(null);
+    }
+    throw new NoMethodException();
+  }
+
+  protected function getAllInactiveFiles() {
+    $session = mySession::getInstance();
+    if ($this->method === 'GET') {
+      return File::getAllInactiveFiles();
     }
     throw new NoMethodException();
   }
@@ -139,7 +151,7 @@ class FilesEndpoint extends API
     if ($this->method === 'GET') {
       $type = isset($args[0]) ? $args[0] : 'person';
       $limit = isset($args[1]) ? $args[1] : true;
-      $id = intval($args[2]);
+      $id = isset($args[2]) ? intval($args[2]) : null;
       $individual = isset($id) && !empty($id) && is_numeric($id) ? $id : null;
       $val = $this->verb;
       if ($val === 'object' && $type === 'place') {
@@ -163,6 +175,44 @@ class FilesEndpoint extends API
         if (!empty($id) && isset($id) && is_numeric($id)){
           return Tag::getByFileId($id);
         }
+      }
+      throw new Exception('Id Required');
+    }
+    throw new NoMethodException();
+  }
+
+  protected function activate($args) {
+    $session = mySession::getInstance();
+    if ($this->method === 'POST') {
+      // Get all edit information required for file edits.
+      if (isset($args) && !empty($args)) {
+        $id = intval($args[0]);
+        $isAdmin = $session->isLoggedIn() && $session->isAdmin();
+        if (!empty($id) && isset($id) && is_numeric($id) && $isAdmin){
+          $file = File::getById($id);
+          $file->status = 'A';
+          return $file->save();
+        }
+        throw new ForbiddenException();
+      }
+      throw new Exception('Id Required');
+    }
+    throw new NoMethodException();
+  }
+
+  protected function deactivate($args) {
+    $session = mySession::getInstance();
+    if ($this->method === 'POST') {
+      // Get all edit information required for file edits.
+      if (isset($args) && !empty($args)) {
+        $id = intval($args[0]);
+        $isAdmin = $session->isLoggedIn() && $session->isAdmin();
+        if (!empty($id) && isset($id) && is_numeric($id) && $isAdmin){
+          $file = File::getById($id);
+          $file->status = 'I';
+          return $file->save();
+        }
+        throw new ForbiddenException();
       }
       throw new Exception('Id Required');
     }

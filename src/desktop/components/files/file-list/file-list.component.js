@@ -13,13 +13,13 @@ module.exports = ngModule => {
 
   function fileListCtrl(Business, configs, $scope, $element, $filter) {
     const ctrl = this;
-
     ctrl.$onInit = $onInit;
     ctrl.$onChanges = $onChanges;
     ctrl.$postLink = $postLink;
     ctrl.$onDestroy = $onDestroy;
     ctrl.makeSelection = makeSelection;
     ctrl.getAllFiles = getAllFiles;
+    ctrl.getSubmissionsList = getSubmissionsList;
     ctrl.baseURL = configs.baseURL;
     ctrl.sortBy = '';
     ctrl.label = 'title';
@@ -35,6 +35,8 @@ module.exports = ngModule => {
 
     function $onInit() {
       getAllFiles();
+      getIsAdmin();
+      Business.user.subscribeToUserState(getIsAdmin);
     }
 
     function $onChanges() {
@@ -50,6 +52,12 @@ module.exports = ngModule => {
 
     function $onDestroy() {
       angular.element('body').off('keydown', bodyKeydown);
+    }
+
+    function getIsAdmin() {
+      Business.user.getIsAdmin().then((boolIsAdmin) => {
+        ctrl.isAdmin = boolIsAdmin;
+      });
     }
 
     function makeSelection(thing) {
@@ -109,6 +117,18 @@ module.exports = ngModule => {
           });
         });
       }
+    }
+
+    function getSubmissionsList() {
+      Business.file.getAllInactiveFiles().then((results) => {
+        $scope.$applyAsync(() => {
+          ctrl.files = results;
+          ctrl.files.forEach(file => {
+            file.id = +file.id;
+          });
+          $element.find('.file-list').scrollTop(0);
+        });
+      });
     }
   }
 

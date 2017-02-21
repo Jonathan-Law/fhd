@@ -179,6 +179,7 @@ class IndividualsEndpoint extends API
           throw new ForbiddenException();
         }
       }
+      $person->profile_pic = isset($this->file->profile_pic) ? $this->file->profile_pic : $person->profile_pic;
       if (!empty($person)) {
         $personId = $person->save($user);
       } else {

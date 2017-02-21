@@ -10,10 +10,10 @@ class File
 {
 
    protected static $table_name = "file";
-   protected static $db_fields = array('id', 'link', 'thumblink', 'viewlink', 'title', 'author', 'comments', 'date', 'type', 'status');
+   protected static $db_fields = array('id', 'link', 'thumblink', 'viewlink', 'title', 'author', 'comments', 'date', 'type', 'status', 'creatorId', 'editorId');
    public static function get_db_fields()
    {
-      $fields = array('id', 'link', 'thumblink', 'viewlink', 'title', 'author', 'comments', 'date', 'type', 'status');
+      $fields = array('id', 'link', 'thumblink', 'viewlink', 'title', 'author', 'comments', 'date', 'type', 'status', 'creatorId', 'editorId');
       return $fields;
    }
    public static function nameMe()
@@ -33,6 +33,8 @@ class File
    public $message;
    public $type;
    public $status;
+   public $creatorId;
+   public $editorId;
 
 
    public static function dropFile($temp_id = NULL)
@@ -127,7 +129,7 @@ class File
                if ($individual !== null) {
                   $query .= " AND `id` IN (SELECT `fileid` FROM `tag` WHERE `enum`='person' AND `foreignid`=".$individual.")";
                }
-               $query .=" ORDER BY score DESC";
+               $query .= " ORDER BY score DESC";
                if ($limitNum) {
                   $query .= "LIMIT 0, $limitNum";
                }
@@ -175,7 +177,7 @@ class File
    }
 
    public static function getAll($individual){
-      if (isset($individual)) {
+      if (isset($individual) && $individual !== null) {
          return File::getByInd($individual, null);
       }
       $database = cbSQLConnect::connect('object');
@@ -183,6 +185,18 @@ class File
       {
          $name = 'file';
          $sql = "SELECT * FROM $name";
+         $params = array();
+         $results_array = $database->QueryForObject($sql, $params);
+         return !empty($results_array) ? $results_array : false;
+      }
+   }
+
+   public static function getAllInactiveFiles(){
+      $database = cbSQLConnect::connect('object');
+      if (isset($database))
+      {
+         $name = 'file';
+         $sql = "SELECT * FROM $name WHERE `status`='I'";
          $params = array();
          $results_array = $database->QueryForObject($sql, $params);
          return !empty($results_array) ? $results_array : false;
@@ -335,10 +349,26 @@ class File
          if (!isset($data['status'])) {
             $data['status'] = 'I';
          }
+         if (!isset($data['creatorId'])) {
+            $user = $this->getCurrentUser();
+            $data['creatorId'] = $user->id;
+         }
+         if (!isset($data['editorId'])) {
+            $user = $this->getCurrentUser();
+            $data['editorId'] = $user->id;
+         }
          $insert = $database->SQLInsert($data, "file"); // return true if sucess or false
          if ($insert) {
-            return json_encode($data);
-            // return $insert;
+            // send email to admin here that an individual has been submitted by a non-admin;
+            if ($data["status"] === 'I'){
+               $message = "A new File requires approval:<br><br>";
+               $message .= "<a href='http://familyhistorydatabase.org/#/admin/files'>".$data["title"]."</a><br><br>";
+               $message .= "by ".$user->username." ".$user->email;
+               $subject = "New File for approval";
+               sendOwnerUpdate($message, $subject);
+            }
+            // return json_encode($data);
+            return $insert;
          }
          else
          {
@@ -350,6 +380,15 @@ class File
    protected function update()
    {
       $database = cbSQLConnect::connect('object');
+      $user = $this->getCurrentUser();
+      $this->editorId = $user->id;
+      if ($this->status === 'I') {
+         $message = "A new File requires approval:<br><br>";
+         $message .= "<a href='http://familyhistorydatabase.org/#/admin/files'>".$this->title."</a><br><br>";
+         $message .= "by ".$user->username." ".$user->email;
+         $subject = "New File for approval";
+         sendOwnerUpdate($message, $subject);
+      }
       if (isset($database))
       {
          $fields = self::$db_fields;
@@ -371,15 +410,21 @@ class File
    }
 
    // Delete the object from the table.
-   public function delete()
+   public function delete($override = false)
    {
-      $database = cbSQLConnect::adminConnect('object');
+      $database = cbSQLConnect::adminConnect('both');
       if (isset($database))
       {
-         $tags = $this->getTagListById($this->id);
-         foreach ($tags as $tag) {
-            $temp = recast('Tag', $tag);
-            $temp->delete();
+         if ($override === false) {
+            $tags = $this->getTagListById($this->id);
+            if ($tags) {
+               foreach ($tags as $tag) {
+                  $temp = recast('Tag', $tag);
+                  $temp->delete();
+               }
+            } else {
+               return $this->delete(true);
+            }
          }
          return ($database->SQLDelete(self::$table_name, 'id', $this->id));
       }
@@ -626,6 +671,12 @@ class File
       }
 
       return true;
+   }
+
+   private function getCurrentUser() {
+      $session = mySession::getInstance();
+      $user_id = $session->getVar('user_id');
+      return User::getById($user_id);
    }
 
 

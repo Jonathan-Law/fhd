@@ -1,13 +1,13 @@
 const _ = require('lodash');
 module.exports = ngModule => {
-  ngModule.directive('datepicker', /* @ngInject */ ($timeout/*datepickerFactory*/) => {
+  ngModule.directive('datepicker', /* @ngInject */ (/*datepickerFactory*/) => {
     require('./datepicker.css');
 
     function preFn(scope) {
       const disabled = false;
-      $timeout(() => {
-        scope.confident = scope.confident === undefined ? true : +scope.confident;
-      });
+      scope.confidenceObject = {
+        confident: scope.confident === undefined ? true : !!+scope.confident
+      };
       scope.today = () => {
         scope.dt = new Date();
       };
@@ -24,7 +24,7 @@ module.exports = ngModule => {
           yearRows: 10,
           yearColumns: 5,
         }, scope.options || {});
-        if (!scope.confident) {
+        if (!scope.confidenceObject.confident) {
           scope.dateOptions.minMode = 'year';
           scope.format = 'YYYY';
           scope.formatConfig = 'yyyy';
@@ -34,9 +34,12 @@ module.exports = ngModule => {
           scope.formatConfig = 'MM-dd-yyyy';
         }
       };
-
       scope.$watch('confident', (newval) => {
-        if (!+newval) {
+        scope.confidenceObject.confident = !!+newval;
+      });
+
+      scope.$watchCollection('confidenceObject', (newval) => {
+        if (!newval.confident) {
           scope.dateOptions.minMode = 'year';
           scope.format = 'YYYY';
           scope.formatConfig = 'yyyy';
@@ -45,6 +48,7 @@ module.exports = ngModule => {
           scope.format = 'MM-DD-YYYY';
           scope.formatConfig = 'MM-dd-yyyy';
         }
+        scope.confident = newval.confident;
       });
 
       scope.updateOptions();

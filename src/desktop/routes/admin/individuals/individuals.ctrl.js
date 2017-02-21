@@ -33,6 +33,12 @@ function individuals($scope, business/*, individual, $state*/) {
 
   $scope.getNewList();
 
+  $scope.getUserName = (individual) => {
+    business.user.getUserName(individual.submitter).then((name) => {
+      individual.submitterName = name;
+    });
+  };
+
   $scope.makeSelection = (thing) => {
     $scope.selection = thing;
   };

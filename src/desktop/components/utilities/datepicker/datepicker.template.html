@@ -1,5 +1,5 @@
 <label>
-  <input type="checkbox" ng-init="confident = true;" ng-model="confident" class="ng-valid ng-dirty"> Exact Date
+  <input type="checkbox" ng-model="confidenceObject.confident" class="ng-valid ng-dirty"> Exact Date
 </label>
 <div class="input-group" style="width: 100%">
   <input type="text" class="form-control" uib-datepicker-popup="{{formatConfig}}" ng-model="dt" is-open="popup.opened" datepicker-options="dateOptions" ng-required="isRequired" close-text="Close" placeholder="{{placeholder + ' ' + format}}" tabindex="0" />

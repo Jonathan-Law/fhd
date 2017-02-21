@@ -17,9 +17,13 @@ module.exports = ngModule => {
     ctrl.$onChanges = $onChanges;
     ctrl.saveChanges = saveChanges;
     ctrl.deleteFile = deleteFile;
+    ctrl.activateFile = activateFile;
+    ctrl.deactivateFile = deactivateFile;
 
     function $onInit() {
       handleTags();
+      getIsAdmin();
+      Business.user.subscribeToUserState(getIsAdmin);
     }
     function $onChanges() {
       handleTags();
@@ -31,12 +35,36 @@ module.exports = ngModule => {
       });
     }
 
+    function getIsAdmin() {
+      Business.user.getIsAdmin().then((boolIsAdmin) => {
+        ctrl.isAdmin = boolIsAdmin;
+      });
+    }
+
     function deleteFile(file) {
       if (confirm('Are you sure you want to delete this file?')) {
         Business.file.deleteFile(file).then(() => {
           ctrl.callback();
         });
       }
+    }
+
+    function activateFile() {
+      Business.file.activateFile(ctrl.file.id).then((result) => {
+        if (result) {
+          ctrl.file.status = 'A';
+          ctrl.callback({ file: ctrl.file });
+        }
+      });
+    }
+
+    function deactivateFile() {
+      Business.file.deactivateFile(ctrl.file.id).then((result) => {
+        if (result) {
+          ctrl.file.status = 'I';
+          ctrl.callback({ file: ctrl.file });
+        }
+      });
     }
 
     function handleTags() {
